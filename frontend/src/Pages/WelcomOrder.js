@@ -16,7 +16,7 @@ const WelcomOrder = (props) => {
     <>
     <div className={`${(login)?"hidden":""}`}><GoLogin/></div>
     <div className={`${(login)?"":"hidden"}`}>
-    <div className='flex items-center justify-center flex-col text-center' style={{height:"100vh"}}>
+    <div className='flex items-center justify-center flex-col text-center' style={{height:"70vh"}}>
       <FaCheck className=' bg-fuchsia-800 text-white  p-3 text-6xl rounded-full'/>
       <h1 className='text-2xl my-4'>Your Order has been Placed successfully</h1>
       <Link to="/orders"><button className=' bg-fuchsia-800 text-white px-4 py-2 rounded-full'>View Order</button></Link>

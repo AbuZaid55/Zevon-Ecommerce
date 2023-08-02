@@ -1,5 +1,5 @@
 import React, { useState ,useEffect } from "react";
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { FaSearch,FaTh , FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
 import { FaArrowRightFromBracket} from 'react-icons/fa6';
 import '../CSS/Header.css'
@@ -7,6 +7,7 @@ import axios from "axios";
 import BACKEND_URL from "../baseUrl";
 
 const Header = (props) => {
+  const navigate = useNavigate()
   const [allProduct,setAllProduct]=useState('')
   const [category,setCategory]=useState([])
   const [dropdown1 , setDropdown1]=useState(false)
@@ -14,6 +15,7 @@ const Header = (props) => {
   const [admin,setAdmin]=useState(true)
   const [dropdown,setDropdown]=useState(false)
   const [login,setLogin]=useState(false)
+  const [search,setSearch]=useState('')
   let subCategory = []
 
 
@@ -33,6 +35,28 @@ const Header = (props) => {
     }
 }
 
+  const handleSearch = ()=>{
+  
+  }
+
+  const submitSearch = (e)=>{
+    e.preventDefault()
+    navigate(`/products?search=${search}`)
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   useEffect(()=>{
     if(props.user._id){
       setLogin(true)
@@ -47,34 +71,38 @@ const Header = (props) => {
   },[props.user])
 
   useEffect(()=>{
+    handleSearch()
+    //  eslint-disable-next-line react-hooks/exhaustive-deps
+  },[search])
+  useEffect(()=>{
     fetchProduct()
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   return (
-    <div id="header" className=" z-50 w-full bg-white top-0 h-36">
+    <div id="header" className={` ${(props.path==='/products')?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}
       <div className="flex items-center justify-between h-20 sm:px-8 px-2 border-b border-fuchsia-950">
         <Link to="/"><h1 className=" sm:block text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link>
-        <form className="sm:flex hidden w-full max-w-3xl relative sm:mx-5">
-          <input className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" type="text" placeholder="Search product" />
+        <form className="sm:flex hidden w-full max-w-3xl relative sm:mx-5" onSubmit={(e)=>{submitSearch(e)}}>
+          <input className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
           <button className="absolute right-4 top-1/3 text-fuchsia-950"><FaSearch/></button>
         </form>
         <Link to="/login"><button className={`bg-fuchsia-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(login)?'hidden':'block'}`}>Login</button></Link>
         {/* dropdown1  */}
-        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-fuchsia-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-fuchsia-950 mr-2" src="/Images/profile.jpg" width={'40px'} height={'40px'} alt="" /><span className="text-lg hidden sm:block">Abu Zaid</span></span>
+        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-fuchsia-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-fuchsia-950 mr-2" src={`${(props.user.profile!=='')?`${BACKEND_URL}/Images/${props.user.profile}`:"/Images/profile.jpg"}`} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg hidden sm:block">{props.user.name}</span></span>
         <ul className={`absolute -left-2 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
           <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/profile" className="flex items-center justify-left text-fuchsia-950"><FaUser className="m-3 hidden sm:block text-fuchsia-950"/>Profile</Link></li>
           <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-fuchsia-950"><FaTh className="m-3 hidden sm:block text-fuchsia-950"/>Dashboard</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/cart" className="flex items-center justify-left text-fuchsia-950"><FaShoppingCart className="m-3 hidden sm:block text-fuchsia-950"/>Cart</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/orders" className="flex items-center justify-left text-fuchsia-950"><FaShoppingBag className="m-3 hidden sm:block text-fuchsia-950"/>Order</Link></li>
-          <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link className="flex items-center justify-left text-fuchsia-950"><FaArrowRightFromBracket className="m-3 hidden sm:block text-fuchsia-950"/>Log Out</Link></li>
+          <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to='/logout' className="flex items-center justify-left text-fuchsia-950"><FaArrowRightFromBracket className="m-3 hidden sm:block text-fuchsia-950"/>Log Out</Link></li>
         </ul>
         </div>
         {/* dropdown1 end */}
       </div>
         <form className="sm:hidden flex relative px-4 py-2 border-b border-fuchsia-950">
-          <input className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950 " type="text" placeholder="Search product" />
-          <button className="absolute right-4 top-1/3 text-fuchsia-950 pr-3"><FaSearch/></button>
+          <input className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950 "  type="text" placeholder="Search product" />
+          <button className="absolute right-4 top-1/3 text-fuchsia-950 pr-3" type='submit'><FaSearch/></button>
         </form>
 
         {/* section2 */}
@@ -86,11 +114,11 @@ const Header = (props) => {
           {/* dropdown2 */}
           <li className={`relative sm:mx-5 sm:border border-b border-white sm:border-fuchsia-950 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-fuchsia-800 hover:text-white text-white sm:text-fuchsia-950 ${(dropdown2)?'':'overflow-hidden'}`} onMouseMove={(e)=>{setDropdown2(true)}} onMouseOut={(e)=>{setDropdown2(false)}}><span className="flex items-center cursor-pointer"><FaListUl className="mr-2"/>Category{(dropdown2)?<FaAngleDown className="ml-2"/>:<FaAngleUp className="ml-2"/>}</span>
           
-          <ul className={`absolute border-t-2 border-x-2 -left-10  sm:-left-3  bg-white z-50 ${(dropdown2)?'top-full':'bottom-full'}`} style={{maxWidth:'200px'}}>
+          <ul className={`absolute border-t-2 border-x-2 left-5  sm:-left-3  bg-white z-50 ${(dropdown2)?'top-full':'bottom-full'}`} style={{maxWidth:'200px'}}>
             {/* dropdown3 */}
             {
-              category!=='' && category.map((cat,i)=>{
-                return <li key={i} className={`relative px-3 py-2 border-b text-fuchsia-950 hover:bg-fuchsia-50 cursor-pointer`} id="dropdown3" ><span className="flex items-center justify-between">{cat}<FaAngleRight/></span>
+              category!=='' && category.map((cat,I)=>{
+                return <li key={I} className={`relative px-3 py-2 border-b text-fuchsia-950 hover:bg-fuchsia-50 cursor-pointer`} id="dropdown3" ><span className="flex items-center justify-between">{cat}<FaAngleRight/></span>
                 <ul className="absolute hidden top-0 left-full w-full z-50 bg-white border">
                   {
                     allProduct.map((item,i)=>{

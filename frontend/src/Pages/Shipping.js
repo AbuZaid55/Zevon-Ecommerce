@@ -70,7 +70,7 @@ const Shipping = (props) => {
       })
      }
      </div>
-    <button className='flex items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full mx-auto my-10' onClick={(e)=>{goConfirm(e)}} > Continue</button>
+    <button className={`${(user.shippingDetails.length===0)?'hidden':'flex'} items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full mx-auto my-10`} onClick={(e)=>{goConfirm(e)}} > Continue</button>
     <button className='flex items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full ml-auto' onClick={()=>{setshowAddressForm(!showAddressForm)}}><FaPlus className='mr-2'/> Add Address</button>
 
 

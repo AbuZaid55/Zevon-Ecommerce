@@ -1,7 +1,7 @@
 const router = require("express").Router()
 const auth = require('../auth/auth.js')
 const multer = require('../utils/uploadFile.js')
-const {user,signUp, verifyEmail,resentVerificatonCode, logIn,sendResetLink, changePass, uploadProfile,addShippingDetails,deleteShippingDetails, addToCart, setQty, removeCartItem}=require('../controller/userController')
+const {user,signUp, verifyEmail,resentVerificatonCode, logIn,sendResetLink, changePass, uploadProfile,addShippingDetails,deleteShippingDetails, addToCart, setQty, removeCartItem,Logout, contact}=require('../controller/userController')
 
 router.get('/user',auth,user)
 router.post('/signup',signUp)
@@ -16,5 +16,7 @@ router.post('/deleteShippingDetails',deleteShippingDetails)
 router.post('/addToCart',addToCart)
 router.post('/setQty',setQty)
 router.post('/removeCartItem',removeCartItem)
+router.post('/contact',contact)
+router.get('/logout',Logout)
 
 module.exports=router;

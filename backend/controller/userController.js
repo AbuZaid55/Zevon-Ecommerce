@@ -4,7 +4,7 @@ const changePassModel = require('../models/changePassModel')
 const {sendError,sendSuccess}=require('../sendResponse')
 const validator = require("email-validator")
 const generateOtp = require('../utils/generateOtp')
-const {otpMail,greetingMail,linkSendMail} = require('../utils/mail')
+const {otpMail,greetingMail,linkSendMail,contactMail} = require('../utils/mail')
 const JWT = require("jsonwebtoken")
 const fs = require("fs")
 const productModel = require("../models/productModel")
@@ -428,6 +428,29 @@ const removeCartItem = async(req,res)=>{
     }
 }
 
+const Logout = async(req,res)=>{
+    try{
+        res.clearCookie("jwtToken")
+        res.status(202).send({success:"Log Out Successfully"})
+    }catch(err){
+        res.status(401).send({errors:"Log Out failed"})
+    }
+
+}
+
+const contact = (req,res)=>{
+    try {
+        const {name,email,phone,subject,massage}=req.body
+        if(name=='' || email=='' || phone=='' | subject=='' || massage==''){
+            return sendError(res,"All Field are required!")
+        }
+        contactMail(name,email,phone,subject,massage)
+        sendSuccess(res,"Massage sent to Admin successfully")
+    } catch (error) {
+        sendError(res,"Contact Failed!")
+    }
+}
+
 module.exports = { 
     user,
     signUp,
@@ -442,4 +465,6 @@ module.exports = {
     addToCart,
     setQty,
     removeCartItem,
+    Logout,
+    contact
 }

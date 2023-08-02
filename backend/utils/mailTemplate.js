@@ -204,9 +204,42 @@ const linkSendMailTemplate = (link) =>{
     </body>`
 }
 
+const contactMailTemplate = (name,email,phone,subject,massage)=>{
+    return `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+        *{
+            box-sizing: border-box;
+        }
+        h1{
+            text-align: center;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: rgb(185, 0, 185);
+            width: 100%;
+            font-size: 3rem;
+        }
+    
+        </style>
+    </head>
+    <body>
+        <div>
+            <h1>Zevon contact mail</h1>
+            <p>Name: ${name}</p>
+            <p>Email: ${email}</p>
+            <p>Phone No: ${phone}</p>
+            <p>Subject: ${subject}</p>
+            <p>Massage: ${massage}</p>
+        </div>
+    </body>
+    </html>`
+}
 
 module.exports = {
     otpMailTemplate,
     greetingMailTemplate,
     linkSendMailTemplate,
+    contactMailTemplate,
 }

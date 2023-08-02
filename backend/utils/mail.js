@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer")
-const {otpMailTemplate, greetingMailTemplate,linkSendMailTemplate} = require("./mailTemplate")
+const {otpMailTemplate, greetingMailTemplate,linkSendMailTemplate,contactMailTemplate} = require("./mailTemplate")
 var transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
@@ -53,9 +53,24 @@ const linkSendMail = (to,link)=>{
         }
     })
 }
+const contactMail = (name,email,phone,subject,massage)=>{
+    transporter.sendMail({
+        from: email,
+        to: process.env.MAIL_USER,
+        subject:"Zevon Contact Mail",
+        html: contactMailTemplate(name,email,phone,subject,massage)
+    },(err,info)=>{
+        if(err){
+            console.log(err)
+        }else{
+            console.log("Mail successfull sent")
+        }
+    })
+}
 
 module.exports = {
     otpMail,
     greetingMail,
     linkSendMail,
+    contactMail
 };

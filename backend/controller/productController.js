@@ -155,6 +155,23 @@ const submitReview = async(req,res)=>{
     }
 }
 
+const search = async(req,res)=>{
+    const key = req.params.key
+    let data = await productModel.find({
+        "$or":[
+            {"name":{$regex:key}},
+            {"category":{$regex:key}},
+            // {"subCategory":{$regex:key}},
+            // {"sellprice":{$regex:key}},
+            // {"maxprice":{$regex:key}},
+            // {"color":{$regex:key}},
+            // {"description":{$regex:key}},
+            // {"createdAt":{$regex:key}},
+            // {"deliveryCharge":{$regex:key}}
+        ]
+    })
+    sendSuccess(res,"Search Product",data)
+}
 
 module.exports = {
     products,
@@ -162,4 +179,5 @@ module.exports = {
     updataProduct,
     deleteProduct,
     submitReview,
+    search,
 }

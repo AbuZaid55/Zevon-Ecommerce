@@ -1,11 +1,12 @@
 import React ,{useEffect, useState} from 'react'
-import {useLocation, useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate,Link} from 'react-router-dom'
 import ImageSlider from '../Component/ImageSlider';
 import { FaStar,FaRupeeSign } from 'react-icons/fa';
 import ReviewCard from '../Component/ReviewCard';
 import Card from '../Component/Card';
 import { FaAngleLeft ,FaAngleRight } from 'react-icons/fa';
 import BACKEND_URL from '../baseUrl';
+import { no_of_item_silder } from '../baseUrl';
 import axios from 'axios'
 const Details = (prop) => {
   const user = prop.user
@@ -23,6 +24,7 @@ const Details = (prop) => {
   const [rating,setRating]=useState(0)
   const [comment,setComment]=useState('')
   const [productRating,setProductRating]=useState(0)
+  let iteminSlider = 0
 
   const leftSlider = (id)=>{
     const slider = document.getElementById(id)
@@ -170,7 +172,7 @@ return (<>
         <button className=' bg-fuchsia-800 text-white py-3 px-7 rounded font-semibold' onClick={(e)=>{addToCart(e)}}>Add to Cart</button>
     </div>
     <div>
-    <h1 className='text-xl border-b mb-2 py-2'>Highlight</h1>
+    <h1 className={`${(product.highlight.length===0)?'hidden':''} text-xl border-b mb-2 py-2`}>Highlight</h1>
       {
         product.highlight.map((value,i)=>{
           return <li key={i} className=' list-disc marker:text-fuchsia-800 my-2'>{value}</li>
@@ -203,11 +205,14 @@ return (<>
   {/* Similar product  */}
    <div className={`w-full ${(similarProduct.length===0)?'hidden':''}`}>
    <div className='sm:my-4 relative'>
-        <div className='flex items-center justify-between'><h1 className='text-2xl sm:text-3xl ml-1 sm:ml-5 mt-3 font-bold text-fuchsia-950'>Similar products</h1><span className='sm:text-xl p-2 bg-fuchsia-800 text-white rounded-full m-2 cursor-pointer'><FaAngleRight/></span></div>
+        <div className='flex items-center justify-between'><h1 className='text-2xl sm:text-3xl ml-1 sm:ml-5 mt-3 font-bold text-fuchsia-950'>Similar products</h1><span className='sm:text-xl p-2 bg-fuchsia-800 text-white rounded-full m-2 cursor-pointer'><Link to={`/products?subCategory=${product.subCategory}`}><FaAngleRight/></Link></span></div>
         <div className='flex overflow-x-scroll w-full relative scroll scrollbar-hide scroll-smooth' id={`slider${2}`}>
            {
             similarProduct.map((item,i)=>{
-              return <Card key={i} product={item} userId={user._id}/> 
+              iteminSlider = iteminSlider+1 
+              if(iteminSlider<=no_of_item_silder){
+                return <Card key={i} product={item} userId={user._id}/> 
+              }
             })
            }
         </div>

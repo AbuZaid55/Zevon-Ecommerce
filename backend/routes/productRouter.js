@@ -6,9 +6,11 @@ const {
     updataProduct, 
     deleteProduct,
     submitReview,
+    search,
 }=require('../controller/productController')
 
 router.get('/products',products)
+router.get('/search/:key',search)
 router.post('/add/product',upload.fields([{name:"thumbnail"},{name:"images"}]),addProduct)
 router.put('/update/product',upload.fields([{name:"thumbnail"},{name:"images"}]),updataProduct)
 router.delete('/delete/product',deleteProduct)

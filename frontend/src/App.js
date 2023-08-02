@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import BACKEND_URL from './baseUrl'
 import axios  from 'axios'
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, location, useLocation } from 'react-router-dom';
 import Header from './Component/Header'
 import Footer from './Component/Footer'
 import Home from './Pages/Home'
@@ -21,12 +21,15 @@ import Page404 from './Pages/Page404';
 import VerifyEmail from './Pages/VerifyEmail'
 import WelcomOrder from './Pages/WelcomOrder';
 import TrackOrder from './Pages/TrackOrder';
+import Logout from './Pages/Logout';
 
 import Dashboard from './Pages/Dashboard';
 import AddProduct from './Pages/AddProduct';
 
 
 const App = () => {
+  const location = useLocation().pathname
+  const [path,setPath]=useState('')
   const [user,setUser]=useState('')
   const getUser = async()=>{
     try {
@@ -35,17 +38,20 @@ const App = () => {
         setUser(res.data.data)
       }
     } catch (error) {
-      console.log(error)
+      setUser('')
     }
 }
 
 useEffect(()=>{
-  getUser()
+  getUser()  
   //  eslint-disable-next-line react-hooks/exhaustive-deps
 },[])
+useEffect(()=>{
+  setPath(location)
+},[location])
   return (
    <>
-   <Header user={user}/>
+   <Header path={path} user={user}/>
     <Routes>
       <Route path='/' element={<Home user={user}/>} />
       <Route path='/contact' element={<Contact/>} />
@@ -64,13 +70,15 @@ useEffect(()=>{
       <Route path='/verifyemail' element={<VerifyEmail user={user}/>} />
       <Route path='/sendresetlink' element={<SendResetLink/>} />
       <Route path='/changepass' element={<ChangePass/>} />
+      <Route path='/logout' element={<Logout user={user} getUser={getUser}/>} />
       {/* ///////////// */}
       <Route path='/admin/dashboard' element={<Dashboard user={user}/>} />
       <Route path='/admin/dashboard/addproduct' element={<AddProduct user={user}/>} />
       {/* ///////////// */}
+      <Route path='/page404' element={<Page404/>} />
       <Route path='*' element={<Page404/>} />
     </Routes>
-    <Footer/>
+    <Footer path={path}/>
    </>
   )
 }
