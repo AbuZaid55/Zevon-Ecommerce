@@ -101,7 +101,7 @@ const resentVerificatonCode = async(req,res)=>{
         await verifyEmailModel({owner:user._id,otp:OTP}).save() 
         otpMail(user.email,OTP)
         
-        sendSuccess(res,"OTP sent successfully")
+        sendSuccess(res,"OTP sent successfull to your email id")
    } catch (error) {
     sendError(res,"Resend Verification code Failed!")
    }
@@ -126,12 +126,12 @@ const logIn = async(req,res)=>{
         }
         user.password = undefined
         const token = user.generateToken()
-        res.cookie('jwtToken',token,{
-            expires:new Date(Date.now() + 604800000),
+        res.cookie('ZevonToken',token,{
+            expires:new Date(Date.now() + Number(process.env.EXPIRE_COOKIE_TIME)),
             httpOnly:true
         })
         if(!user.validated){
-            const sendOtp = await verifyEmailModel.findOne({owner:user._id})
+            const sendOtp = await verifyEmailModel.findOne({owner:user._id}) 
             if(!sendOtp){
                 const OTP = generateOtp()
                 await verifyEmailModel({owner:user._id,otp:OTP}).save()
@@ -141,6 +141,7 @@ const logIn = async(req,res)=>{
         }
         sendSuccess(res,"You are login successfully")
     } catch (error) {
+        console.log(error)
         sendError(res,"Login Failed!")
     }
 }
@@ -169,7 +170,7 @@ const sendResetLink = async(req,res)=>{
          await result.save()
  
          linkSendMail(user.email,`${process.env.FRONTEND_CHANGEPASSWORD_URL}?token=${token}&id=${user._id}`)
-         sendSuccess(res,"Reset link sent successfully")
+         sendSuccess(res,"Reset link sent successfull to your email id")
     } catch (error) {
         console.log(error)
      sendError(res,"send Reset Link Failed!")
@@ -235,7 +236,6 @@ const uploadProfile = async(req,res)=>{
             } catch (error) {
                 console.log(error)
             }
-            console.log("Aaaa")
         }
         user.profile=profile
         await user.save()
@@ -430,7 +430,8 @@ const removeCartItem = async(req,res)=>{
 
 const Logout = async(req,res)=>{
     try{
-        res.clearCookie("jwtToken")
+        res.clearCookie("ZevonToken")
+        res.clearCookie("googleZevonToken")
         res.status(202).send({success:"Log Out Successfully"})
     }catch(err){
         res.status(401).send({errors:"Log Out failed"})

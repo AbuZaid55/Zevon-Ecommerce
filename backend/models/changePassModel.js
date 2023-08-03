@@ -15,7 +15,7 @@ const changePassSchema = new mongoose.Schema({
         default:Date.now()
     }
 })
-changePassSchema. index( { "createdAt": 1 }, { expireAfterSeconds: process.env.EXPIRE_TOKEN_TIME } );
+changePassSchema.index({ createdAt: 1 }, { expires: Number(process.env.EXPIRE_TOKEN_TIME ) })
 
 changePassSchema.pre("save",async function(next){
     if(this.isModified("token")){
@@ -32,4 +32,4 @@ changePassSchema.methods = {
 }
 
 
-module.exports = mongoose.model('changePas',changePassSchema)
+module.exports = mongoose.model('changePass',changePassSchema)

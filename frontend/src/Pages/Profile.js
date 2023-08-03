@@ -10,6 +10,7 @@ const Profile = (props) => {
   const [showAddressForm,setshowAddressForm]=useState(false)
   const [user,setUser]=useState({_id:"",email:"",name:"",cart:[],shippingDetails:[],profile:""})
   const [newAddress,setNewAddress]=useState({name:"",houseNo:"",address:"",pinCode:"",city:"",state:"",phoneNo:""})
+  const [userProfile,setUserProfile]=useState('/Images/profile.jpg')
   
   const handleNewAddress=(e)=>{
     setNewAddress({...newAddress,[e.target.name]:e.target.value})
@@ -58,6 +59,13 @@ const Profile = (props) => {
     if(props.user._id){
       setLogin(true)
       setUser(props.user)
+      if(props.user.profile!=='' && props.user.profile.includes('https://')){
+        setUserProfile(props.user.profile)
+      }else if(props.user.profile!==''){
+        setUserProfile(`${BACKEND_URL}/Images/${props.user.profile}`)
+      }else{
+        setUserProfile('/Images/profile.jpg')
+      }
     }else{
       setLogin(false)
     }
@@ -69,7 +77,7 @@ const Profile = (props) => {
     <div className={`${(login)?"":"hidden"}`}>
       <div className='w-full flex flex-col sm:flex-row my-10'>
         <div className='w-full sm:w-1/2 flex items-center justify-center'>
-          <div className='w-64 h-64 sm:w-72 sm:h-72 border-2 rounded-full relative mt-3'><img className='w-full h-full rounded-full border-4 border-fuchsia-800' src={(user.profile!=='')?`${BACKEND_URL}/Images/${user.profile}`:"/Images/profile.jpg"} alt="Pic" />
+          <div className='w-64 h-64 sm:w-72 sm:h-72 border-2 rounded-full relative mt-3'><img className='w-full h-full rounded-full border-4 border-fuchsia-800' src={userProfile} alt="Pic" />
           <label htmlFor="upload" className=' cursor-pointer absolute top-3/4 right-4 border shadow-md bg-white p-2 text-xl text-fuchsia-800 rounded-full'><FaCamera/></label>
           <input type="file" className='hidden' id='upload' onChange={(e)=>{uploadProfile(e)}}/>
           </div>

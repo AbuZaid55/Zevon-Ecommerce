@@ -1,5 +1,4 @@
 import axios from 'axios'
-import GoLogin from '../Component/GoLogin';
 import React, { useEffect, useState } from 'react'
 import { useNavigate,useLocation } from 'react-router-dom'
 import BACKEND_URL from '../baseUrl'
@@ -10,7 +9,6 @@ const VerifyEmail = (props) => {
   const [code,setCode]=useState('')
   const [userId,setUserId]=useState()
   const [path,setPath]=useState('')
-  const [login,setLogin]=useState(false)
   
   const submitForm = async(e)=>{
     e.preventDefault()
@@ -18,6 +16,7 @@ const VerifyEmail = (props) => {
       const res = await axios.post(`${BACKEND_URL}/auth/verifyEmail`,{otp:code,userId:userId})
       setCode()
       alert(res.data.massage)
+      props.getUser()
       if(path==='signup'){
         navigate('/login')
       }
@@ -48,17 +47,8 @@ const VerifyEmail = (props) => {
     }
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
-  useEffect(()=>{
-    if(props.user._id){
-      setLogin(true)
-    }else{
-      setLogin(false)
-    }
-  },[props.user])
   return (
    <>
-   <div className={`${(login)?"hidden":""}`}><GoLogin/></div>
-  <div className={`${(login)?"":"hidden"}`}>
    <div className='w-full flex items-center justify-center my-5'>
       <form className='w-full sm:w-2/3 lg:w-1/3 p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}}>
             <h1 className='text-3xl text-center font-bold text-fuchsia-900 mb-3 mt-2 '>Verify your Email!</h1>
@@ -72,7 +62,6 @@ const VerifyEmail = (props) => {
             </div>
         </form>
     </div>
-   </div>
    </>
   )
 }

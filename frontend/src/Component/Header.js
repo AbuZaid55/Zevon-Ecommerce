@@ -1,14 +1,13 @@
-import React, { useState ,useEffect } from "react";
+import React, { useState ,useEffect, useRef } from "react";
 import {Link, useNavigate} from 'react-router-dom'
 import { FaSearch,FaTh , FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
 import { FaArrowRightFromBracket} from 'react-icons/fa6';
 import '../CSS/Header.css'
-import axios from "axios";
 import BACKEND_URL from "../baseUrl";
 
 const Header = (props) => {
   const navigate = useNavigate()
-  const [allProduct,setAllProduct]=useState('')
+  const allProduct = props.allProduct
   const [category,setCategory]=useState([])
   const [dropdown1 , setDropdown1]=useState(false)
   const [dropdown2 , setDropdown2]=useState(false)
@@ -16,52 +15,65 @@ const Header = (props) => {
   const [dropdown,setDropdown]=useState(false)
   const [login,setLogin]=useState(false)
   const [search,setSearch]=useState('')
-  let subCategory = []
+  const [searchItem,setSearchItem]=useState([])
+  const [showitem,setShowItem]=useState(false)
+  const [userProfile,setUserProfile]=useState('/Images/profile.jpg')
 
-
-  const fetchProduct = async()=>{
-    try {
-        const res = await axios.get(`${BACKEND_URL}/products`)
-        setAllProduct(res.data)
-        res.data.map((item)=>{
-            const isExist = category.includes(item.category)
-            if(!isExist){
-              category.push(item.category)
-              setCategory(category)
-            }
-          })
-    } catch (error) {
-        console.log(error)
-    }
-}
+  const getCategory = ()=>{
+    let cat = []
+    allProduct!==undefined && allProduct.map((item)=>{
+      const isExist = cat.includes(item.category)
+      if(!isExist){
+        cat.push(item.category)
+      }
+    })
+    setCategory(cat)
+  }
 
   const handleSearch = ()=>{
-  
+        const key = search.toLowerCase().split(' ')
+        const searchItem = allProduct.filter((item)=>{
+            const name = item.name.toLowerCase()
+            const description = item.description.toLowerCase()
+            const category = item.category.toLowerCase()
+            const subCategory = item.subCategory.toLowerCase()
+            let match = []
+            key.map((keyPoint)=>{
+                if(name.includes(keyPoint) || description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===search || subCategory===search){
+                    match.push(true)
+                }else{
+                    match.push(false)
+                }
+            })
+            if(!match.includes(false)){
+                return item
+            }
+        })
+       setSearchItem(searchItem)
+       setShowItem(true)
   }
-
+  const handleClickOnItem = (_id)=>{
+    console.log(_id)
+    setShowItem(false)
+    navigate(`/details?_id=${_id}`)
+  }
   const submitSearch = (e)=>{
     e.preventDefault()
+    setShowItem(false)
     navigate(`/products?search=${search}`)
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   useEffect(()=>{
     if(props.user._id){
       setLogin(true)
       if(props.user.admin){
         setAdmin(true)
+      }
+      if(props.user.profile!=='' && props.user.profile.includes('https://')){
+        setUserProfile(props.user.profile)
+      }else if(props.user.profile!==''){
+        setUserProfile(`${BACKEND_URL}/Images/${props.user.profile}`)
+      }else{
+        setUserProfile('/Images/profile.jpg')
       }
     }else{
       setAdmin(false)
@@ -74,22 +86,30 @@ const Header = (props) => {
     handleSearch()
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[search])
-  useEffect(()=>{
-    fetchProduct()
-    //  eslint-disable-next-line react-hooks/exhaustive-deps
-  },[])
+  useEffect(()=>{ 
+      getCategory()
+  },[allProduct])
   return (
-    <div id="header" className={` ${(props.path==='/products')?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
+    <div id="header" className={` ${(props.path==='/products')?'fixed top-0 left-0 ':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}
       <div className="flex items-center justify-between h-20 sm:px-8 px-2 border-b border-fuchsia-950">
         <Link to="/"><h1 className=" sm:block text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link>
         <form className="sm:flex hidden w-full max-w-3xl relative sm:mx-5" onSubmit={(e)=>{submitSearch(e)}}>
-          <input className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
+          <div className="w-full relative ">
+          <input onBlur={()=>{setShowItem(false)}} className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
+          <div className={`${(search==='' || showitem===false)?'hidden':''} absolute top-full z-50 w-full overflow-auto scrollbar-hide shadow-2xl border-x-2 mt-1 rounded-xl`}>
+          {searchItem.map((item,i)=>{
+            if(i<6){
+              return <span key={i} onClick={()=>{handleClickOnItem(item._id)}} className="flex bg-white border-y py-2 px-3 cursor-pointer w-full overflow-hidden whitespace-nowrap hover:bg-fuchsia-50"><img className="mr-3" src={`${(item.thumbnail!=='')?`${BACKEND_URL}/Images/${item.thumbnail}`:"/Images/profile.jpg"}`} style={{width:'30px',height:'30px'}} alt="" />{item.name}</span>
+            }
+          })}
+          </div>
+          </div>
           <button className="absolute right-4 top-1/3 text-fuchsia-950"><FaSearch/></button>
         </form>
         <Link to="/login"><button className={`bg-fuchsia-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(login)?'hidden':'block'}`}>Login</button></Link>
         {/* dropdown1  */}
-        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-fuchsia-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-fuchsia-950 mr-2" src={`${(props.user.profile!=='')?`${BACKEND_URL}/Images/${props.user.profile}`:"/Images/profile.jpg"}`} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg hidden sm:block">{props.user.name}</span></span>
+        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-fuchsia-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-fuchsia-950 mr-2" src={userProfile} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg hidden sm:block">{props.user.name}</span></span>
         <ul className={`absolute -left-2 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
           <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/profile" className="flex items-center justify-left text-fuchsia-950"><FaUser className="m-3 hidden sm:block text-fuchsia-950"/>Profile</Link></li>
           <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-fuchsia-950"><FaTh className="m-3 hidden sm:block text-fuchsia-950"/>Dashboard</Link></li>
@@ -118,6 +138,7 @@ const Header = (props) => {
             {/* dropdown3 */}
             {
               category!=='' && category.map((cat,I)=>{
+                let subCategory = []
                 return <li key={I} className={`relative px-3 py-2 border-b text-fuchsia-950 hover:bg-fuchsia-50 cursor-pointer`} id="dropdown3" ><span className="flex items-center justify-between">{cat}<FaAngleRight/></span>
                 <ul className="absolute hidden top-0 left-full w-full z-50 bg-white border">
                   {

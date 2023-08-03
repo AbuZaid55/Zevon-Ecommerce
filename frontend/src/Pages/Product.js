@@ -4,15 +4,13 @@ import Footer from '../Component/Footer'
 import {useLocation} from 'react-router-dom'
 import { FaAngleDown,FaAngleUp,FaFilter,FaRupeeSign,FaStar,FaArrowRight,FaArrowLeft} from 'react-icons/fa';
 import Card from '../Component/Card'
-import axios from 'axios';
-import BACKEND_URL from '../baseUrl';
 import { no_of_item_page } from '../baseUrl';
 
-const Product = (prop) => {
+const Product = (props) => {
     const params = (useLocation().search);
     const subCategoryParams = params.slice(params.indexOf('=')+1)
     const urlSubCategory = subCategoryParams.replaceAll('%20',' ')
-    const [allProduct,setAllProduct]=useState('')
+    const allProduct = props.allProduct
     const [allFilterProduct,setAllFilterProduct]=useState('')
     const [filterProduct,setFilterProduct]=useState('')
     const [category,setCategory]=useState([])
@@ -24,7 +22,6 @@ const Product = (prop) => {
     const [totalPage,setTotalPage]=useState(1)
     const [currentPage,setCurrentPage]=useState(1)
     const [filterSubCategory,setfilterSubCategory]=useState([])
-    let subCategory = []
 
     const showSubCat=(e)=>{
         const xData = e.target.parentElement.getAttribute("data-show")
@@ -55,41 +52,52 @@ const Product = (prop) => {
         }
     }
 
-    const fetchProduct = async()=>{
-        try {
-            const res = await axios.get(`${BACKEND_URL}/products`)
-            setAllProduct(res.data)
-            res.data.map((item)=>{
-                const isExist = category.includes(item.category)
-                if(!isExist){
-                  category.push(item.category)
-                  setCategory(category)
-                }
-              })
-              let maxPrice = 0
-              res.data.map((item)=>{
-                if(item.sellprice>maxPrice){
-                    maxPrice = item.sellprice
-                }
-              })
-              setMaxPrice(maxPrice)
-              setFilterPrice(maxPrice)
-        } catch (error) {
-            console.log(error)
-        }
+    const getFilterKey = async()=>{
+        let cat = []
+        let maxPrice=0
+        allProduct.map((item)=>{
+            const isExist = cat.includes(item.category)
+            if(!isExist){
+                cat.push(item.category)
+            }
+            if(item.sellprice>maxPrice){
+                maxPrice = item.sellprice
+            }
+        })
+        setCategory(cat)
+        setMaxPrice(maxPrice)
+        setFilterPrice(maxPrice)
+
     }
     
     const searchProduct = async()=>{
-        try {
-            const res = await axios.get(`${BACKEND_URL}/search/${urlSubCategory}`) 
-            console.log(res.data.data)
-        } catch (error) {
-            console.log(error)
+        const key = urlSubCategory.toLowerCase().split(' ')
+        const searchItem = allProduct.filter((item)=>{
+            const name = item.name.toLowerCase()
+            const description = item.description.toLowerCase()
+            const category = item.category.toLowerCase()
+            const subCategory = item.subCategory.toLowerCase()
+            let match = []
+            key.map((keyPoint)=>{
+                if(name.includes(keyPoint) || description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===urlSubCategory || subCategory===urlSubCategory){
+                    match.push(true)
+                }else{
+                    match.push(false)
+                }
+            })
+            if(!match.includes(false)){
+                return item
+            }
+        })
+        setAllFilterProduct(searchItem)
+        if(searchItem!=='' && searchItem!==false){
+            setTotalPage(Math.ceil(searchItem.length/no_of_item_page))
+            setAllFilterProduct(searchItem)
         }
     }
 
     const filterAllProducts = ()=>{
-        const filterallproduct = allProduct!=='' && allProduct.filter((item)=>{
+        const filterallproduct = allProduct.filter((item)=>{
             let rat = 0
             if(item.reviews.length!==0){
                 item.reviews.map((review)=>{
@@ -131,10 +139,19 @@ const Product = (prop) => {
             }
         }
     }
+    //5. showAllProductwithPaginationWise
     useEffect(()=>{
         const filterproduct = allFilterProduct.slice((currentPage-1)*no_of_item_page,((currentPage-1)*5)+no_of_item_page)
         setFilterProduct(filterproduct)
     },[currentPage,totalPage,allFilterProduct])
+    //4.getfilterWiseAllProduct
+    useEffect(()=>{
+        setCurrentPage(1)
+        if(!params.includes('?search=')){
+            filterAllProducts()
+        }
+    },[filterSubCategory,rating,filterPrice])
+    //3. getAppliedFilter
     useEffect(()=>{
         setCurrentPage(1)
         if(params.includes('?search=') && urlSubCategory!==''){
@@ -145,20 +162,19 @@ const Product = (prop) => {
         }else{
             setfilterSubCategory([])
         }
-        fetchProduct()
         //  eslint-disable-next-line react-hooks/exhaustive-deps
-    },[urlSubCategory])
+    },[urlSubCategory,allProduct])
+    //2. getallProduct
+    useEffect(()=>{
+        getFilterKey()
+    },[allProduct])
+    //1. getuser
     useEffect(()=>{
         setCurrentPage(1)
-        setUserId(prop.user._id)
-    },[prop.user])
-    useEffect(()=>{
-        setCurrentPage(1)
-        filterAllProducts()
-    },[filterSubCategory,rating,filterPrice])
-  return (
+        setUserId(props.user._id)
+    },[props.user])
+    return (
     <div>
-        <div className='fixed top-0 left-0 z-50 w-full' style={{height:"20vh"}}><Header user={prop.user}/></div>
         <div className=' mt-44 sm:mt-36 w-full flex fixed'>
         <aside className={` bg-gray-200 ${(showFilter)?'left-0':' -left-60 '} absolute z-20 md:static h-full md:h-auto w-1/5 transition-all`} style={{minWidth:"230px",maxWidth:"300px"}}>
         <span className='absolute left-full py-3 border rounded-lg rounded-l-none bg-white text-fuchsia-800 px-2 cursor-pointer text-xl md:hidden mt-2' onClick={()=>{setShowFilter(!showFilter)}} ><FaFilter/></span>
@@ -177,6 +193,7 @@ const Product = (prop) => {
                 <h1 className='text-2xl font-semibold px-3 text-fuchsia-950 py-3'>Category</h1>
                 {
                     category!=='' && category.map((cat,I)=>{
+                        let subCategory = []
                         return <div key={I} className='h-12 data-[show=true]:h-full  overflow-hidden mb-1' data-show="false">
                         <h1 className='bg-white px-3 text-xl cursor-pointer h-12 flex items-center justify-between' onClick={(e)=>{showSubCat(e)}}>{cat}<FaAngleUp className=' pointer-events-none'/><FaAngleDown className=' pointer-events-none'  style={{display:"none"}}/></h1>
                         {

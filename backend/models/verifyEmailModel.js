@@ -13,11 +13,10 @@ const verifyEmailSchema =  new mongoose.Schema({
     },
     createdAt:{
         type:Date,
-        expires:1800,
-        default:Date.now()
+        default:Date.now(),
     }
 })
-verifyEmailSchema. index( { "createdAt": 1 }, { expireAfterSeconds: process.env.EXPIRE_TOKEN_TIME } );
+verifyEmailSchema.index({ createdAt: 1 }, { expires: Number(process.env.EXPIRE_TOKEN_TIME ) })
 
 verifyEmailSchema.pre('save',async function(next){
     if(this.isModified("otp")){

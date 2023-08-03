@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import BACKEND_URL from './baseUrl'
 import axios  from 'axios'
-import { Routes, Route, location, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './Component/Header'
 import Footer from './Component/Footer'
 import Home from './Pages/Home'
@@ -31,19 +31,31 @@ const App = () => {
   const location = useLocation().pathname
   const [path,setPath]=useState('')
   const [user,setUser]=useState('')
+  const [allProduct,setAllProduct]=useState([])
   const getUser = async()=>{
     try {
       const res = await axios.get(`${BACKEND_URL}/auth/user`,{withCredentials:true})
       if(res.status===200){
-        setUser(res.data.data)
-      }
+        if(res.data.data.validated){
+          setUser(res.data.data)
+        }
+      } 
     } catch (error) {
       setUser('')
     }
 }
+const fetchProduct = async()=>{
+  try {
+    const res = await axios.get(`${BACKEND_URL}/products`)
+    setAllProduct(res.data)
+  } catch (error) {
+    alert(error.response.data.massage)
+  }
+}
 
 useEffect(()=>{
   getUser()  
+  fetchProduct()
   //  eslint-disable-next-line react-hooks/exhaustive-deps
 },[])
 useEffect(()=>{
@@ -51,11 +63,11 @@ useEffect(()=>{
 },[location])
   return (
    <>
-   <Header path={path} user={user}/>
+   <Header path={path} allProduct={allProduct} user={user}/>
     <Routes>
-      <Route path='/' element={<Home user={user}/>} />
+      <Route path='/' element={<Home user={user} getUser={getUser} allProduct={allProduct}/>} />
       <Route path='/contact' element={<Contact/>} />
-      <Route path='/products' element={<Product user={user}/>} />
+      <Route path='/products' element={<Product user={user} allProduct={allProduct}/>} />
       <Route path='/details' element={<Detail user={user} getUser={getUser}/>} />
       <Route path='/cart' element={<Cart user={user} getUser={getUser}/>} />
       <Route path='/cart/shipping' element={<Shipping user={user} getUser={getUser}/>} />
@@ -67,7 +79,7 @@ useEffect(()=>{
       <Route path='/profile' element={<Profile getUser={getUser} user={user}/>} />
       <Route path='/login' element={<Login getUser={getUser}/>} />
       <Route path='/signup' element={<SignUp/>} />
-      <Route path='/verifyemail' element={<VerifyEmail user={user}/>} />
+      <Route path='/verifyemail' element={<VerifyEmail getUser={getUser} user={user}/>} />
       <Route path='/sendresetlink' element={<SendResetLink/>} />
       <Route path='/changepass' element={<ChangePass/>} />
       <Route path='/logout' element={<Logout user={user} getUser={getUser}/>} />
