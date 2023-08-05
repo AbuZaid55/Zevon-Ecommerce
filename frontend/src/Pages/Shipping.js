@@ -9,7 +9,7 @@ const Shipping = (props) => {
   const user = props.user
   const [login,setLogin]=useState(false)
   const navigate = useNavigate()
-  const [checkboxIndex,setCheckboxIndex]=useState(0)
+  const [checkboxIndex,setCheckboxIndex]=useState(-1)
   const [address,setAddress]=useState({})
   const [showAddressForm,setshowAddressForm]=useState(false)
   const [newAddress,setNewAddress]=useState({name:"",houseNo:"",address:"",pinCode:"",city:"",state:"",phoneNo:""})
@@ -40,7 +40,11 @@ const Shipping = (props) => {
 
     const goConfirm = (e)=>{
       e.preventDefault()
-      navigate('/cart/confirm',{state:{address:address}})
+      if(address && address.name && address.address && address.phoneNo){
+        navigate('/cart/confirm',{state:{address:address}})
+      }else{
+        alert("Please Select Shipping Details")
+      }
     }
     useEffect(()=>{
       if(props.user._id){
@@ -58,7 +62,7 @@ const Shipping = (props) => {
      <div className='flex flex-wrap items-center justify-evenly'>
      {
       user.name && user.shippingDetails.map((data,i)=>{
-       return <label className={`flex items-center w-80 p-1 sm:p-4 m-1 sm:m-4 cursor-pointer ${(checkboxIndex===i)?'border-green-700 border-4':' border-fuchsia-700 border'}`} ><input className='hidden' type="checkbox" value={JSON.stringify(data)} checked={checkboxIndex===i} onChange={(e)=>{handleAddress(e,i)}}/>
+       return <label key={i} className={`flex items-center w-80 p-1 sm:p-4 m-1 sm:m-4 cursor-pointer ${(checkboxIndex===i)?'border-green-700 border-4':' border-fuchsia-700 border'}`} ><input className='hidden' type="checkbox" value={JSON.stringify(data)} checked={checkboxIndex===i} onChange={(e)=>{handleAddress(e,i)}}/>
         <div className=' pointer-events-none'>
             <h1>{data.name}</h1>
             <p>{data.houseNo} {data.address} {data.city} {data.state}</p>
@@ -70,7 +74,7 @@ const Shipping = (props) => {
       })
      }
      </div>
-    <button className={`${(user.shippingDetails.length===0)?'hidden':'flex'} items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full mx-auto my-10`} onClick={(e)=>{goConfirm(e)}} > Continue</button>
+    <button className={`${(user!=='' && user.shippingDetails.length===0)?'hidden':'flex'} items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full mx-auto my-10`} onClick={(e)=>{goConfirm(e)}} > Continue</button>
     <button className='flex items-center justify-center py-2 px-4 bg-fuchsia-800 text-white font-bold m-5 rounded-full ml-auto' onClick={()=>{setshowAddressForm(!showAddressForm)}}><FaPlus className='mr-2'/> Add Address</button>
 
 

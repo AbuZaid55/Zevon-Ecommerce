@@ -162,14 +162,14 @@ const sendResetLink = async(req,res)=>{
          }
          const alreadySend = await changePassModel.findOne({owner:user._id})
          if(alreadySend){
-             return sendError(res,"Reset Link already send")
+             return sendError(res,"Reset Link already send") 
          }
  
          const token = JWT.sign({_id:user._id,email:user.email},process.env.JWT_KEY)
          const result =  changePassModel({owner:user._id,token:token})
          await result.save()
  
-         linkSendMail(user.email,`${process.env.FRONTEND_CHANGEPASSWORD_URL}?token=${token}&id=${user._id}`)
+         linkSendMail(user.email,`${process.env.FRONTEND_URL}/changepass?token=${token}&id=${user._id}`)
          sendSuccess(res,"Reset link sent successfull to your email id")
     } catch (error) {
         console.log(error)

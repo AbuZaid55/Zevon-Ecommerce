@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import GoLogin from "../Component/GoLogin";
+import BACKEND_URL from '../baseUrl'
+import axios from 'axios'
 import {
   FaRupeeSign,
 } from "react-icons/fa";
@@ -14,13 +16,48 @@ const Confirm = (props) => {
   const [user,setUser]=useState('')
   const [login, setLogin] = useState(false);
   const [address, setAddress] = useState({});
-
+  
   const makePayment = async(e)=>{
     e.preventDefault()
-    const orderDetails = {email:user.email,address:address,item:user.cart,totalAmount:totalPrice+GST+deliveryCharge}
-    console.log(orderDetails)
-    navigate('/welcome')
+    const orderDetails = {email:user.email,address:address}
+    try {
+      if(user.email!=='' || address && address.name && address.address){
+        const res = await axios.post(`${BACKEND_URL}/order/payment/createOrder`,orderDetails)
+        initPayment(res.data.data)
+      }else{
+        alert("Invvalid shipping details")
+      }
+    } catch (error) {
+      alert(error.response.data.massage)
+    }
   }
+
+  const initPayment = (data)=>{
+    const options = {
+      key: data.razorpay_key_id, 
+      amount: data.amount, 
+      currency: "INR",
+      name: "Zevon Ecommerce",
+      order_id: data.id, 
+      handler:async function (response){
+        try {
+          console.log(response)
+            const res = await axios.post(`${BACKEND_URL}/order/payment/verify`,response)
+            props.getUser()
+            if(res.status===200){
+              alert(res.data.massage)
+              navigate('/welcome')
+            }
+          } catch (error) {
+            alert(error.response.data.massage)
+        }
+      },
+  };
+  const rzp1 = new window.Razorpay(options);
+  rzp1.open()
+  }
+
+
   useEffect(() => {
     if (props.user._id) {
       setUser(props.user)

@@ -25,7 +25,9 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/Images',express.static('Images'))
+
 app.use('/auth',require('./routes/userRouter'))
+app.use('/order',require('./routes/orderRouter'))
 app.use(require('./routes/productRouter'))
 
 app.listen(port,()=>{

@@ -89,7 +89,7 @@ const Product = (props) => {
                 return item
             }
         })
-        setAllFilterProduct(searchItem)
+        // setAllFilterProduct(searchItem)
         if(searchItem!=='' && searchItem!==false){
             setTotalPage(Math.ceil(searchItem.length/no_of_item_page))
             setAllFilterProduct(searchItem)
@@ -147,7 +147,7 @@ const Product = (props) => {
     //4.getfilterWiseAllProduct
     useEffect(()=>{
         setCurrentPage(1)
-        if(!params.includes('?search=')){
+        if(!params.includes('?search=') ||urlSubCategory===''){
             filterAllProducts()
         }
     },[filterSubCategory,rating,filterPrice])

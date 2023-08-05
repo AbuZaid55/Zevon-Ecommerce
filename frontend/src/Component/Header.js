@@ -6,6 +6,7 @@ import '../CSS/Header.css'
 import BACKEND_URL from "../baseUrl";
 
 const Header = (props) => {
+  const ref = useRef(null);
   const navigate = useNavigate()
   const allProduct = props.allProduct
   const [category,setCategory]=useState([])
@@ -53,7 +54,6 @@ const Header = (props) => {
        setShowItem(true)
   }
   const handleClickOnItem = (_id)=>{
-    console.log(_id)
     setShowItem(false)
     navigate(`/details?_id=${_id}`)
   }
@@ -62,6 +62,13 @@ const Header = (props) => {
     setShowItem(false)
     navigate(`/products?search=${search}`)
   }
+
+  const handleClickOutside = (e)=>{
+    if(!ref.current.contains(e.target)){
+      setShowItem(false)
+    }
+  }
+
   useEffect(()=>{
     if(props.user._id){
       setLogin(true)
@@ -81,7 +88,6 @@ const Header = (props) => {
     }
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[props.user])
-
   useEffect(()=>{
     handleSearch()
     //  eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,15 +95,18 @@ const Header = (props) => {
   useEffect(()=>{ 
       getCategory()
   },[allProduct])
+  useEffect(()=>{
+    document.addEventListener('click',handleClickOutside,true)
+  },[])
   return (
     <div id="header" className={` ${(props.path==='/products')?'fixed top-0 left-0 ':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}
       <div className="flex items-center justify-between h-20 sm:px-8 px-2 border-b border-fuchsia-950">
         <Link to="/"><h1 className=" sm:block text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link>
         <form className="sm:flex hidden w-full max-w-3xl relative sm:mx-5" onSubmit={(e)=>{submitSearch(e)}}>
-          <div className="w-full relative ">
-          <input onBlur={()=>{setShowItem(false)}} className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
-          <div className={`${(search==='' || showitem===false)?'hidden':''} absolute top-full z-50 w-full overflow-auto scrollbar-hide shadow-2xl border-x-2 mt-1 rounded-xl`}>
+          <div className="w-full relative " ref={ref}>
+          <input ref={ref} className=" w-full border px-4 py-2 rounded-md text-fuchsia-950 border-fuchsia-950" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
+          <div  className={`${(search==='' || showitem===false)?'hidden':''} absolute top-full z-50 w-full overflow-auto scrollbar-hide shadow-2xl border-x-2 mt-1 rounded-xl`}>
           {searchItem.map((item,i)=>{
             if(i<6){
               return <span key={i} onClick={()=>{handleClickOnItem(item._id)}} className="flex bg-white border-y py-2 px-3 cursor-pointer w-full overflow-hidden whitespace-nowrap hover:bg-fuchsia-50"><img className="mr-3" src={`${(item.thumbnail!=='')?`${BACKEND_URL}/Images/${item.thumbnail}`:"/Images/profile.jpg"}`} style={{width:'30px',height:'30px'}} alt="" />{item.name}</span>
@@ -110,7 +119,7 @@ const Header = (props) => {
         <Link to="/login"><button className={`bg-fuchsia-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(login)?'hidden':'block'}`}>Login</button></Link>
         {/* dropdown1  */}
         <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-fuchsia-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-fuchsia-950 mr-2" src={userProfile} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg hidden sm:block">{props.user.name}</span></span>
-        <ul className={`absolute -left-2 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
+        <ul className={`absolute -left-2 sm:-left-0 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
           <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/profile" className="flex items-center justify-left text-fuchsia-950"><FaUser className="m-3 hidden sm:block text-fuchsia-950"/>Profile</Link></li>
           <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-fuchsia-950"><FaTh className="m-3 hidden sm:block text-fuchsia-950"/>Dashboard</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/cart" className="flex items-center justify-left text-fuchsia-950"><FaShoppingCart className="m-3 hidden sm:block text-fuchsia-950"/>Cart</Link></li>

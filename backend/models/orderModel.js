@@ -16,12 +16,68 @@ const orderSchema = mongoose.Schema({
         type:String,
         required:true
     },
-    totalAmount:{
+    totalPaidAmount:{
+        type:Number,
+        required:true
+    },
+    status:{
+        type:String,
+        requried:true,
+        enum:["Processing","Confirmed","Shipped","Out For Delivery","Delivered","Cancelled","Refund"],
+        default:"Processing"
+    },
+    item:[
+        {
+            
+            productId:{
+                type:String,
+                requried:true
+            },
+            name:{
+                type:String,
+                required:true
+            },
+            thumbnail:{
+                type:String,
+                required:true
+            },
+            size:{
+                type:String
+            },
+            color:{
+                type:String,
+            },
+            price:{
+                type:Number,
+                required:true
+            },
+            qty:{
+                type:Number,
+                required:true
+            },
+            deliveryCharge:{
+                type:String,
+                required:true
+            },
+            GST:{
+                type:String,
+                requried:true
+            }
+        }
+    ],
+    razorpay_payment_id:{
+        type:String,
+        requried:true
+    },
+    razorpay_order_id:{
         type:String,
         required:true
     },
-    username:{
-        type:String,
+    createdAt:{
+        type:Date,
+        default:Date.now(),
         required:true
-    },
+    }
 })
+
+module.exports = mongoose.model("order",orderSchema)

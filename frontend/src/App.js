@@ -32,6 +32,7 @@ const App = () => {
   const [path,setPath]=useState('')
   const [user,setUser]=useState('')
   const [allProduct,setAllProduct]=useState([])
+
   const getUser = async()=>{
     try {
       const res = await axios.get(`${BACKEND_URL}/auth/user`,{withCredentials:true})
@@ -43,15 +44,15 @@ const App = () => {
     } catch (error) {
       setUser('')
     }
-}
-const fetchProduct = async()=>{
+  }
+  const fetchProduct = async()=>{
   try {
     const res = await axios.get(`${BACKEND_URL}/products`)
     setAllProduct(res.data)
   } catch (error) {
     alert(error.response.data.massage)
   }
-}
+  }
 
 useEffect(()=>{
   getUser()  
@@ -71,7 +72,7 @@ useEffect(()=>{
       <Route path='/details' element={<Detail user={user} getUser={getUser}/>} />
       <Route path='/cart' element={<Cart user={user} getUser={getUser}/>} />
       <Route path='/cart/shipping' element={<Shipping user={user} getUser={getUser}/>} />
-      <Route path='/cart/confirm' element={<Confirm user={user}/>} />
+      <Route path='/cart/confirm' element={<Confirm getUser={getUser} user={user}/>} />
       <Route path='/orders' element={<Order user={user}/>} />
       <Route path='/track' element={<TrackOrder/>} />
       <Route path='/welcome' element={<WelcomOrder user={user}/>} />

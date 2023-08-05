@@ -7,7 +7,7 @@ const TrackOrder = () => {
    useEffect(()=>{
      if(status==="Processing"){
       setTrack(15)
-    }else if(status==="Order Confirmed"){
+    }else if(status==="Confirmed"){
       setTrack(40)
     }else if(status==="Shipped"){
       setTrack(60)
