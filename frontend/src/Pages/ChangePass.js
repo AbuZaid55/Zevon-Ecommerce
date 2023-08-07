@@ -23,7 +23,7 @@ const ChangePass = () => {
   }
   return (
     <div className='w-full flex items-center justify-center my-5'>
-    <form className='w-full md:w-1/3 p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}}>
+    <form className='w-full p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}} style={{maxWidth:'500px'}}>
           <h1 className='text-3xl text-center font-bold text-fuchsia-900 mb-3 mt-2 border-b border-fuchsia-950 pb-3'>Change data</h1>
           <label className='mt-3 text-fuchsia-950' htmlFor="new_pass">New data</label>
           <input className='w-full border-b border-fuchsia-950 mb-3 text-fuchsia-950' name='new_pass' type="text" placeholder='Enter your new data' id='new_pass' value={data.new_pass} onChange={(e)=>{handleInput(e)}}/>

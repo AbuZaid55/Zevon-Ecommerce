@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import Header from '../Component/Header'
+import React, { useEffect, useState, useRef} from 'react'
 import Footer from '../Component/Footer'
 import {useLocation} from 'react-router-dom'
 import { FaAngleDown,FaAngleUp,FaFilter,FaRupeeSign,FaStar,FaArrowRight,FaArrowLeft} from 'react-icons/fa';
@@ -7,6 +6,7 @@ import Card from '../Component/Card'
 import { no_of_item_page } from '../baseUrl';
 
 const Product = (props) => {
+    const ref = useRef(null)
     const params = (useLocation().search);
     const subCategoryParams = params.slice(params.indexOf('=')+1)
     const urlSubCategory = subCategoryParams.replaceAll('%20',' ')
@@ -139,6 +139,15 @@ const Product = (props) => {
             }
         }
     }
+    const handleClickOutside = (e)=>{
+        try {
+          if(!ref.current.contains(e.target)){
+            setShowFilter(false)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
     //5. showAllProductwithPaginationWise
     useEffect(()=>{
         const filterproduct = allFilterProduct.slice((currentPage-1)*no_of_item_page,((currentPage-1)*5)+no_of_item_page)
@@ -173,10 +182,14 @@ const Product = (props) => {
         setCurrentPage(1)
         setUserId(props.user._id)
     },[props.user])
+    useEffect(()=>{
+        document.addEventListener('click',handleClickOutside,true)
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
+      },[])
     return (
     <div>
         <div className=' mt-44 sm:mt-36 w-full flex fixed'>
-        <aside className={` bg-gray-200 ${(showFilter)?'left-0':' -left-60 '} absolute z-20 md:static h-full md:h-auto w-1/5 transition-all`} style={{minWidth:"230px",maxWidth:"300px"}}>
+        <aside ref={ref} className={` bg-gray-200 ${(showFilter)?'left-0':' -left-60 '} absolute z-20 md:static h-full md:h-auto w-1/5 transition-all`} style={{minWidth:"230px",maxWidth:"300px"}}>
         <span className='absolute left-full py-3 border rounded-lg rounded-l-none bg-white text-fuchsia-800 px-2 cursor-pointer text-xl md:hidden mt-2' onClick={()=>{setShowFilter(!showFilter)}} ><FaFilter/></span>
             <div className=' overflow-y-scroll scrollbar-hide pb-10' style={{height:"80vh"}}>
             <div>

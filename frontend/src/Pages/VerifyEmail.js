@@ -50,7 +50,7 @@ const VerifyEmail = (props) => {
   return (
    <>
    <div className='w-full flex items-center justify-center my-5'>
-      <form className='w-full sm:w-2/3 lg:w-1/3 p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}}>
+      <form className='w-full p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}} style={{maxWidth:'500px'}}>
             <h1 className='text-3xl text-center font-bold text-fuchsia-900 mb-3 mt-2 '>Verify your Email!</h1>
             <p className='text-center'>Please Enter 4-digit verification code that was send to your email id </p>
             <p className='text-center'>The code is valid for 30 minutes.</p>

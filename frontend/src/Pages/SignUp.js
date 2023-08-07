@@ -26,7 +26,7 @@ const SignUp = (props) => {
   }
   return (
     <div className='w-full flex items-center justify-center my-5'>
-      <div className='w-full md:w-1/3 p-4 flex flex-col'>
+      <div className='w-full p-4 flex flex-col' style={{maxWidth:'500px'}}>
             <h1 className='text-3xl text-center font-bold text-fuchsia-900 mb-3 mt-2 border-b border-fuchsia-950 pb-3'>Sign Up</h1>
             <label className='mt-3 text-fuchsia-950' htmlFor="name">Name</label>
             <input className='w-full border-b border-fuchsia-950 mb-3 text-fuchsia-950' name='name' type="text" placeholder='Enter your Name' id='name' value={newUser.name} onChange={(e)=>{handleInput(e)}}/>

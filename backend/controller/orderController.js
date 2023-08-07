@@ -119,8 +119,50 @@ const getOrders = async(req,res)=>{
     }
 }
 
+const trackOrder = async(req,res)=>{
+    const {orderId}=req.body
+    if(!orderId || orderId===''){
+        return sendError(res,"Order id not found!")
+    }
+    try {
+        const order = await orderModel.findById(orderId)
+        if(!order){
+            return sendError(res,"Order not found!")
+        }
+        sendSuccess(res,"Order Status",order.status)
+    } catch (error) {
+        sendError(res,"Order not found!")
+    }
+}
+
+const cancleOrder = async(req,res)=>{
+    const {orderId,userId}=req.body
+    if(orderId===''){
+        return sendError(res,"Something Went Wrong!")
+    }
+    if(userId===''){
+        return sendError(res,"Invalid User!")
+    }
+    try {
+        const order = await orderModel.findById(orderId)
+        if(!order){
+            return sendError(res,"Order not found")
+        }
+        if(!order.userId===userId){
+            return sendError(res,"Invalid User!")
+        }
+        order.status = "Cancelled"
+        await order.save()
+        sendSuccess(res,"Your Order is successfully canceled")
+    } catch (error) {
+        sendError(res,"Something Went Wrong!")
+    }
+}
+
 module.exports = {
     createOrder,
     paymentVerify,
     getOrders,
+    trackOrder,
+    cancleOrder,
 }

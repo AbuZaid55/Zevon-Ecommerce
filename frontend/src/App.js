@@ -21,7 +21,6 @@ import Page404 from './Pages/Page404';
 import VerifyEmail from './Pages/VerifyEmail'
 import WelcomOrder from './Pages/WelcomOrder';
 import TrackOrder from './Pages/TrackOrder';
-import Logout from './Pages/Logout';
 
 import Dashboard from './Pages/Dashboard';
 import AddProduct from './Pages/AddProduct';
@@ -50,7 +49,7 @@ const App = () => {
     const res = await axios.get(`${BACKEND_URL}/products`)
     setAllProduct(res.data)
   } catch (error) {
-    alert(error.response.data.massage)
+    console.log(error)
   }
   }
 
@@ -64,7 +63,7 @@ useEffect(()=>{
 },[location])
   return (
    <>
-   <Header path={path} allProduct={allProduct} user={user}/>
+   <Header path={path} allProduct={allProduct} getUser={getUser} user={user}/>
     <Routes>
       <Route path='/' element={<Home user={user} getUser={getUser} allProduct={allProduct}/>} />
       <Route path='/contact' element={<Contact/>} />
@@ -83,7 +82,6 @@ useEffect(()=>{
       <Route path='/verifyemail' element={<VerifyEmail getUser={getUser} user={user}/>} />
       <Route path='/sendresetlink' element={<SendResetLink/>} />
       <Route path='/changepass' element={<ChangePass/>} />
-      <Route path='/logout' element={<Logout user={user} getUser={getUser}/>} />
       {/* ///////////// */}
       <Route path='/admin/dashboard' element={<Dashboard user={user}/>} />
       <Route path='/admin/dashboard/addproduct' element={<AddProduct user={user}/>} />

@@ -18,7 +18,7 @@ const SendResetLink = () => {
   }
   return (
     <div className='w-full flex items-center justify-center my-5'>
-      <form className='w-full md:w-1/3 p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}}>
+      <form className='w-full p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}} style={{maxWidth:'500px'}}>
             <h1 className='text-3xl text-center font-bold text-fuchsia-900 mb-3 mt-2 '>Change Password</h1>
             <p className='text-center'>Send link to your email id </p>
             <p className='text-center'>The link is valid for 30 minutes.</p>

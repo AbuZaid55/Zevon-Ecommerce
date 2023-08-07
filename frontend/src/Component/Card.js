@@ -38,13 +38,6 @@ const Card = (props) => {
      }
     }
    }
-  //  useEffect(()=>{
-  //   let rat = 0
-  //   reviews.map((review)=>{
-  //     setRating(rating+review.rating)
-  //   })
-  //   console.log(rating)
-  //  },[])
   return (
     <div className=' w-44 sm:w-52 md:w-60 lg:w-72 border-2 mt-2 lg:m-4 p-1 sm:p-4' >
         <div className='w-full h-40 sm:h-44 md:h-56 lg:h-64'><img className='min-h-full w-full' src={(thumbnail!=='')?`${BACKEND_URL}/Images/${thumbnail}`:""} alt="Pic" /></div>
