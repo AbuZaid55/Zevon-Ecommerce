@@ -5,7 +5,7 @@ const auth=async(req,res,next)=>{
     try{
         const token = req.cookies.ZevonToken 
         const googleVerified = req.isAuthenticated() && req.user
-        if(googleVerified){
+        if(googleVerified){ 
             const user = await userModel.findOne({email:req.user})
             if(!user){
                 return sendError(res,"Unauthorized user")

@@ -4,6 +4,7 @@ import GoLogin from '../Component/GoLogin';
 import { Link } from 'react-router-dom';
 import BACKEND_URL from '../baseUrl'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Order = (props) => {
   const [login,setLogin]=useState(true)
@@ -13,29 +14,33 @@ const Order = (props) => {
 
 
   const getOrders = async()=>{
+    props.setLoader2(true)
     try {
       const orders = await axios.post(`${BACKEND_URL}/order/getOrders`,{_id:props.user._id})
       setOrders(orders.data.data.reverse())
     } catch (error) {
       console.log(error)
     }
+    props.setLoader2(false)
   }
 
   const cancleOrder = async(_id)=>{
+    props.setLoader2(true)
     if(_id===''){
-      alert("Something Went Wrong!")
+      toast.error("Something Went Wrong!")
     }else if(!props.user._id){
-      alert("Invalid User")
+      toast.error("Invalid User")
     }else{
       try {
         const res = await axios.post(`${BACKEND_URL}/order/cancleOrder`,{orderId:_id,userId:props.user._id})
         getOrders()
         setShowCancleForm(false)
-        alert(res.data.massage)
+        toast.success(res.data.massage)
       } catch (error) {
-        alert(error.response.data.massage)
+        toast.error(error.response.data.massage)
       }
     }
+    props.setLoader2(false)
   }
 
   useEffect(()=>{
@@ -62,7 +67,7 @@ const Order = (props) => {
               return <div key={i} className="flex border my-1 items-center">
               <img className="m-2" style={{width:"80px" , height:"80px"}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" />
               <div className='w-full'>
-              <h1 className=' lg:text-2xl font-semibold'>{item.name}</h1>
+              <Link to={`/details?_id=${item.productId}`}><h1 className=' lg:text-2xl font-semibold'>{item.name}</h1></Link>
               <div className='flex items-center justify-between flex-wrap'>
               <p className="lg:text-xl mx-2">Size: {item.size}</p>
               <p className="flex items-center lg:text-xl mx-2">Color: <span className="w-5 h-5 inline-block ml-1 rounded-full" style={{backgroundColor:item.color}}></span></p>

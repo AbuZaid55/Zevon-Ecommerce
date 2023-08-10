@@ -1,0 +1,22 @@
+#addProduct{
+    min-height: 100vh;
+    width: 100%;
+    & #mainButton{
+        width: 100%;
+        @include flex(row);
+        justify-content:space-between;
+        margin: 3rem 0;
+        & button{
+            color: white;
+            padding: 10px 8px;
+            width: 10rem;
+            border-radius: 8px;
+            &:first-child{
+                background-color: $button-color;
+            }
+            &:nth-child(2){
+                background-color: green;
+            }
+        }
+    }
+}

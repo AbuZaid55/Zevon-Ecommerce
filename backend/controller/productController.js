@@ -1,6 +1,7 @@
 const {sendError, sendSuccess }= require('../sendResponse')
 const productModel = require("../models/productModel")
 const userModel = require("../models/userModel")
+const orderModel = require('../models/orderModel')
 const fs = require("fs")
 
 const products = async(req,res)=>{
@@ -37,7 +38,7 @@ const updataProduct = async(req,res)=>{
         const highlight = (req.body.highlight!=='')?JSON.parse(req.body.highlight):[]
         const images = []
         img.map((item)=>{ images.push(item.filename)})
-        const {productId,name,description,stock,maxprice,sellprice,category,subCategory,COD,color,size}=req.body
+        const {productId,name,description,stock,maxprice,sellprice,deliveryCharge,category,subCategory,color,size,GST}=req.body
         if(productId==''){
             return sendError(res,"Invalid Porduct Id!")
         }
@@ -45,7 +46,8 @@ const updataProduct = async(req,res)=>{
             return sendError(res,"All field are required!")
         }
         if(thumbnail==='' && images.length==0){
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,COD,color,size,highlight}}) 
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,deliveryCharge,GST,subCategory,color,size,highlight}}) 
+            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST}})
         }
         const dbProduct = await productModel.findById(productId)
         if(thumbnail!='' && images.length==0){
@@ -54,7 +56,9 @@ const updataProduct = async(req,res)=>{
             } catch (error) {
                 console.log(error)
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,COD,color,size,highlight,thumbnail}})
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,thumbnail}})
+            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
+            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumbnail}})
         }
         if(thumbnail=='' && images.length!=0){
             try {
@@ -64,7 +68,7 @@ const updataProduct = async(req,res)=>{
             } catch (error) {
                 console.log(error)
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,COD,color,size,highlight,images}})
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,images}})
         }
         if(thumbnail!='' && images.length!=0){
             try {
@@ -79,7 +83,9 @@ const updataProduct = async(req,res)=>{
             } catch (error) {
                 console.log(error)
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,COD,color,size,thumbnail,images}})
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,thumbnail,images}}) 
+            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
+            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumbnail}})
         }
         sendSuccess(res,"Product update successfully")
     } catch (error) {

@@ -4,6 +4,7 @@ const crypto  = require("crypto")
 const userModel = require('../models/userModel')
 const orderModel = require('../models/orderModel')
 const failedPaymentModel = require('../models/PaymentFailed')
+const PaymentModel = require('../models/Payment')
 
 let userEmail = ''
 let shippingDetails = ''
@@ -71,6 +72,14 @@ const paymentFailed = async(razorpay_payment_id,razorpay_order_id)=>{
         console.log(error)
     }
 }
+const successPayment = async(razorpay_payment_id,razorpay_order_id)=>{
+    try {
+        const user = await userModel.findOne({email:userEmail})
+        await PaymentModel({username:user.name,email:user.email,userId:user._id,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,razorpay_payment_id:razorpay_payment_id,razorpay_order_id,razorpay_order_id}).save()
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const paymentVerify = async(req,res)=>{
     const {razorpay_order_id,razorpay_payment_id,razorpay_signature}=req.body 
@@ -91,7 +100,7 @@ const paymentVerify = async(req,res)=>{
 
             user.cart=[]
             await user.save()
-
+            successPayment(razorpay_payment_id,razorpay_order_id)
             return sendSuccess(res,"Your Order has been Placed successfully")
         }else{
             paymentFailed(razorpay_payment_id,razorpay_order_id)

@@ -4,7 +4,7 @@ import { FaInstagram,FaDiscord,FaLinkedin,FaGithub,FaHome,FaRegAddressBook,FaPho
 
 const Footer = (props) => {
   return (
-    <div className={` ${(props.path==='/products')?'hidden':'flex'} bg-gray-300 items-center justify-around py-5 flex-wrap`}>
+    <div className={` ${(props.path==='/products' || props.path && props.path.includes('/admin'))?'hidden':'flex'} bg-gray-300 items-center justify-around py-5 flex-wrap`}>
       <div className='hidden lg:block'><Link to="/"><h1 className="mx-3 text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link></div>
       <div className='hidden lg:block mt-0 mx-3' style={{width:'260px'}}>
         <h1 className='text-3xl border-b-4 p-2 border-black font-bold mb-3'>Pages</h1>

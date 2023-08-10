@@ -1,10 +1,11 @@
 import React, { useState ,useEffect, useRef } from "react";
 import {Link, useNavigate} from 'react-router-dom'
-import { FaSearch,FaTh , FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
-import { FaArrowRightFromBracket} from 'react-icons/fa6';
 import '../CSS/Header.css'
 import BACKEND_URL from "../baseUrl";
 import axios from "axios";
+import { toast } from 'react-toastify'
+import { FaArrowRightFromBracket} from 'react-icons/fa6';
+import { FaSearch,FaTh , FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
 
 const Header = (props) => {
   const ref = useRef(null);
@@ -79,6 +80,7 @@ const Header = (props) => {
   }
 
   const logout = async()=>{
+    props.setLoader2(true)
     try {
         const res = await axios.get(`${BACKEND_URL}/auth/logout`,{withCredentials:true})
         if(res.status===202){
@@ -87,8 +89,9 @@ const Header = (props) => {
             navigate('/login')
         }
     } catch (error) {
-        alert(error.response.data.massage)
+        toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
 }
 
   useEffect(()=>{
@@ -123,7 +126,7 @@ const Header = (props) => {
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[])
   return (
-    <div id="header" className={` ${(props.path==='/products')?'fixed top-0 left-0 ':''} z-50 w-full bg-white top-0 h-36`}>
+    <div id="header" className={` ${(props.path==='/products')?'fixed top-0 left-0 ':''} ${(props.path.includes('/admin'))?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}
       <div className="flex items-center justify-between h-20 sm:px-8 px-2 border-b border-fuchsia-950">
         <Link to="/"><h1 className=" sm:block text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link>
@@ -148,7 +151,7 @@ const Header = (props) => {
           <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-fuchsia-950"><FaTh className="m-3 hidden sm:block text-fuchsia-950"/>Dashboard</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/cart" className="flex items-center justify-left text-fuchsia-950"><FaShoppingCart className="m-3 hidden sm:block text-fuchsia-950"/>Cart</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/orders" className="flex items-center justify-left text-fuchsia-950"><FaShoppingBag className="m-3 hidden sm:block text-fuchsia-950"/>Order</Link></li>
-          <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link onClick={()=>{setShowLogoutform(true)}} className="flex items-center justify-left text-fuchsia-950"><FaArrowRightFromBracket className="m-3 hidden sm:block text-fuchsia-950"/>Log Out</Link></li>
+          <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><span onClick={()=>{setShowLogoutform(true)}} className="flex items-center justify-left text-fuchsia-950"><FaArrowRightFromBracket className="m-3 hidden sm:block text-fuchsia-950"/>Log Out</span></li>
         </ul>
         </div>
         {/* dropdown1 end */}

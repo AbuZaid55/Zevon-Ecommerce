@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { FaGoogle } from "react-icons/fa";
 import BACKEND_URL from '../baseUrl';
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const SignUp = (props) => {
   const navigate = useNavigate()
@@ -11,15 +12,17 @@ const SignUp = (props) => {
     setNewUser({...newUser,[e.target.name]:e.target.value})
   }
   const submitForm = async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/signup`,newUser)
       setNewUser({name:"",email:"",password:"",confirm_pass:""})
       navigate('/verifyemail',{state:{userId:res.data.data._id,path:'signup'}})
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
   const googleSignUp = async()=>{
     window.open(`${BACKEND_URL}/auth/google`,'_self')

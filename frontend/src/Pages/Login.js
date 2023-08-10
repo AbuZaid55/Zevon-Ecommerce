@@ -3,6 +3,7 @@ import { Link,useLocation,useNavigate } from 'react-router-dom'
 import { FaGoogle } from "react-icons/fa";
 import BACKEND_URL from '../baseUrl'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 const Login = (prop) => {
   const location  = useLocation()
@@ -13,12 +14,13 @@ const Login = (prop) => {
     setUser({...user,[e.target.name]:e.target.value})
   }
   const submitForm = async(e)=>{
+    prop.setLoader2(true)
     e.preventDefault()
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/login`,user,{withCredentials:true})
       setUser({email:"",password:""})
       if(res.data.massage==="!verified"){
-        alert("Otp has been sent to your email id")
+        toast.success("Otp has been sent to your email id")
         navigate('/verifyEmail',{state:{userId:res.data.data._id,path:'login'}})
       }else{
         prop.getUser()
@@ -29,8 +31,9 @@ const Login = (prop) => {
         }
       }
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    prop.setLoader2(false)
   }
   const googleLogin = async()=>{
     window.open(`${BACKEND_URL}/auth/google`,'_self')

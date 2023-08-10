@@ -8,6 +8,9 @@ import { FaAngleLeft ,FaAngleRight } from 'react-icons/fa';
 import BACKEND_URL from '../baseUrl';
 import { no_of_item_silder } from '../baseUrl';
 import axios from 'axios'
+import { toast } from 'react-toastify'
+
+
 const Details = (prop) => {
   const user = prop.user
   const location = useLocation()
@@ -39,13 +42,14 @@ const Details = (prop) => {
 
   }
   const fetchProductDetails = async()=>{
+    prop.setLoader2(true)
     try {
       const res = await axios.get(`${BACKEND_URL}/products`)
       const product = res.data.filter((item)=>{
         return item._id===productId
       })
       if(product.length===0){
-        alert("No product found!")
+        toast.error("No product found!")
         navigate('/page404')
       }else{
         setProduct(product[0])
@@ -67,11 +71,13 @@ const Details = (prop) => {
         }
       }
     } catch (error) {
-      alert("Unable to fetch product!")
+      toast.error("Unable to fetch product!")
     }
+    prop.setLoader2(false)
   }
   const submitReview = async()=>{
-    if(user===''){
+    prop.setLoader2(true)
+    if(user==='' || user==='Not Found!'){
       navigate('/login',{state:{path:fullPath}})
     }else{
       try {
@@ -80,20 +86,21 @@ const Details = (prop) => {
         setComment('')
         setShowReviewForm(false)
         fetchProductDetails()
-        alert(res.data.massage)
+        toast.success(res.data.massage)
       } catch (error) {
         const massage = error.response.data.massage
         if(massage==="Invalid User"){
           navigate('/login',{state:{path:fullPath}})
         }else{
-          alert(massage)
+          toast.error(massage)
         }
       }
     }
+    prop.setLoader2(false)
   }
   const addToCart = async(e)=>{
     e.preventDefault()
-   if(user===''){
+   if(user==='' || user==='Not Found!'){
     navigate('/login',{state:{path:fullPath}})
    }else{
     try {
@@ -102,13 +109,13 @@ const Details = (prop) => {
       setQty(1)
       setColor('')
       prop.getUser()
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
       const massage = error.response.data.massage
       if(massage==='Invalid User'){
         navigate('/login',{state:{path:fullPath}})
       }else{
-        alert(massage)
+        toast.error(massage)
       }
     }
    }
@@ -155,7 +162,7 @@ return (<>
       <div className='flex'>
         {
           product.size.map((Size,i)=>{
-            return <span key={i} className={`mr-3 border-2 w-9 h-9 flex items-center justify-center cursor-pointer rounded ${(size===Size)?'border-black':''}`} onClick={()=>{setSize(Size)}}>{Size}</span>
+            return <span key={i} className={`mr-3 border-2 px-1 flex items-center justify-center cursor-pointer rounded ${(size===Size)?'border-black':''}`} style={{minWidth:'30px', minHeight:'30px'}} onClick={()=>{setSize(Size)}}>{Size}</span>
           })
         }
       </div>
@@ -211,7 +218,7 @@ return (<>
             similarProduct.map((item,i)=>{
               iteminSlider = iteminSlider+1 
               if(iteminSlider<=no_of_item_silder){
-                return <Card key={i} product={item} userId={user._id}/> 
+                return <Card setLoader2={prop.setLoader2} key={i} product={item} userId={user._id}/> 
               }
             })
            }

@@ -4,6 +4,7 @@ import { FaCamera,FaPlus, FaTrash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import BACKEND_URL from '../baseUrl';
 import axios from 'axios';
+import { toast } from 'react-toastify'
 
 const Profile = (props) => {
   const [login,setLogin]=useState(false)
@@ -17,6 +18,7 @@ const Profile = (props) => {
   }
 
   const addShippingDetails=async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     try {
       newAddress["_id"]=user._id
@@ -24,35 +26,40 @@ const Profile = (props) => {
       setNewAddress({name:"",houseNo:"",address:"",pinCode:"",city:"",state:"",phoneNo:""})
       setshowAddressForm(false)
       props.getUser()
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
 
   const deleteShippingDetails=async(i)=>{
+    props.setLoader2(true)
     console.log(i)
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/deleteShippingDetails`,{_id:user._id,index:i})
       props.getUser()
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
 
   const uploadProfile=async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     const formdata = new FormData()
     formdata.append("_id",user._id)
     formdata.append("profile",e.target.files[0])
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/uploadProfile`,formdata)
-      alert(res.data.massage)
+      toast.success(res.data.massage)
       props.getUser()
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
 
   useEffect(()=>{
@@ -95,9 +102,10 @@ const Profile = (props) => {
         <h1 className='text-center text-3xl sm:text-4xl font-semibold my-10'>Prosonal Information</h1>
         <div className='w-full lg:w-5/6 mx-auto my-10 flex items-center sm:items-start flex-col '>
           <div className='pl-3'>
-          <h1 className='text-xl sm:text-3xl my-5 px-5'>Name: {user.name}</h1>
-          <h1 className='text-xl sm:text-3xl my-5 px-5'>Email:{user.email}</h1>
-          <h1 className='text-xl sm:text-3xl my-5 px-5'>Shipping Address:-</h1>
+          <h1 className='text-xl sm:text-3xl my-5 px-5'>Name : {user.name}</h1>
+          <h1 className='text-xl sm:text-3xl my-5 px-5'>Email : {user.email}</h1>
+          <h1 className='text-xl sm:text-3xl my-5 px-5'>User Id : {user._id}</h1>
+          <h1 className='text-xl sm:text-3xl my-5 px-5'>Shipping Address :-</h1>
           </div>
           <div className='flex flex-wrap items-center justify-evenly'>
           {user.shippingDetails.map((data,i)=>{

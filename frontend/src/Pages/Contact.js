@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import BACKEND_URL from '../baseUrl'
+import { toast } from 'react-toastify'
 
 const Contact = () => {
   const [details,setDetails]=useState({name:"",email:'',phone:"",subject:"",massage:""})
@@ -12,15 +13,15 @@ const Contact = () => {
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/contact`,details)
       setDetails({name:"",email:'',phone:"",subject:"",massage:""})
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
   }
   return (
     <div>
       <div className='flex w-full m-auto border sm:mt-0 mt-5 '>
-        <img className='hidden md:block w-1/2 p-4' src="/Images/contact2.jpg" alt="Pic" />
+        <img className='hidden md:block w-1/2 p-4' src="/Images/contact.jpg" alt="Pic" />
         <form className='w-full md:w-1/2 p-4 flex flex-col' onSubmit={(e)=>{submitForm(e)}}>
             <h1 className='text-3xl text-center font-bold text-fuchsia-950 mb-3 mt-2'>Contact Us</h1>
             <label className='mt-3 text-fuchsia-950' htmlFor="name">Name</label>

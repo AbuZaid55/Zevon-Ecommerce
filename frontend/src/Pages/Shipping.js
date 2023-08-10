@@ -4,6 +4,7 @@ import {FaPlus} from 'react-icons/fa';
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
 import BACKEND_URL from '../baseUrl';
+import { toast } from 'react-toastify'
 
 const Shipping = (props) => {
   const user = props.user
@@ -25,6 +26,7 @@ const Shipping = (props) => {
     }
 
     const addShippingDetails=async(e)=>{
+      props.setLoader2(true)
       e.preventDefault()
       try {
         newAddress["_id"]=user._id
@@ -32,10 +34,11 @@ const Shipping = (props) => {
         setNewAddress({name:"",houseNo:"",address:"",pinCode:"",city:"",state:"",phoneNo:""})
         setshowAddressForm(false)
         props.getUser()
-        alert(res.data.massage)
+        toast.success(res.data.massage)
       } catch (error) {
-        alert(error.response.data.massage)
+        toast.error(error.response.data.massage)
       }
+      props.setLoader2(false)
     }
 
     const goConfirm = (e)=>{
@@ -43,7 +46,7 @@ const Shipping = (props) => {
       if(address && address.name && address.address && address.phoneNo){
         navigate('/cart/confirm',{state:{address:address}})
       }else{
-        alert("Please Select Shipping Details")
+        toast.error("Please Select Shipping Details")
       }
     }
     useEffect(()=>{

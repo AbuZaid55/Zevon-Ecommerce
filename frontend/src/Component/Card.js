@@ -3,6 +3,7 @@ import { FaStar,FaRupeeSign } from 'react-icons/fa';
 import { Link, useNavigate ,useLocation } from 'react-router-dom';
 import BACKEND_URL from '../baseUrl';
 import axios from 'axios';
+import { toast } from 'react-toastify'
 
 const Card = (props) => {
   const location  = useLocation()
@@ -27,13 +28,13 @@ const Card = (props) => {
     }else{
      try {
        const res = await axios.post(`${BACKEND_URL}/auth/addToCart`,{userId:userId,productId:_id,name:name,price:sellprice,thumbnail:thumbnail,size:'',qty:1,color:'',GST:GST,deliveryCharge:deliveryCharge})
-       alert(res.data.massage)
+       toast.success(res.data.massage)
      } catch (error) {
        const massage = error.response.data.massage
        if(massage==='Invalid User'){
          navigate('/login',{state:{path:fullPath}})
        }else{
-         alert(massage)
+         toast.error(massage)
        }
      }
     }

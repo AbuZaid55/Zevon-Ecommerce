@@ -2,14 +2,16 @@ import React,{useEffect, useState} from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
 import BACKEND_URL from '../baseUrl'
+import { toast } from 'react-toastify'
 
-const TrackOrder = () => {
+const TrackOrder = (props) => {
     const params = (useLocation().search);
     const [orderId,setOrderId]=useState('')
     const [track,setTrack]=useState(20)
     const [status,setStatus]=useState("")
 
   const fetchOrder = async(_id)=>{
+    props.setLoader2(true)
     setStatus('')
     if(_id!==''){
       try {
@@ -18,11 +20,12 @@ const TrackOrder = () => {
           setStatus(res.data.data)
         }
       } catch (error) {
-        alert(error.response.data.massage)
+        toast.error(error.response.data.massage)
       }
     }else{
-      alert("Enter Order Id")
+      toast.success("Enter Order Id")
     }
+    props.setLoader2(false)
   }
 
    useEffect(()=>{

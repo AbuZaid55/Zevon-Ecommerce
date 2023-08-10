@@ -1,0 +1,15 @@
+@import "mixin&var";
+@import "sidebar";
+@import "form";
+@import "addProduct";
+@import "updateProduct";
+@import "products";
+
+
+#main{
+    margin-left: 16rem;
+}
+
+
+@import "mediaQuery";
+@import "animation";

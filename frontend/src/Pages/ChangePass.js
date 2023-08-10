@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { useLocation ,useNavigate} from 'react-router-dom'
 import BACKEND_URL from '../baseUrl' 
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
-const ChangePass = () => {
+const ChangePass = (props) => {
   const navigate = useNavigate()
   const token = new URLSearchParams(useLocation().search).get("token")
   const userId = new URLSearchParams(useLocation().search).get("id")
@@ -12,14 +13,16 @@ const ChangePass = () => {
     setData({...data,[e.target.name]:e.target.value})
   }
   const submitForm = async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/changePass`,data)
-      alert(res.data.massage)
+      toast.success(res.data.massage)
       navigate('/')
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
   return (
     <div className='w-full flex items-center justify-center my-5'>

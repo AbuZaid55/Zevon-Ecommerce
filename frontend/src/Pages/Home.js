@@ -47,7 +47,7 @@ useEffect(()=>{
   return (
     <div className='mt-9 sm:mt-0'>
       {/* section1 */}
-      <div className=" h-40 sm:h-64 w-full sm:mt-0 mt-9">
+      <div className=" h-40 sm:h-64 md:h-80 w-full sm:mt-0 mt-9">
         <ImageSlider imgUrl={imgUrl}/>
       </div>
       {/* section2 */}

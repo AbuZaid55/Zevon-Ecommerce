@@ -152,6 +152,7 @@ const Product = (props) => {
     useEffect(()=>{
         const filterproduct = allFilterProduct.slice((currentPage-1)*no_of_item_page,((currentPage-1)*5)+no_of_item_page)
         setFilterProduct(filterproduct)
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
     },[currentPage,totalPage,allFilterProduct])
     //4.getfilterWiseAllProduct
     useEffect(()=>{
@@ -159,6 +160,7 @@ const Product = (props) => {
         if(!params.includes('?search=') ||urlSubCategory===''){
             filterAllProducts()
         }
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
     },[filterSubCategory,rating,filterPrice])
     //3. getAppliedFilter
     useEffect(()=>{
@@ -176,11 +178,13 @@ const Product = (props) => {
     //2. getallProduct
     useEffect(()=>{
         getFilterKey()
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
     },[allProduct])
     //1. getuser
     useEffect(()=>{
         setCurrentPage(1)
         setUserId(props.user._id)
+        //  eslint-disable-next-line react-hooks/exhaustive-deps
     },[props.user])
     useEffect(()=>{
         document.addEventListener('click',handleClickOutside,true)

@@ -4,6 +4,7 @@ import {useNavigate,Link} from 'react-router-dom'
 import GoLogin from '../Component/GoLogin';
 import BACKEND_URL from '../baseUrl'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Cart = (props) => {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ const goShipping = (e)=>{
 
 
 const setQty = async(e,act,productId,i)=>{
+  props.setLoader2(true)
   e.preventDefault()
   try {
     await axios.post(`${BACKEND_URL}/auth/setQty`,{action:act,productId:productId,userId:user._id,index:i})
@@ -27,14 +29,16 @@ const setQty = async(e,act,productId,i)=>{
   } catch (error) {
     const massage = error.response.data.massage
     if(massage==="Sorry, Product is Out of Stock" || massage==="Product Quentity Can't be 0" || massage==="Max Limit is 10"){
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }else{
       navigate('/login',{state:{path:'/cart'}})
     }
   }
+  props.setLoader2(false)
 }
 
 const removeItem = async(e,i)=>{
+  props.setLoader2(true)
   e.preventDefault()
   try {
     await axios.post(`${BACKEND_URL}/auth/removeCartItem`,{userId:user._id,index:i})
@@ -44,9 +48,10 @@ const removeItem = async(e,i)=>{
     if(massage==="Invalid User"){
       navigate('/login',{state:{path:'/cart'}})
     }else{
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
   }
+  props.setLoader2(false)
 }
 
 

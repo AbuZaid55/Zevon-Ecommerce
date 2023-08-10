@@ -6,6 +6,7 @@ import {
   FaRupeeSign,
 } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const Confirm = (props) => {
   const location = useLocation();
@@ -15,9 +16,10 @@ const Confirm = (props) => {
   const [deliveryCharge,setDeliveryCharge]=useState(0)
   const [user,setUser]=useState('')
   const [login, setLogin] = useState(false);
-  const [address, setAddress] = useState({});
+  const [address, setAddress] = useState({})
   
   const makePayment = async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     const orderDetails = {email:user.email,address:address}
     try {
@@ -25,14 +27,15 @@ const Confirm = (props) => {
         const res = await axios.post(`${BACKEND_URL}/order/payment/createOrder`,orderDetails)
         initPayment(res.data.data)
       }else{
-        alert("Invvalid shipping details")
+        toast.error("Invvalid shipping details")
       }
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
 
-  const initPayment = (data)=>{
+  const initPayment = (data)=>{ 
     const options = {
       key: data.razorpay_key_id, 
       amount: data.amount, 
@@ -41,17 +44,16 @@ const Confirm = (props) => {
       order_id: data.id, 
       handler:async function (response){
         try {
-          console.log(response)
             const res = await axios.post(`${BACKEND_URL}/order/payment/verify`,response)
             props.getUser()
             if(res.status===200){
-              alert(res.data.massage)
+              toast.success(res.data.massage)
               navigate('/welcome')
             }
           } catch (error) {
-            alert(error.response.data.massage)
+            toast.error(error.response.data.massage)
         }
-      },
+      }
   };
   const rzp1 = new window.Razorpay(options);
   rzp1.open()
@@ -111,7 +113,7 @@ const Confirm = (props) => {
                 className="m-2"
                 width={"80px"}
                 height={"80px"}
-                src="/Images/Products/Mens-Lightweight-Puffer-Jacket01-600x764.jpg"
+                src={`${BACKEND_URL}/Images/${item.thumbnail}`}
                 alt="Pic"
               />
               <div className="w-full flex flex-col justify-center">

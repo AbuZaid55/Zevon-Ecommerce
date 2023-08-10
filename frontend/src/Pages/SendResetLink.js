@@ -2,19 +2,22 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import BACKEND_URL from '../baseUrl';
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
-const SendResetLink = () => {
+const SendResetLink = (props) => {
   const [email,setEmail]=useState('')
   
   const submitForm = async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/sendResetLink`,{email:email})
       setEmail('')
-      alert(res.data.massage)
+      toast.success(res.data.massage)
     } catch (error) {
-      alert(error.response.data.massage)
+      toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
   return (
     <div className='w-full flex items-center justify-center my-5'>

@@ -1,0 +1,21 @@
+@media screen and (max-width:690px) {
+    .form div{
+        width: 100%;
+    }
+}
+@media screen and (max-width:940px) {
+   #main{
+        margin-left: 0;
+   }
+   #aside span{
+    display: block;
+   }
+   #aside{
+    left: -15.9rem;
+    animation: left2 0.5s ease-in-out;
+   }
+   #checkbox:checked ~ #aside{
+    left: 0;
+    animation: left 0.5s ease-in-out;
+   }
+}

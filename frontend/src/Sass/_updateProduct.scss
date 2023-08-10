@@ -1,0 +1,17 @@
+#updateProduct{
+    min-height: 100vh;
+    width: 100%;
+    & #mainButton{
+        width: 100%;
+        @include flex(row);
+        justify-content:flex-end; 
+        margin: 3rem 0;
+        & button{
+            color: white;
+            padding: 10px 8px;
+            width: 10rem;
+            border-radius: 8px;
+            background-color: green;
+        }
+    }
+}
