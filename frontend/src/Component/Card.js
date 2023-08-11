@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { FaStar,FaRupeeSign } from 'react-icons/fa';
 import { Link, useNavigate ,useLocation } from 'react-router-dom';
 import BACKEND_URL from '../baseUrl';

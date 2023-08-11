@@ -3,6 +3,7 @@ const Razorpay = require("razorpay")
 const crypto  = require("crypto")
 const userModel = require('../models/userModel')
 const orderModel = require('../models/orderModel')
+const productModel = require('../models/productModel')
 const failedPaymentModel = require('../models/PaymentFailed')
 const PaymentModel = require('../models/Payment')
 
@@ -96,12 +97,21 @@ const paymentVerify = async(req,res)=>{
                 paymentFailed(razorpay_payment_id,razorpay_order_id)
                 return sendError(res,"Payment Failed!")
             }
+            user.cart.map(async(item)=>{
+                const product = await productModel.findById(item.productId)
+                if(product.stock<=item.qty){
+                    product.stock=0
+                }else{
+                    product.stock=product.stock-item.qty
+                }
+                await product.save()
+            })
             await orderModel({username:user.name,userId:user._id,email:user.email,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,item:user.cart,razorpay_payment_id:razorpay_payment_id,razorpay_order_id:razorpay_order_id}).save()
 
             user.cart=[]
             await user.save()
             successPayment(razorpay_payment_id,razorpay_order_id)
-            return sendSuccess(res,"Your Order has been Placed successfully")
+            sendSuccess(res,"Your Order has been Placed successfully")
         }else{
             paymentFailed(razorpay_payment_id,razorpay_order_id)
             sendError(res,"Payment Failed")

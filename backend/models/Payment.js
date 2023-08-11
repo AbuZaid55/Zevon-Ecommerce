@@ -5,7 +5,7 @@ const paymentSchema = mongoose.Schema({
         required:true
     },
     userId:{
-        type:mongoose.Types.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         required:true
     },
     phoneNo:{

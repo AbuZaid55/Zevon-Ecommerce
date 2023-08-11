@@ -66,7 +66,7 @@ const productSchema = mongoose.Schema({
     reviews:[
         {
             _id:false,
-            userId:{type:mongoose.Types.ObjectId},
+            userId:{type:mongoose.Schema.Types.ObjectId,},
             username:{type:String},
             profile:{type:String},
             rating:{type:Number},

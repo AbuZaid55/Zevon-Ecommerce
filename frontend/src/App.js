@@ -98,7 +98,7 @@ useEffect(()=>{
       <Route path='/' element={<Home user={user} getUser={getUser} allProduct={allProduct}/>} />
       <Route path='/contact' element={<Contact setLoader2={setLoader2}/>} />
       <Route path='/products' element={<Product user={user} allProduct={allProduct}/>} />
-      <Route path='/details' element={<Detail setLoader2={setLoader2} user={user} getUser={getUser}/>} />
+      <Route path='/details' element={<Detail setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} getUser={getUser}/>} />
       <Route path='/cart' element={<Cart user={user} setLoader2={setLoader2} getUser={getUser}/>} />
       <Route path='/cart/shipping' element={<Shipping  setLoader2={setLoader2} user={user} getUser={getUser}/>} />
       <Route path='/cart/confirm' element={<Confirm setLoader2={setLoader2} getUser={getUser} user={user}/>} />
@@ -114,10 +114,10 @@ useEffect(()=>{
       <Route path='/changepass' element={<ChangePass setLoader2={setLoader2}/>} />
       {/* ///////////// */}
       <Route path='/admin/dashboard' element={<Dashboard user={user}/>} />
-      <Route path='/admin/dashboard/products' element={<Products user={user}/>} />
+      <Route path='/admin/dashboard/products' element={<Products allProduct={allProduct} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user}/>} />
       <Route path='/admin/dashboard/addproduct' element={<AddProduct setLoader2={setLoader2} user={user}/>} />
       <Route path='/admin/dashboard/updateproduct' element={<UpdateProduct allProduct={allProduct} fetchProduct={fetchProduct} setLoader2={setLoader2} user={user}/>} />
-      <Route path='/admin/dashboard/users' element={<Users user={user}/>} />
+      <Route path='/admin/dashboard/users' element={<Users setLoader2={setLoader2} user={user}/>} />
       <Route path='/admin/dashboard/orders' element={<Orders user={user}/>} />
       <Route path='/admin/dashboard/cancleorder' element={<CancleOrder user={user}/>} />
       <Route path='/admin/dashboard/payment' element={<Payment user={user}/>} />

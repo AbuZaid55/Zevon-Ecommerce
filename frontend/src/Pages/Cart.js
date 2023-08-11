@@ -28,10 +28,10 @@ const setQty = async(e,act,productId,i)=>{
     props.getUser()
   } catch (error) {
     const massage = error.response.data.massage
-    if(massage==="Sorry, Product is Out of Stock" || massage==="Product Quentity Can't be 0" || massage==="Max Limit is 10"){
-      toast.error(error.response.data.massage)
-    }else{
+    if(massage==="Invalid User"){
       navigate('/login',{state:{path:'/cart'}})
+    }else{
+      toast.error(error.response.data.massage)
     }
   }
   props.setLoader2(false)
@@ -76,8 +76,8 @@ useEffect(()=>{
 },[props.user])
   return (<>
   <div className={`${(login)?"hidden":""}`}><GoLogin/></div>
-  <div className={`w-full ${(login && user.cart.length===0)?"flex":"hidden"} items-center justify-center flex-col`} style={{height:"100vh"}}><h1 className="text-5xl font-bold text-fuchsia-700">No Cart Item</h1><Link to="/products" className="px-4 py-3 bg-fuchsia-700 text-white font-semibold mt-5 rounded-full">Go to Shopping</Link></div>
-    <div className={`w-full ${(login && user.cart.length!==0)?"flex":"hidden"} flex-col sm:flex-row mt-10 sm:mt-0 `}>
+  <div className={`w-full ${(login && user.cart.length===0)?"flex":"hidden"} items-center justify-center flex-col`} style={{height:"49vh"}}><h1 className="text-5xl font-bold text-fuchsia-700">No Cart Item</h1><Link to="/products" className="px-4 py-3 bg-fuchsia-700 text-white font-semibold mt-5 rounded-full">Go to Shopping</Link></div>
+    <div className={`w-full ${(login && user.cart.length!==0)?"flex":"hidden"} flex-col sm:flex-row mt-10 sm:mt-0 `} style={{minHeight:"49vh"}}>
       <div className="w-full sm:w-4/6 ">
         {/* item  */}
     {

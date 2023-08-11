@@ -20,7 +20,7 @@ app.use(cookie())
 app.use(cookieSession({
     name:"googleZevonToken",
     keys:[process.env.JWT_KEY],
-    maxAge:24*60*60*100
+    maxAge:Number(process.env.EXPIRE_COOKIE_TIME)
 })) 
 app.use(passport.initialize())
 app.use(passport.session())

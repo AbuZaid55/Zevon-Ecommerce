@@ -13,6 +13,15 @@ const user = (req,res)=>{
     sendSuccess(res,"Hello User",req.rootUser)
 }
 
+const allUser = async(req,res)=>{
+    try {
+        const allUser = await userModel.find()
+        sendSuccess(res,"All Users",allUser)
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+
 const signUp = async(req,res)=>{
     try {
         const {name,email,password,confirm_pass}=req.body 
@@ -345,7 +354,7 @@ const addToCart = async(req,res)=>{
         }
         user.cart.push({name:name,thumbnail:thumbnail,productId:productId,size:size,qty:qty,color:color,price:price,GST:GST,deliveryCharge:deliveryCharge})
         await user.save()
-        sendSuccess(res,"Product Add successfully")
+        sendSuccess(res,"Product Added successfully")
     } catch (error) {
         console.log(error)
         sendError(res,"something went wrong!")
@@ -380,10 +389,18 @@ const setQty = async(req,res)=>{
         }
         const cartItem = user.cart[index]
         if(action=='Inc'){
-            if(cartItem.qty<10){
-                cartItem.qty = cartItem.qty+1 
+            if(product.stock<10){
+                if(cartItem.qty<product.stock){
+                    cartItem.qty = cartItem.qty+1 
+                }else{
+                    return sendError(res,"Sorry, Unavailable stock!")
+                }
             }else{
-                return sendError(res,"Max Limit is 10")
+                if(cartItem.qty<10){
+                    cartItem.qty = cartItem.qty+1 
+                }else{
+                    return sendError(res,"Max Limit is 10")
+                }
             }
         }
         if(action == 'Dec'){
@@ -452,6 +469,56 @@ const contact = (req,res)=>{
     }
 }
 
+const makeAdmin = async(req,res)=>{
+    const {userId} = req.body
+    try {
+        if(userId===''){
+            return sendError(res,"User Id not Found!")
+        }
+        const user = await userModel.findById(userId)
+        if(!userId){
+            return sendError(res,"User not Found!")
+        }
+        user.admin = true
+        await user.save()
+        sendSuccess(res,"User maked admin successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+const removeAdmin = async(req,res)=>{
+    const {userId} = req.body
+    try {
+        if(userId===''){
+            return sendError(res,"User Id not Found!")
+        }
+        const totaladmin = await userModel.find({admin:true})
+        if(totaladmin.length<=1){
+            return sendError(res,"Please make admin to another")
+        }
+        const user = await userModel.findById(userId)
+        if(!userId){
+            return sendError(res,"User not Found!")
+        }
+        user.admin = false
+        await user.save()
+        sendSuccess(res,"Remove admin successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+const deleteUser = async(req,res)=>{
+    const {userId} = req.query
+    try {
+        if(userId===''){
+            return sendError(res,"User Id not Found!")
+        }
+        await userModel.findByIdAndDelete(userId)
+        sendSuccess(res,"User delete successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
 module.exports = { 
     user,
     signUp,
@@ -467,5 +534,9 @@ module.exports = {
     setQty,
     removeCartItem,
     Logout,
-    contact
+    contact,
+    allUser,
+    makeAdmin,
+    removeAdmin,
+    deleteUser
 }

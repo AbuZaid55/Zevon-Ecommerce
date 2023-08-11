@@ -41,6 +41,18 @@ const Details = (prop) => {
     window.scrollTo({top: 0, behavior: 'smooth'});
 
   }
+  const handleQty = (action)=>{
+    if(action==="Inc"){
+      if(product.stock<10){
+        setQty((qty<product.stock)?qty+1:product.stock)
+      }else{
+        setQty((qty<10)?qty+1:10)
+      }
+    }
+    if(action==="Desc"){
+      setQty((qty>1)?qty-1:1)
+    }
+  }
   const fetchProductDetails = async()=>{
     prop.setLoader2(true)
     try {
@@ -98,7 +110,18 @@ const Details = (prop) => {
     }
     prop.setLoader2(false)
   }
+  const deleteReview = async(userId)=>{
+    try {
+      const res = await axios.post(`${BACKEND_URL}/reviewDelete/product`,{productId:product._id,userId:userId})
+      fetchProductDetails()
+      prop.fetchProduct()
+      toast.success(res.data.massage)
+    } catch (error) {
+      toast.error(error.response.data.massage)
+    }
+  }
   const addToCart = async(e)=>{
+    prop.setLoader2(true)
     e.preventDefault()
    if(user==='' || user==='Not Found!'){
     navigate('/login',{state:{path:fullPath}})
@@ -119,6 +142,7 @@ const Details = (prop) => {
       }
     }
    }
+   prop.setLoader2(false)
   }
   useEffect(()=>{
     scrollTop()
@@ -132,11 +156,11 @@ return (<>
     <div className=' h-full overflow-y-scroll scrollbar-hide'>
       {
         product.images && product.images.map((url,i)=>{
-          return <img key={i} className='w-20 h-20 m-2 cursor-pointer' src={`${BACKEND_URL}/Images/${url}`} onClick={()=>{setSlideIndex(i)}} alt="" />
+          return <img key={i} className='w-20 h-20 m-2 cursor-pointer border-2 border-fuchsia-700' src={`${BACKEND_URL}/Images/${url}`} onClick={()=>{setSlideIndex(i)}} alt="" />
         })
       }
     </div>
-    <div className='w-80 sm:w-96 mx-5 my-2'><ImageSlider imgUrl={product.images} index={slideIndex}/></div>
+    <div className='w-80 sm:w-96 mx-5 my-2 border-2 border-fuchsia-700'><ImageSlider imgUrl={product.images} index={slideIndex}/></div>
   </div>
 
   {/* section2 */}
@@ -170,9 +194,9 @@ return (<>
     <div className={`${(product.stock===0)?'hidden':''}`}>
       <h1 className='text-xl border-b mb-2 py-2'>Quentity</h1>
         <div className='flex'>
-        <span className='mr-3 bg-fuchsia-800 text-white text-xl w-9 h-9 flex items-center justify-center cursor-pointer rounded' onClick={()=>{setQty((qty>1)?qty-1:1)}}>-</span>
+        <span className='mr-3 bg-fuchsia-800 text-white text-xl w-9 h-9 flex items-center justify-center cursor-pointer rounded' onClick={()=>{handleQty("Desc")}}>-</span>
         <span className='mr-3 border border-fuchsia-800 text-fuchsia-800 text-xl w-9 h-9 flex items-center justify-center cursor-pointer rounded'>{qty}</span>
-        <span className='mr-3 bg-fuchsia-800 text-white text-xl w-9 h-9 flex items-center justify-center cursor-pointer rounded' onClick={()=>{setQty((qty<10)?qty+1:10)}}>+</span>
+        <span className='mr-3 bg-fuchsia-800 text-white text-xl w-9 h-9 flex items-center justify-center cursor-pointer rounded' onClick={()=>{handleQty("Inc")}}>+</span>
         </div>
       </div>
     <div className='flex items-center justify-end border-b py-2 my-2'>
@@ -204,7 +228,7 @@ return (<>
       {/* Review Card  */}
       {
         product.reviews && product.reviews.map((review,i)=>{
-          return <ReviewCard key={i} rating={review.rating} name={review.username} comment={review.comment} profile={review.profile} />
+          return <ReviewCard key={i} userId={review.userId} deleteReview={deleteReview} admin={user.admin} rating={review.rating} name={review.username} comment={review.comment} profile={review.profile} />
         })
       }
     </div>

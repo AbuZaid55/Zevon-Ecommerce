@@ -89,7 +89,6 @@ const Product = (props) => {
                 return item
             }
         })
-        // setAllFilterProduct(searchItem)
         if(searchItem!=='' && searchItem!==false){
             setTotalPage(Math.ceil(searchItem.length/no_of_item_page))
             setAllFilterProduct(searchItem)
@@ -150,7 +149,7 @@ const Product = (props) => {
       }
     //5. showAllProductwithPaginationWise
     useEffect(()=>{
-        const filterproduct = allFilterProduct.slice((currentPage-1)*no_of_item_page,((currentPage-1)*5)+no_of_item_page)
+        const filterproduct = allFilterProduct.slice((currentPage-1)*no_of_item_page,currentPage*no_of_item_page)
         setFilterProduct(filterproduct)
         //  eslint-disable-next-line react-hooks/exhaustive-deps
     },[currentPage,totalPage,allFilterProduct])

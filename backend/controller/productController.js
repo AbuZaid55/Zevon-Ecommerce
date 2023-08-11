@@ -95,7 +95,7 @@ const updataProduct = async(req,res)=>{
 
 const deleteProduct = async(req,res)=>{
     try {
-        const productId  = req.body.productId 
+        const productId  = req.query.productId 
         if(productId=='' || productId==undefined){
             return sendError(res,"Invalid Product Id!")
         }
@@ -113,6 +113,7 @@ const deleteProduct = async(req,res)=>{
             console.log(error)
         }
         await productModel.deleteOne({_id:productId})
+        await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.productId':'aa','cart.$.price':'','cart.$.deliveryCharge':'','cart.$.GST':'','cart.$.name':'','cart.$.thumbnail':'','cart.$.qty':0}})
         sendSuccess(res,"Product delete successfully")
     } catch (error) {
         sendError(res,"something went wrong!")
@@ -157,8 +158,33 @@ const submitReview = async(req,res)=>{
         sendSuccess(res,"Review update successfully")
     } catch (error) {
         console.log(error)
-        sendError(res,"something went wrong!")
+        sendError(res,"Something went wrong!")
     }
+}
+
+const deleteReview = async(req,res)=>{
+    const {productId,userId}=req.body
+    if(productId===''){
+        return sendError(res,"Product Id not Found!")
+    }
+    if(userId===''){
+        return sendError(res,"User Id not Found!")
+    }
+    try {
+        const product  = await productModel.findById(productId)
+        if(!product){
+            return sendError(res,"Product not Found!")
+        }
+        const reviews = product.reviews.filter((review)=>{
+            return review.userId!=userId
+        })
+        product.reviews = reviews
+        await product.save()
+        sendSuccess(res,"Review Delete Successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+
 }
 
 
@@ -168,4 +194,5 @@ module.exports = {
     updataProduct,
     deleteProduct,
     submitReview, 
+    deleteReview
 }
