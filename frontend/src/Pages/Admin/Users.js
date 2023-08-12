@@ -1,12 +1,12 @@
 import React ,{useEffect,useState} from 'react'
-import { useNavigate,Link } from 'react-router-dom';
-import { FaTrash,FaEdit,FaPlusSquare,FaStar,FaArrowRight,FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
+import { FaTrash,FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import BACKEND_URL from '../../baseUrl';
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
 
-const Products = (props) => {
+const Users = (props) => {
   const navigate = useNavigate()
   const [userOnPerPage,setUserOnPerPage]=useState(20)
   const [allUsers,setAllUsers]=useState([])
@@ -34,7 +34,7 @@ const Products = (props) => {
     setShowConfirm(false)
     props.setLoader2(true)
     try {
-      const res = await axios.delete(`${BACKEND_URL}/auth/delete?userId=${userId}`)
+      const res = await axios.delete(`${BACKEND_URL}/auth/delete?userId=${userId}`,{withCredentials:true})
       getAllUsers()
       toast.success(res.data.massage)
     } catch (error) {
@@ -47,7 +47,7 @@ const Products = (props) => {
     setShowMakeAdminPopup(false)
     props.setLoader2(true)
     try {
-      const res = await axios.post(`${BACKEND_URL}/auth/makeadmin`,{userId:userId})
+      const res = await axios.post(`${BACKEND_URL}/auth/makeadmin`,{userId:userId},{withCredentials:true})
       getAllUsers()
       toast.success(res.data.massage)
     } catch (error) {
@@ -60,7 +60,7 @@ const Products = (props) => {
     setShowRemoveAdminPopup(false)
     props.setLoader2(true)
     try {
-      const res = await axios.post(`${BACKEND_URL}/auth/removeadmin`,{userId:userId})
+      const res = await axios.post(`${BACKEND_URL}/auth/removeadmin`,{userId:userId},{withCredentials:true})
       getAllUsers()
       toast.success(res.data.massage)
     } catch (error) {
@@ -87,18 +87,18 @@ const Products = (props) => {
             setCurrentPage(1)
         }
     }
-}
-
-const getAllUsers = async()=>{
-  props.setLoader2(true)
-  try {
-    const allUser = await axios.get(`${BACKEND_URL}/auth/allUser`,{withCredentials:true})
-    setAllUsers(allUser.data.data)
-  } catch (error) {
-    toast.error(error.response.data.massage)
   }
-  props.setLoader2(false)
-}
+
+  const getAllUsers = async()=>{
+    props.setLoader2(true)
+    try {
+      const allUser = await axios.get(`${BACKEND_URL}/auth/allUser`,{withCredentials:true})
+      setAllUsers(allUser.data.data)
+    } catch (error) {
+      toast.error(error.response.data.massage)
+    }
+    props.setLoader2(false)
+  }
 
   useEffect(()=>{ 
     if(props.user!==''){
@@ -136,7 +136,7 @@ const getAllUsers = async()=>{
       <Aside/>
       <div className='user' id='main'>
         <h1>Users</h1>
-        <div>
+        <div style={{minHeight:'70vh'}}>
          <div className='flex items-center justify-between'>
          <div className='search relative'>
          <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Users by id or email' />
@@ -223,4 +223,4 @@ const getAllUsers = async()=>{
   )
 }
 
-export default Products
+export default Users

@@ -8,12 +8,13 @@ const {
     submitReview,
     deleteReview,
 }=require('../controller/productController')
+const auth = require("../auth/auth")
 
 router.get('/products',products)
-router.post('/add/product',upload.fields([{name:"thumbnail"},{name:"images"}]),addProduct)
-router.put('/update/product',upload.fields([{name:"thumbnail"},{name:"images"}]),updataProduct)
-router.delete('/delete/product',deleteProduct)
+router.post('/add/product',auth,upload.fields([{name:"thumbnail"},{name:"images"}]),addProduct)
+router.put('/update/product',auth,upload.fields([{name:"thumbnail"},{name:"images"}]),updataProduct)
+router.delete('/delete/product',auth,deleteProduct)
 router.post('/review/product',submitReview)
-router.post('/reviewDelete/product',deleteReview)
+router.post('/reviewDelete/product',auth,deleteReview)
 
 module.exports=router;

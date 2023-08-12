@@ -98,7 +98,7 @@ const submitForm = async(e)=>{
       formdata.append('images',item)
     ))
     try {
-      const res = await axios.put(`${BACKEND_URL}/update/product`,formdata)
+      const res = await axios.put(`${BACKEND_URL}/update/product`,formdata,{withCredentials:true})
       if(res.status===200){
         toast.success(res.data.massage)
         setProduct({...product,"thumbnail":'',"images":[]})

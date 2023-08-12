@@ -118,10 +118,10 @@ useEffect(()=>{
       <Route path='/admin/dashboard/addproduct' element={<AddProduct setLoader2={setLoader2} user={user}/>} />
       <Route path='/admin/dashboard/updateproduct' element={<UpdateProduct allProduct={allProduct} fetchProduct={fetchProduct} setLoader2={setLoader2} user={user}/>} />
       <Route path='/admin/dashboard/users' element={<Users setLoader2={setLoader2} user={user}/>} />
-      <Route path='/admin/dashboard/orders' element={<Orders user={user}/>} />
-      <Route path='/admin/dashboard/cancleorder' element={<CancleOrder user={user}/>} />
-      <Route path='/admin/dashboard/payment' element={<Payment user={user}/>} />
-      <Route path='/admin/dashboard/failedpayment' element={<FailedPayment user={user}/>} />
+      <Route path='/admin/dashboard/orders' element={<Orders setLoader2={setLoader2} user={user}/>} />
+      <Route path='/admin/dashboard/cancleorder' element={<CancleOrder setLoader2={setLoader2} user={user}/>} />
+      <Route path='/admin/dashboard/payment' element={<Payment setLoader2={setLoader2} user={user}/>} />
+      <Route path='/admin/dashboard/failedpayment' element={<FailedPayment setLoader2={setLoader2} user={user}/>} />
       <Route path='/admin/dashboard/customer' element={<Customer user={user}/>} />
       {/* ///////////// */}
       <Route path='/page404' element={<Page404/>} />

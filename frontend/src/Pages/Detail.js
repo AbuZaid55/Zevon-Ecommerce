@@ -112,7 +112,7 @@ const Details = (prop) => {
   }
   const deleteReview = async(userId)=>{
     try {
-      const res = await axios.post(`${BACKEND_URL}/reviewDelete/product`,{productId:product._id,userId:userId})
+      const res = await axios.post(`${BACKEND_URL}/reviewDelete/product`,{productId:product._id,userId:userId},{withCredentials:true})
       fetchProductDetails()
       prop.fetchProduct()
       toast.success(res.data.massage)

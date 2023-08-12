@@ -5,7 +5,7 @@ const userModel = require('../models/userModel')
 const orderModel = require('../models/orderModel')
 const productModel = require('../models/productModel')
 const failedPaymentModel = require('../models/PaymentFailed')
-const PaymentModel = require('../models/Payment')
+const paymentModel = require('../models/Payment')
 
 let userEmail = ''
 let shippingDetails = ''
@@ -76,7 +76,7 @@ const paymentFailed = async(razorpay_payment_id,razorpay_order_id)=>{
 const successPayment = async(razorpay_payment_id,razorpay_order_id)=>{
     try {
         const user = await userModel.findOne({email:userEmail})
-        await PaymentModel({username:user.name,email:user.email,userId:user._id,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,razorpay_payment_id:razorpay_payment_id,razorpay_order_id,razorpay_order_id}).save()
+        await paymentModel({username:user.name,email:user.email,userId:user._id,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,razorpay_payment_id:razorpay_payment_id,razorpay_order_id,razorpay_order_id}).save()
     } catch (error) {
         console.log(error)
     }
@@ -106,7 +106,7 @@ const paymentVerify = async(req,res)=>{
                 }
                 await product.save()
             })
-            await orderModel({username:user.name,userId:user._id,email:user.email,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,item:user.cart,razorpay_payment_id:razorpay_payment_id,razorpay_order_id:razorpay_order_id}).save()
+            await orderModel({username:shippingDetails.name,userId:user._id,email:user.email,phoneNo:phoneNo,totalPaidAmount:totalPrice+GST+deliveryCharge,shippingDetails:shippingDetails,item:user.cart,razorpay_payment_id:razorpay_payment_id,razorpay_order_id:razorpay_order_id}).save()
 
             user.cart=[]
             await user.save()
@@ -178,10 +178,91 @@ const cancleOrder = async(req,res)=>{
     }
 }
 
+const getAllPayment = async(req,res)=>{
+    try {
+        const payment = await paymentModel.find()
+        sendSuccess(res,"All Payment Details",payment)
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+const deletePayment = async(req,res)=>{
+    const {_id} = req.query
+    try {
+        if(_id===''){
+            return sendError(res,"Id not Found!")
+        }
+        await paymentModel.findByIdAndDelete(_id)
+        sendSuccess(res,"User delete successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+
+const getAllFailedPayment = async(req,res)=>{
+    try {
+        const payment = await failedPaymentModel.find()
+        sendSuccess(res,"All Payment Details",payment)
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+const deleteFailedPayment = async(req,res)=>{
+    const {_id} = req.query
+    try {
+        if(_id===''){
+            return sendError(res,"Id not Found!")
+        }
+        await failedPaymentModel.findByIdAndDelete(_id)
+        sendSuccess(res,"User delete successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+
+const getAllOrders = async(req,res)=>{
+    try {
+        const orders = await orderModel.find()
+        if(!orders){
+            return sendError(res,"No Orders")
+        }
+        sendSuccess(res,"All orders",orders)
+    } catch (error) {
+        sendError(res,error)
+    }
+}
+
+const changeStatus = async(req,res)=>{
+    const {orderId,status}=req.body
+    const statusType = ["Processing","Confirmed","Shipped","Out For Delivery","Delivered","Cancelled","Refund"]
+    if(orderId===''){
+        return sendError(res,"Order Id not Found!")
+    }
+    if(status==='' || !statusType.includes(status)){
+        return sendError(res,"Invalid Status Type!")
+    }
+    try {
+        const order = await orderModel.findById(orderId)
+        if(!order){
+            return sendError(res,"Order Not Found!")
+        }
+        order.status=status
+        await order.save()
+        sendSuccess(res,"Status Changed Successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
 module.exports = {
     createOrder,
     paymentVerify,
     getOrders,
     trackOrder,
     cancleOrder,
+    getAllPayment,
+    deletePayment,
+    getAllFailedPayment,
+    deleteFailedPayment,
+    getAllOrders,
+    changeStatus,
 }

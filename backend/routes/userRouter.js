@@ -19,9 +19,9 @@ router.post('/addToCart',addToCart)
 router.post('/setQty',setQty)
 router.post('/removeCartItem',removeCartItem)
 router.post('/contact',contact)
-router.post('/makeadmin',makeAdmin)
-router.post('/removeadmin',removeAdmin)
-router.delete('/delete',deleteUser)
+router.post('/makeadmin',auth,makeAdmin)
+router.post('/removeadmin',auth,removeAdmin)
+router.delete('/delete',auth,deleteUser)
 router.get('/logout',Logout)
 router.get("/google",passport.authenticate("google", { scope: ["profile","email"] }));
 router.get("/google/callback",passport.authenticate("google", { failureRedirect: `${process.env.FRONTEND_URL}/login` }),(req, res) => {

@@ -14,10 +14,9 @@ const Confirm = (props) => {
   const [totalPrice,setTotalPrice]=useState(0)
   const [GST,setGST]=useState(0)
   const [deliveryCharge,setDeliveryCharge]=useState(0)
-  const [user,setUser]=useState('')
+  const [user,setUser]=useState({_id:"",email:"",name:"",cart:[],shippingDetails:[],profile:""})
   const [login, setLogin] = useState(false);
   const [address, setAddress] = useState({})
-  
   const makePayment = async(e)=>{
     props.setLoader2(true)
     e.preventDefault()
@@ -150,7 +149,7 @@ const Confirm = (props) => {
             </h1>
             <div className="border w-full">
               <div className="flex items-center justify-between my-2 px-4 py-1">
-                <span>Total Price (2 item)</span>
+                <span>Total Price ({user.cart.length} item)</span>
                 <span className="flex items-center font-semibold ">
                   <FaRupeeSign />
                   {totalPrice}

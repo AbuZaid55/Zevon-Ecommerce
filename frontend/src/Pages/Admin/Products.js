@@ -32,7 +32,7 @@ const Products = (props) => {
     setShowConfirm(false)
     props.setLoader2(true)
     try {
-      const res = await axios.delete(`${BACKEND_URL}/delete/product?productId=${deleteItemId}`)
+      const res = await axios.delete(`${BACKEND_URL}/delete/product?productId=${deleteItemId}`,{withCredentials:true})
       props.fetchProduct()
       toast.success(res.data.massage)
     } catch (error) {

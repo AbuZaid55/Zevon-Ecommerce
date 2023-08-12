@@ -20,6 +20,13 @@ const orderSchema = mongoose.Schema({
         type:Number,
         required:true
     },
+    shippingDetails:{
+        houseNo:{type:String,requried:true},
+        address:{type:String,requried:true},
+        pinCode:{type:Number,requried:true},
+        city:{type:String,requried:true},
+        state:{type:String,requried:true},
+    },
     status:{
         type:String,
         requried:true,
@@ -56,7 +63,7 @@ const orderSchema = mongoose.Schema({
                 required:true
             },
             deliveryCharge:{
-                type:String,
+                type:Number,
                 required:true
             },
             GST:{

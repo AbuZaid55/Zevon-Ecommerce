@@ -108,7 +108,7 @@ function AddProduct(props) {
       formdata.append('images',item)
     ))
     try {
-      const res = await axios.post(`${BACKEND_URL}/add/product`,formdata)
+      const res = await axios.post(`${BACKEND_URL}/add/product`,formdata,{withCredentials:true})
       if(res.status===200){
         toast.success(res.data.massage)
         setProduct({name:'',description:'',stock:'',maxprice:'', sellprice:'',deliveryCharge:"",GST:"",category:'',subCategory:'', color:[],size:[],highlight:[],thumbnail:'',images:[]})
