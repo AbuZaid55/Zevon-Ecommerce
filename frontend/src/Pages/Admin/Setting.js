@@ -3,24 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import Aside from './Aside'
 
 
-const Customer = (props) => {
+const Setting = (props) => {
   const navigate = useNavigate()
   useEffect(()=>{ 
     if(props.user!==''){
-      if(props.user.admin===true){
+      if(props.user.type==='Admin'){
       }else{
-        navigate('/page404')
+        navigate('*')
       }
     }
   },[props.user])
   return (
     <div className='flex'>
       <Aside/>
-      <div className='customer' id='main'>
-        Customer Services
+      <div className='setting' id='main'>
+        setting
       </div>
     </div>
   )
 }
 
-export default Customer
+export default Setting;

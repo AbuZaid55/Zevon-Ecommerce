@@ -27,10 +27,11 @@ const userSchema = mongoose.Schema({
         default:false,
         required:true
     },
-    admin:{
-        type:Boolean,
-        default:false,
-        required:true
+    type:{
+        type:String,
+        required:true,
+        enum:['User','Worker','Admin'],
+        default:'User',
     },
     shippingDetails:[
         {

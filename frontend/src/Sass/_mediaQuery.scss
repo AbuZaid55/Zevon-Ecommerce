@@ -3,7 +3,7 @@
         width: 100%;
     }
 }
-@media screen and (max-width:940px) {
+@media screen and (max-width:1130px) {
    #main{
         margin-left: 0;
    }
@@ -17,5 +17,79 @@
    #checkbox:checked ~ #aside{
     left: 0;
     animation: left 0.5s ease-in-out;
+   }
+}
+@media screen and (max-width:820px) {
+    .changeStatus{
+        & > div:first-child{
+            font-size: 2rem;
+        }
+    }
+   .orders,.payment, .products, .user{
+        & > h1{
+            font-size: 2rem;
+        }
+    & .search{
+        width: 90%;
+    }
+    & .top{
+        flex-direction: column;
+    }
+    & .top2{
+        width: 100%;
+        @include flex(row);
+        justify-content: flex-end;
+    }
+   }
+}
+
+
+@media screen and (max-width:950px) {
+   table thead {
+    display: none;
+   }
+   table tbody tr{
+    height: unset;
+   }
+   table {
+    width: 95%;
+    margin: auto;
+   }
+    table tr{
+    display: block;
+    width: 100%;
+    margin-bottom: 15px;
+    background-color: whitesmoke;
+   }
+   table tbody tr td{
+    display: block;
+    width: 100%;
+    text-align: right;
+    padding:0.8rem 0;
+    padding-right: 15px;
+    position: relative;
+    font-size: 1.3rem;
+
+   }
+   table tbody .icon{
+    margin: unset;
+    margin-left: auto;
+   }
+   table td::before{
+    content: attr(datalabel);
+    position: absolute;
+    left: 15px;
+    font-weight: 500;
+   }
+   table tbody td .m-auto{
+    margin: unset;
+    margin-left: auto;
+   }
+   table img{
+    margin: unset !important;
+    margin-left: auto !important;
+   }
+   .add{
+    margin-top: 1rem;
    }
 }

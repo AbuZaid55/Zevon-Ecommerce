@@ -62,7 +62,7 @@ const Details = (prop) => {
       })
       if(product.length===0){
         toast.error("No product found!")
-        navigate('/page404')
+        navigate('*')
       }else{
         setProduct(product[0])
         const subCategory = product[0].subCategory
@@ -228,7 +228,7 @@ return (<>
       {/* Review Card  */}
       {
         product.reviews && product.reviews.map((review,i)=>{
-          return <ReviewCard key={i} userId={review.userId} deleteReview={deleteReview} admin={user.admin} rating={review.rating} name={review.username} comment={review.comment} profile={review.profile} />
+          return <ReviewCard key={i} userId={review.userId} deleteReview={deleteReview} type={user.type} rating={review.rating} name={review.username} comment={review.comment} profile={review.profile} />
         })
       }
     </div>

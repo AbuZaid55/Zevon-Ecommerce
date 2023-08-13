@@ -70,9 +70,9 @@ const getAllFailedPayment = async()=>{
 
   useEffect(()=>{ 
     if(props.user!==''){
-      if(props.user.admin===true){
+      if(props.user.type==='Admin'){
       }else{
-        navigate('/page404')
+        navigate('*')
       }
     }
   },[props.user])
@@ -99,12 +99,14 @@ const getAllFailedPayment = async()=>{
       <div className='payment' id='main'>
         <h1>Failed Payments</h1>
         <div>
-         <div className='flex items-center justify-between'>
+         <div className='top flex items-center justify-between'>
          <div className='search relative'>
          <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Payments' />
          </div>
+          <div className='top2'>
           <label  className='noPageLabel'><input className='noPage' value={paymentOnPerPage} onChange={((e)=>{handleItemPerPage(e)})} type="number" max={100} />Per Page</label>
           <span className='noOfPay'>No of Payment: {searchPayment.length}</span>
+          </div>
          </div>
           <table>
 
@@ -122,12 +124,12 @@ const getAllFailedPayment = async()=>{
             <tbody>
                 {paginationPayment.map((item,i)=>{
                   return <tr key={i}>
-                  <td>{item.razorpay_payment_id}</td>
-                  <td >{item.razorpay_order_id}</td>
-                  <td>{item.userId}</td>
-                  <td>&#8377; {item.totalFailedAmount}</td>
-                  <td>{item.createdAt.slice(0,10).split("-").reverse().join("-")}</td>
-                  <td><FaTrash className='icon delete' onClick={()=>{setId(item._id);setShowConfirm(true)}}/></td>
+                  <td datalabel={'Payment Id'}>{item.razorpay_payment_id}</td>
+                  <td datalabel={'Order Id'} >{item.razorpay_order_id}</td>
+                  <td datalabel={'User Id'}>{item.userId}</td>
+                  <td datalabel={'Failed Amount'}>&#8377; {item.totalFailedAmount}</td>
+                  <td datalabel={'Date'}>{item.createdAt.slice(0,10).split("-").reverse().join("-")}</td>
+                  <td datalabel={'Delete'}><FaTrash className='icon delete' onClick={()=>{setId(item._id);setShowConfirm(true)}}/></td>
                 </tr>
                 })}
             </tbody>

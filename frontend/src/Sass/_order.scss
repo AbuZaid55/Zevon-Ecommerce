@@ -46,15 +46,10 @@
             border-radius: 8px;
             cursor: pointer;
         }
-    }
-    & .item{
-        border-top: 1px solid $color;
-        &:first-child{
-            border-top: 0;
-        }
-    }
+    }   
     & .select{
-        color: $color;
+        background-color: $color;
+        color: white;
         border-radius: 5px;
         margin-left: 5px;
     }

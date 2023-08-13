@@ -59,9 +59,9 @@ const Products = (props) => {
 }
   useEffect(()=>{ 
     if(props.user!==''){
-      if(props.user.admin===true){
+      if(props.user.type==='Admin'){
       }else{
-        navigate('/page404')
+        navigate('*')
       }
     }
   },[props.user])
@@ -87,7 +87,7 @@ const Products = (props) => {
       let match = []
       if(searchType==='default'){
         key.map((keyPoint)=>{
-          if(name.includes(keyPoint) || description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===search || subCategory===search){
+          if(name.includes(keyPoint) || item._id.includes(search)|| stock==search || price==search || item.createdAt.includes(search.split("-").reverse().join("-")) ||description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===search || subCategory===search){
               match.push(true)
           }else{
               match.push(false)
@@ -144,7 +144,7 @@ const Products = (props) => {
         <h1>Products</h1>
         <p className='add'><Link to='/admin/dashboard/addproduct'><button><FaPlusSquare className='mr-3'/>Add Products</button></Link></p>
         <div>
-         <div className='flex items-center justify-between'>
+         <div className='top flex items-center justify-between'>
          <div className='search relative'>
          <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Products' />
          <label className='searchType'>Search Type :- 
@@ -157,10 +157,12 @@ const Products = (props) => {
          </select>
          </label>
          </div>
+          <div className='top2'>
           <label  className='noPageLabel'><input className='noPage' value={itemOnPerPage} onChange={((e)=>{handleItemPerPage(e)})} type="number" max={100} />Per Page</label>
           <span className='totalproducts'>Total Products: {allProduct.length}</span>
+          </div>
          </div>
-          <table>
+          <table className='mt-4 '>
 
             <thead>
               <tr>
@@ -186,13 +188,13 @@ const Products = (props) => {
                      rat= (rat/item.reviews.length).toFixed(1)
                    }
                   return <tr key={i}>
-                  <td><img style={{height:"60px",width:"60px",margin:" 8px auto",borderRadius:'10px'}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" /></td>
-                  <td className='name'><Link to={`/details?_id=${item._id}`}>{item.name}</Link></td>
-                  <td>{item.stock}</td>
-                  <td>&#8377; {item.sellprice}</td>
-                  <td><span className={`${(rat>=3)?'bg-green-700':""} ${(rat<3 && rat>1)?'bg-yellow-500':""} ${(rat<=1)?'bg-red-700':""} text-white flex m-auto items-center justify-evenly`} style={{width:'50px',height:"30px", borderRadius:'8px'}}>{rat}<FaStar/></span></td>
-                  <td><Link to={`/admin/dashboard/updateproduct?_id=${item._id}`}><FaEdit className='icon edit'/></Link></td>
-                  <td><FaTrash className='icon delete' onClick={()=>{setDeleteItemId(item._id);setShowConfirm(true)}}/></td>
+                  <td datalabel={"Thumbnail"}><img style={{height:"60px",width:"60px",margin:" 8px auto",borderRadius:'10px'}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" /></td>
+                  <td datalabel={"Name"} className='name'><Link to={`/details?_id=${item._id}`}>{item.name}</Link></td>
+                  <td datalabel={"Stock"}>{item.stock}</td>
+                  <td datalabel={"Price"}>&#8377; {item.sellprice}</td>
+                  <td datalabel={"Rating"}><span className={`${(rat>=3)?'bg-green-700':""} ${(rat<3 && rat>1)?'bg-yellow-500':""} ${(rat<=1)?'bg-red-700':""} text-white flex m-auto items-center justify-evenly`} style={{width:'50px',height:"30px", borderRadius:'8px'}}>{rat}<FaStar/></span></td>
+                  <td datalabel={"Edit"}><Link to={`/admin/dashboard/updateproduct?_id=${item._id}`}><FaEdit className='icon edit'/></Link></td>
+                  <td datalabel={"Delete"}><FaTrash className='icon delete' onClick={()=>{setDeleteItemId(item._id);setShowConfirm(true)}}/></td>
                 </tr>
                 })}
             </tbody>

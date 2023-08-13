@@ -19,6 +19,7 @@ table{
     & tbody tr td{
         border: 1px solid $color;
         text-align: center;
+        width: 7rem;
     }
     & .name{
         width: unset;
@@ -39,5 +40,13 @@ table{
                 color: rgb(203, 0, 0);
             }
         }
+    }
+}
+.user table .select{
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    & option{
+        font-weight: 700;
     }
 }

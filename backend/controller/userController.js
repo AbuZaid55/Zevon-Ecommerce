@@ -469,40 +469,32 @@ const contact = (req,res)=>{
     }
 }
 
-const makeAdmin = async(req,res)=>{
-    const {userId} = req.body
+const changeType = async(req,res)=>{
+    const {userId,type} = req.body
+    const enumType = ['User','Worker','Admin']
     try {
         if(userId===''){
             return sendError(res,"User Id not Found!")
         }
-        const user = await userModel.findById(userId)
-        if(!userId){
-            return sendError(res,"User not Found!")
+        if(type===''){
+            return sendError(res,"Invalid Type!")
         }
-        user.admin = true
-        await user.save()
-        sendSuccess(res,"User maked admin successfully")
-    } catch (error) {
-        sendError(res,"Something went wrong!")
-    }
-}
-const removeAdmin = async(req,res)=>{
-    const {userId} = req.body
-    try {
-        if(userId===''){
-            return sendError(res,"User Id not Found!")
-        }
-        const totaladmin = await userModel.find({admin:true})
-        if(totaladmin.length<=1){
-            return sendError(res,"Please make admin to another")
+        if(!enumType.includes(type)){
+            return sendError(res,"Invalid Type")
         }
         const user = await userModel.findById(userId)
-        if(!userId){
-            return sendError(res,"User not Found!")
+        if(!user){
+            return sendError(res,"User Not Found!")
         }
-        user.admin = false
+        if(user.type==='Admin'){
+            const totalAdmin = await userModel.find({type:'Admin'})
+            if(totalAdmin.length<=1){
+                return sendError(res,"Please make admin to another")
+            }
+        }
+        user.type = type
         await user.save()
-        sendSuccess(res,"Remove admin successfully")
+        sendSuccess(res,"Type Changed Successfully")
     } catch (error) {
         sendError(res,"Something went wrong!")
     }
@@ -512,6 +504,16 @@ const deleteUser = async(req,res)=>{
     try {
         if(userId===''){
             return sendError(res,"User Id not Found!")
+        }
+        const user = await userModel.findById(userId)
+        if(!user){
+            return sendError(res,"User Not Found!")
+        }
+        if(user.type==='Admin'){
+            const totalAdmin = await userModel.find({type:'Admin'})
+            if(totalAdmin.length<=1){
+                return sendError(res,"Please make admin to another")
+            }
         }
         await userModel.findByIdAndDelete(userId)
         sendSuccess(res,"User delete successfully")
@@ -536,7 +538,6 @@ module.exports = {
     Logout,
     contact,
     allUser,
-    makeAdmin,
-    removeAdmin,
+    changeType,
     deleteUser
 }

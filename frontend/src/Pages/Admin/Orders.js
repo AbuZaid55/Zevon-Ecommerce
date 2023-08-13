@@ -59,13 +59,22 @@ const getAllOrders = async()=>{
 }
 
 const changeStatus = async(orderId,status)=>{
+  props.setLoader2(true)
   try {
-    const res = await axios.post(`${BACKEND_URL}/order/changeStatus`,{orderId:orderId,status:status},{withCredentials:true})
-    getAllOrders()
-    toast.success(res.data.massage)
+    if(status!=='Cancelled'){
+      const res = await axios.post(`${BACKEND_URL}/order/changeStatus`,{orderId:orderId,status:status},{withCredentials:true})
+      getAllOrders()
+      toast.success(res.data.massage)
+    }else{
+      const res = await axios.post(`${BACKEND_URL}/order/cancleOrder`,{orderId:orderId},{withCredentials:true})
+      getAllOrders()
+      props.fetchProduct()
+      toast.success(res.data.massage)
+    }
   } catch (error) {
     toast.error(error.response.data.massage)
   }
+  props.setLoader2(false)
 }
 
 const print = useReactToPrint({
@@ -82,9 +91,9 @@ const printPDF = (elementId)=>{
 
   useEffect(()=>{ 
     if(props.user!==''){
-      if(props.user.admin===true){
+      if(props.user.type==='Admin'){
       }else{
-        navigate('/page404')
+        navigate('*')
       }
     }
   },[props.user])
@@ -121,7 +130,7 @@ const printPDF = (elementId)=>{
       <div className='orders' id='main'>
         <h1>Orders</h1>
         <div style={{minHeight:'70vh'}}>
-         <div className='flex items-center justify-between'>
+         <div className='top flex items-center justify-between'>
          <div className='search relative'>
          <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Products' />
          <label className='searchType'>Status :- 
@@ -135,8 +144,10 @@ const printPDF = (elementId)=>{
          </select>
          </label>
          </div>
+          <div className='top2'>
           <label  className='noPageLabel'><input className='noPage' value={ordersOnPerPage} onChange={((e)=>{handleItemPerPage(e)})} type="number" max={100} />Per Page</label>
           <span className='noOfPay'>Total Order: {searchOrders.length}</span>
+          </div>
          </div>
 
          {/* Order  */}
@@ -144,7 +155,7 @@ const printPDF = (elementId)=>{
           let totalPrice = 0
           let GST =0
           let deliverCharge = 0
-          return <div key={I}  className="sm:mx-4 my-5 border-2 border-fuchsia-700 rounded-xl overflow-hidden relative">
+          return <div key={I}  className=" mx-2 sm:mx-4 my-5 border-2 border-fuchsia-700 rounded-xl overflow-hidden relative">
             <span className='absolute top-1 right-1 cursor-pointer p-2 text-fuchsia-700 border-2 border-fuchsia-700 rounded bg-white' onClick={(e)=>{printPDF(`print${order._id}`)}}><FaPrint className=' pointer-events-none'/></span>
           {/* item  */}
            {
@@ -165,7 +176,7 @@ const printPDF = (elementId)=>{
            }
 
         {/* item end  */}
-          <div className='p-2 bg-fuchsia-700 text-white text-lg'>
+          <div className='p-2 text-fuchsia-700 border-t-2 border-fuchsia-700 text-lg'>
           <p>Order Id: {order._id}</p>
           <p className='w-full'>Order On : {order.createdAt.slice(0,10).split("-").reverse().join("-")}</p>
           <p>Status :-  
@@ -220,7 +231,7 @@ const printPDF = (elementId)=>{
               <div className="flex items-center justify-between my-2 px-4 py-1">
                 <span>GST</span>
                 <span className="flex items-center font-semibold">
-                &#8377; {GST}
+                +&#8377; {GST}
                 </span>
               </div>
               <div className="flex items-center justify-between my-2 px-4 py-1">

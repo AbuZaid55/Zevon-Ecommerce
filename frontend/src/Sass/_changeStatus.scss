@@ -1,0 +1,48 @@
+.changeStatus{
+    width: 100%;
+    & > div:first-child{
+        @include flex(row);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: $color;
+        margin: 2rem 0;
+    }
+    & > div:nth-child(2){
+        height: 80vh;
+        @include flex(column);
+        & div{
+            margin: 2rem;
+            @include flex(column);
+            align-items: flex-start;
+            border: 2px solid $color;
+            padding: 2rem;
+            border-radius: 10px;
+            & label {
+                color: $color;
+                font-size: 1.5rem;
+            }
+            & input{
+                font-size: 1.5rem;
+                margin-bottom: 2rem;
+                width: 100%;
+                border-bottom: 2px solid $color;
+            }
+            & select{
+                width: 100%;
+                border: 2px solid $color;
+                border-radius: 8px;
+                margin-bottom: 2rem;
+                padding: 0.6rem ;
+                color: $color;
+            }
+            & button{
+                background-color: $color;
+                color: white;
+                padding: 0.6rem 2rem;
+                width: 100%;
+                border-radius: 30px;
+                font-size: 1.2rem;
+            }
+        }
+    }
+}

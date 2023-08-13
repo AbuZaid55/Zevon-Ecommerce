@@ -1,6 +1,6 @@
 import React ,{useEffect,useRef,useState} from 'react'
 import { useNavigate,Link } from 'react-router-dom';
-import { FaArrowRight,FaArrowLeft ,FaPrint,FaRupeeSign} from "react-icons/fa";
+import { FaArrowRight,FaArrowLeft ,FaPrint,FaTrash} from "react-icons/fa";
 import BACKEND_URL from '../../baseUrl';
 import Aside from './Aside'
 import {toast} from 'react-toastify'
@@ -80,11 +80,22 @@ const printPDF = (elementId)=>{
   element.style.display='none'
 }
 
+const deleteOrder = async(orderId)=>{
+  props.setLoader2(true)
+  try {
+    const res = await axios.post(`${BACKEND_URL}/order/deleteOrder`,{orderId:orderId},{withCredentials:true})
+    getAllOrders()
+    toast.success(res.data.massage)
+  } catch (error) {
+    toast.error(error.response.data.massage)
+  }
+  props.setLoader2(false)
+}
   useEffect(()=>{ 
     if(props.user!==''){
-      if(props.user.admin===true){
+      if(props.user.type==='Admin'){
       }else{
-        navigate('/page404')
+        navigate('*')
       }
     }
   },[props.user])
@@ -120,8 +131,8 @@ const printPDF = (elementId)=>{
       <Aside/>
       <div className='orders' id='main'>
         <h1>Cancelled Orders</h1>
-        <div style={{minHeight:'70vh'}}>
-         <div className='flex items-center justify-between'>
+        <div style={{minHeight:'70vh'}} >
+         <div className='top flex items-center justify-between'>
          <div className='search relative'>
          <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Products' />
          <label className='searchType'>Status :- 
@@ -132,8 +143,10 @@ const printPDF = (elementId)=>{
          </select>
          </label>
          </div>
+          <div className='top2'>
           <label  className='noPageLabel'><input className='noPage' value={ordersOnPerPage} onChange={((e)=>{handleItemPerPage(e)})} type="number" max={100} />Per Page</label>
           <span className='noOfPay'>Total Order: {searchOrders.length}</span>
+          </div>
          </div>
 
          {/* Order  */}
@@ -141,7 +154,7 @@ const printPDF = (elementId)=>{
           let totalPrice = 0
           let GST =0
           let deliverCharge = 0
-          return <div key={I}  className="sm:mx-4 my-5 border-2 border-fuchsia-700 rounded-xl overflow-hidden relative">
+          return <div key={I}  className="mx-2 sm:mx-4 my-5 border-2 border-fuchsia-700 rounded-xl overflow-hidden relative">
             <div className=' bg-fuchsia-700 text-white p-2 text-lg'>
             <div>Razorpay Payment Id: {order.razorpay_payment_id}</div>
             <div>Razorpay Order Id: {order.razorpay_order_id}</div>
@@ -166,7 +179,8 @@ const printPDF = (elementId)=>{
            }
 
         {/* item end  */}
-          <div className='p-2 bg-fuchsia-700 text-white text-lg'>
+          <div className='p-2 text-fuchsia-700 border-t-2 border-fuchsia-700 text-lg relative'>
+          <span className={`${(order.status==='Refund')?'':'hidden'} absolute top-1 right-1 cursor-pointer p-2 text-red-700 border-2 border-red-700 rounded bg-white`} onClick={()=>{deleteOrder(order._id)}}><FaTrash className=' pointer-events-none'/></span>
           <p>Order Id: {order._id}</p>
           <p className='w-full'>Order On : {order.createdAt.slice(0,10).split("-").reverse().join("-")}</p>
           <p>Status :-  
@@ -217,7 +231,7 @@ const printPDF = (elementId)=>{
               <div className="flex items-center justify-between my-2 px-4 py-1">
                 <span>GST</span>
                 <span className="flex items-center font-semibold">
-                &#8377; {GST}
+                +&#8377; {GST}
                 </span>
               </div>
               <div className="flex items-center justify-between my-2 px-4 py-1">

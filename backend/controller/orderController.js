@@ -155,24 +155,23 @@ const trackOrder = async(req,res)=>{
 }
 
 const cancleOrder = async(req,res)=>{
-    const {orderId,userId}=req.body
+    const {orderId}=req.body
     if(orderId===''){
         return sendError(res,"Something Went Wrong!")
-    }
-    if(userId===''){
-        return sendError(res,"Invalid User!")
     }
     try {
         const order = await orderModel.findById(orderId)
         if(!order){
             return sendError(res,"Order not found")
         }
-        if(!order.userId===userId){
-            return sendError(res,"Invalid User!")
-        }
+        order.item.map(async(item)=>{
+            const product = await productModel.findById(item.productId)
+            product.stock = product.stock+item.qty 
+            await product.save()
+        })
         order.status = "Cancelled"
         await order.save()
-        sendSuccess(res,"Your Order is successfully canceled")
+        sendSuccess(res,"Order is successfully cancelled")
     } catch (error) {
         sendError(res,"Something Went Wrong!")
     }
@@ -246,9 +245,32 @@ const changeStatus = async(req,res)=>{
         if(!order){
             return sendError(res,"Order Not Found!")
         }
+        if(order.status===status){
+            return sendError(res,"Status is already set!")
+        }
         order.status=status
         await order.save()
         sendSuccess(res,"Status Changed Successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
+
+const deleteOrder = async (req,res)=>{
+    const {orderId}=req.body
+    if(!orderId){
+        return sendError(res,"Order Id not Found!")
+    }
+    try {
+        const order = await orderModel.findById(orderId)
+        if(!order){
+            return sendError(res,"Order Not Found!")
+        }
+        if(order.status!=='Refund'){
+            return sendError(res,"Order should be refunded!")
+        }
+        await orderModel.findByIdAndDelete(order._id)
+        sendSuccess(res,"Order Delete successfully")
     } catch (error) {
         sendError(res,"Something went wrong!")
     }
@@ -265,4 +287,5 @@ module.exports = {
     deleteFailedPayment,
     getAllOrders,
     changeStatus,
-}
+    deleteOrder,
+} 

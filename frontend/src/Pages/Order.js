@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react'
-import { FaRupeeSign, FaMapMarker} from 'react-icons/fa';
+import { FaRupeeSign, FaMapMarker,FaTrash} from 'react-icons/fa';
 import GoLogin from '../Component/GoLogin';
 import { Link } from 'react-router-dom';
 import BACKEND_URL from '../baseUrl'
@@ -32,7 +32,7 @@ const Order = (props) => {
       toast.error("Invalid User")
     }else{
       try {
-        const res = await axios.post(`${BACKEND_URL}/order/cancleOrder`,{orderId:_id,userId:props.user._id})
+        const res = await axios.post(`${BACKEND_URL}/order/cancleOrder`,{orderId:_id},{withCredentials:true})
         getOrders()
         setShowCancleForm(false)
         toast.success(res.data.massage)
@@ -43,6 +43,17 @@ const Order = (props) => {
     props.setLoader2(false)
   }
 
+  const deleteOrder = async(orderId)=>{
+    props.setLoader2(true)
+    try {
+      const res = await axios.post(`${BACKEND_URL}/order/deleteOrder`,{orderId:orderId},{withCredentials:true})
+      getOrders()
+      toast.success(res.data.massage)
+    } catch (error) {
+      toast.error(error.response.data.massage)
+    }
+    props.setLoader2(false)
+  }
   useEffect(()=>{
     if(props.user._id){
       setLogin(true)
@@ -80,9 +91,10 @@ const Order = (props) => {
             })
           }
           {/* item end  */}
-          <div className=" mt-3 py-2 ">
-            <p className='w-full'>ORDERED ON : <span className='font-semibold'>{new Date(order.createdAt).toLocaleString()}</span></p>
-            <p className="flex w-full items-center lg:text-xl ml-auto">TOTAL PAID AMOUNT (including GST & Delivery Charge) : <FaRupeeSign className=" font-extralight text-green-600"/><span className="font-bold text-green-600">{order.totalPaidAmount}</span></p>
+          <div className=" mt-3 py-2 relative">
+          <span className={`${(order.status==='Refund')?'':'hidden'} absolute z-50 top-1 right-1 cursor-pointer p-2 text-red-700 border-2 border-red-700 rounded bg-white`} onClick={()=>{deleteOrder(order._id)}}><FaTrash className=' pointer-events-none'/></span>
+            <p className='w-full'>Order On : <span className='font-semibold'>{new Date(order.createdAt).toLocaleString()}</span></p>
+            <p className="flex w-full items-center lg:text-lg ml-auto">Total Paid Amount (including GST & Delivery Charge) : <FaRupeeSign className=" font-extralight text-green-600"/><span className="font-bold text-green-600">{order.totalPaidAmount}</span></p>
           </div>
           <div className='border-t py-2 flex items-center justify-between'>
             <p className={`${(order.status==="Delivered" || order.status==="Cancelled" || order.status==="Refund")?'hidden':""}`}>STATUS: <span className=' font-semibold text-fuchsia-700 '>{order.status}</span></p>
@@ -100,7 +112,7 @@ const Order = (props) => {
         <div className=' w-56 h-56 border p-4 fixed top-1/2 left-1/2 bg-white rounded -translate-x-2/4 -translate-y-2/4 flex items-stretch justify-between flex-col text-xl'>
           <h1 className=' text-fuchsia-700 text-center'>Are your sure you want to this cancle this order?</h1>
           <div className='flex items-center justify-between'>
-            <button onClick={()=>{cancleOrder(cancleOrderId)}} className=' bg-fuchsia-700 text-white px-3 py-2 rounded'>YES</button>
+            <button onClick={()=>{cancleOrder(cancleOrderId)}} className=' bg-red-700 text-white px-3 py-2 rounded'>YES</button>
             <button onClick={(()=>{setShowCancleForm(false); setCancleOrderId('')})} className=' bg-fuchsia-700 text-white px-3 py-2 rounded'>NO</button>
           </div>
         </div>

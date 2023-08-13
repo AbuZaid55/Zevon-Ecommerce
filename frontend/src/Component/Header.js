@@ -5,7 +5,7 @@ import BACKEND_URL from "../baseUrl";
 import axios from "axios";
 import { toast } from 'react-toastify'
 import { FaArrowRightFromBracket} from 'react-icons/fa6';
-import { FaSearch,FaTh , FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
+import { FaSearch,FaTh , FaMapMarkedAlt, FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
 
 const Header = (props) => {
   const ref = useRef(null);
@@ -97,7 +97,7 @@ const Header = (props) => {
   useEffect(()=>{
     if(props.user._id){
       setLogin(true)
-      if(props.user.admin){
+      if(props.user.type==='Admin'){
         setAdmin(true)
       }
       if(props.user.profile!=='' && props.user.profile.includes('https://')){
@@ -149,6 +149,7 @@ const Header = (props) => {
         <ul className={`absolute -left-2 sm:-left-0 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
           <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/profile" className="flex items-center justify-left text-fuchsia-950"><FaUser className="m-3 hidden sm:block text-fuchsia-950"/>Profile</Link></li>
           <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-fuchsia-950"><FaTh className="m-3 hidden sm:block text-fuchsia-950"/>Dashboard</Link></li>
+          <li className={`${(props.user.type==='Worker')?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-fuchsia-50`}><Link to="/admin/dashboard/changestatus" className="flex items-center justify-left text-fuchsia-950"><FaMapMarkedAlt className="m-3 hidden sm:block text-fuchsia-950"/>Change Status</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/cart" className="flex items-center justify-left text-fuchsia-950"><FaShoppingCart className="m-3 hidden sm:block text-fuchsia-950"/>Cart</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-fuchsia-50"><Link to="/orders" className="flex items-center justify-left text-fuchsia-950"><FaShoppingBag className="m-3 hidden sm:block text-fuchsia-950"/>Order</Link></li>
           <li className="px-4 py-2 border-b-2 hover:bg-fuchsia-50"><span onClick={()=>{setShowLogoutform(true)}} className="flex items-center justify-left text-fuchsia-950"><FaArrowRightFromBracket className="m-3 hidden sm:block text-fuchsia-950"/>Log Out</span></li>

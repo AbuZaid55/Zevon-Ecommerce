@@ -93,7 +93,7 @@ const Profile = (props) => {
           <h1 className='text-3xl px-3'>Hello</h1>
           <h1 className='text-5xl sm:text-7xl font-semibold'>{user.name}</h1>
           <div className='flex flex-col w-60'>
-          <Link to="/orders"><button className=' bg-fuchsia-800 text-white w-full mt-5 py-2 rounded'>My Orders</button></Link>
+          <Link to="/orders"><button className=' bg-fuchsia-800 text-white w-full mt-5  py-2 rounded'>My Orders</button></Link>
           <Link to="/sendresetlink"><button className=' bg-fuchsia-800 text-white w-full mt-3 py-2 rounded'>Change Password</button></Link>
           </div>
         </div>
@@ -105,6 +105,7 @@ const Profile = (props) => {
           <h1 className='text-xl sm:text-3xl my-5 px-5'>Name : {user.name}</h1>
           <h1 className='text-xl sm:text-3xl my-5 px-5'>Email : {user.email}</h1>
           <h1 className='text-xl sm:text-3xl my-5 px-5'>User Id : {user._id}</h1>
+          <h1 className={`${(user.type==='Admin' || user.type==='Worker')?'':'hidden'} text-xl sm:text-3xl my-5 px-5`}>Account Type: <span className={`${(user.type==='Admin')?'text-green-700':''} ${(user.type==='Worker')?'text-blue-800':''} font-semibold`}>{user.type}</span></h1>
           <h1 className='text-xl sm:text-3xl my-5 px-5'>Shipping Address :-</h1>
           </div>
           <div className='flex flex-wrap items-center justify-evenly'>

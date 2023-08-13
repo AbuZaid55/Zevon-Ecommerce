@@ -61,19 +61,16 @@
         width: 80%;
         border-radius: 8px;
     }
-    & .onlyadmin{
+    & .select1{
         background-color: $color;
         padding: 0.5rem;
         color: white;
         border-radius: 8px;
         margin-left: 1.2rem;
-        @include flex(row);
-        width: 11rem;
-        cursor: pointer;
-        & input{
-            margin: 0 .2rem;
-            width: 20px;
-            height: 20px;
+        & select{
+            color: $color;
+            border-radius: 5px;
+            margin-left: 0.5rem;
         }
     }
 }

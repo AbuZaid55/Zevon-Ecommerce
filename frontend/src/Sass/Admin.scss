@@ -8,10 +8,14 @@
 @import "table";
 @import "payment";
 @import "order";
+@import "changeStatus";
 
 
 #main{
     margin-left: 16rem;
+    & select, select option{
+        cursor: pointer;
+    }
 }
 
 
