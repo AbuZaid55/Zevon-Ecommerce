@@ -7,7 +7,7 @@ const fs = require("fs")
 const products = async(req,res)=>{
     try {
         const products = await productModel.find()
-        res.status(200).json(products)
+        sendSuccess(res,"All Products",products)
     } catch (error) {
         sendError(res,"something went wrong!")
     }
@@ -54,7 +54,6 @@ const updataProduct = async(req,res)=>{
             try {
                 fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
             } catch (error) {
-                console.log(error)
             }
             await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,thumbnail}})
             await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
@@ -66,7 +65,6 @@ const updataProduct = async(req,res)=>{
                     fs.unlinkSync(`./Images/${item}`)
                 })
             } catch (error) {
-                console.log(error)
             }
             await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,images}})
         }
@@ -74,14 +72,12 @@ const updataProduct = async(req,res)=>{
             try {
                 fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
             } catch (error) {
-                console.log(error)
             }
             try {
                 dbProduct.images.map((item)=>{
                     fs.unlinkSync(`./Images/${item}`)
                 })
             } catch (error) {
-                console.log(error)
             }
             await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,thumbnail,images}}) 
             await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
@@ -103,14 +99,12 @@ const deleteProduct = async(req,res)=>{
         try {
             fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
         } catch (error) {
-            console.log(error)
         }
         try {
             dbProduct.images.map((item)=>{
                 fs.unlinkSync(`./Images/${item}`)
             })
         } catch (error) {
-            console.log(error)
         }
         await productModel.deleteOne({_id:productId})
         await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.productId':'aa','cart.$.price':'','cart.$.deliveryCharge':'','cart.$.GST':'','cart.$.name':'','cart.$.thumbnail':'','cart.$.qty':0}})

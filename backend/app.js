@@ -29,6 +29,7 @@ app.use('/Images',express.static('Images'))
 app.use('/auth',require('./routes/userRouter'))
 app.use('/order',require('./routes/orderRouter'))
 app.use(require('./routes/productRouter'))
+app.use('/site',require('./routes/siteSettingRouter'))
 
 app.listen(port,()=>{
     console.log(`App listining on port no ${port}`)

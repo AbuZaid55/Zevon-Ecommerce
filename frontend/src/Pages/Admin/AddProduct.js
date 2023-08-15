@@ -1,12 +1,12 @@
 import {useRef, useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
-import BACKEND_URL from '../../baseUrl'
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 
 
 function AddProduct(props) {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const ref1 = useRef()
   const ref2 = useRef()

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { FaStar,FaRupeeSign } from 'react-icons/fa';
 import { Link, useNavigate ,useLocation } from 'react-router-dom';
-import BACKEND_URL from '../baseUrl';
 import axios from 'axios';
 import { toast } from 'react-toastify'
 
 const Card = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const location  = useLocation()
   const fullPath= location.pathname+location.search
   const navigate = useNavigate()
@@ -27,7 +27,7 @@ const Card = (props) => {
      navigate('/login',{state:{path:fullPath}})
     }else{
      try {
-       const res = await axios.post(`${BACKEND_URL}/auth/addToCart`,{userId:userId,productId:_id,name:name,price:sellprice,thumbnail:thumbnail,size:'',qty:1,color:'',GST:GST,deliveryCharge:deliveryCharge})
+       const res = await axios.post(`${BACKEND_URL}/auth/addToCart`,{userId:userId,productId:_id,name:name,price:sellprice,thumbnail:thumbnail,size:'',qty:1,color:'',GST:GST,deliveryCharge:deliveryCharge},{withCredentials:true})
        toast.success(res.data.massage)
      } catch (error) {
        const massage = error.response.data.massage
@@ -51,7 +51,7 @@ const Card = (props) => {
         <div className='flex items-center'><span className='flex items-center bg-green-600 text-white rounded px-1 my-1 lg:text-base '>{rating}<FaStar className='ml-1'/></span></div>
         <div className='flex items-center justify-between mt-2'>
         <Link to={`/details?_id=${_id}`}><button className=' text-xs lg:text-base bg-gray-400 text-white lg:px-3 px-2 py-2 rounded' >More Details</button></Link>
-        <button onClick={()=>{addToCart()}} className=' text-xs lg:text-base bg-fuchsia-800 text-white rounded lg:px-4 px-2 py-2'>Add to Cart</button>
+        <button onClick={()=>{addToCart()}} className=' text-xs lg:text-base bg-main-800 text-white rounded lg:px-4 px-2 py-2'>Add to Cart</button>
         </div>
     </div>
   )

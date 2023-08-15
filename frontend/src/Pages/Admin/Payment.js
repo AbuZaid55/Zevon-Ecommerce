@@ -1,12 +1,12 @@
 import React ,{useEffect,useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { FaTrash,FaArrowRight,FaArrowLeft } from "react-icons/fa";
-import BACKEND_URL from '../../baseUrl';
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
 
 const Payment = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const [paymentOnPerPage,setPaymentOnPerPage]=useState(20)
   const [allPayment,setAllPayment]=useState([])
@@ -77,6 +77,11 @@ const getAllPayment = async()=>{
     }
   },[props.user])
   useEffect(()=>{
+    if(props.setting && props.setting.noOfRow){
+      setPaymentOnPerPage(props.setting.noOfRow)
+    }
+  },[props.setting])
+  useEffect(()=>{
     getAllPayment()
   },[])
   useEffect(()=>{
@@ -139,23 +144,23 @@ const getAllPayment = async()=>{
 
         {/* pagination  */}
         <div className='flex items-center justify-between w-full relative bottom-0'>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
             <div className='flex'>
             <p className='border p-2 w-10 h-10 text-center '>{currentPage}</p>
             <span className='text-3xl'>/</span>
             <p className='border p-2 w-10 h-10 text-center '>{totalPage}</p>
             </div>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
         </div>
       </div>
 
         {/* delete popup  */}
         <div className={`${(showConfirm)?'flex':'hidden'} fixed top-0 left-0 w-full h-full items-center justify-center `} style={{backgroundColor:"rgba(128, 128, 128, 0.653)",zIndex:'200'}}>
         <div className=' w-56 h-56 border p-4  bg-white rounded  flex items-stretch justify-between flex-col'>
-          <h1 className=' text-fuchsia-700 text-center text-2xl'>Are your sure you want to delete?</h1>
+          <h1 className=' text-main-800 text-center text-2xl'>Are your sure you want to delete?</h1>
           <div className='flex items-center justify-between'>
             <button onClick={()=>{deletePayment(id)}} className=' bg-red-700 text-white px-3 py-2 rounded'>YES</button>
-            <button onClick={(()=>{setShowConfirm(false)})} className=' bg-fuchsia-700 text-white px-3 py-2 rounded'>NO</button>
+            <button onClick={(()=>{setShowConfirm(false)})} className=' bg-main-800 text-white px-3 py-2 rounded'>NO</button>
           </div>
         </div>
         </div>

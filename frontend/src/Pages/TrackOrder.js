@@ -1,10 +1,10 @@
 import React,{useEffect, useState} from 'react'
 import { useLocation } from 'react-router-dom'
 import axios from 'axios'
-import BACKEND_URL from '../baseUrl'
 import { toast } from 'react-toastify'
 
 const TrackOrder = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
     const params = (useLocation().search);
     const [orderId,setOrderId]=useState('')
     const [track,setTrack]=useState(20)
@@ -58,7 +58,7 @@ const TrackOrder = (props) => {
    },[status])
   return (
     <div className='flex items-center justify-center flex-col mt-8 sm:mt-0'>
-      <h1 className='text-3xl text-fuchsia-800 mt-5 font-bold'>Track Your Order</h1>
+      <h1 className='text-3xl text-main-800 mt-5 font-bold'>Track Your Order</h1>
       <div className={`${(status==="Cancelled" || status==='Refund')?'hidden':''} w-80 h-80 border-2 relative m-10`}>
         <div className='bg-gray-300 h-72  w-1 relative left-5 top-5'>
           <div className='w-full bg-green-700 absolute z-20' style={{height:`${track}%`}}></div>
@@ -93,8 +93,8 @@ const TrackOrder = (props) => {
       </div>
       <div className='border flex justify-center flex-col p-5 w-80 mb-10'>
         <label className='text-xl mb-2' htmlFor="orderInput">Order Id</label>
-        <input className='w-full border-b border-fuchsia-950' type="text" id='orderInput' placeholder='Enter your order id' value={orderId} onChange={(e)=>{setOrderId(e.target.value)}}/>
-        <button className=' bg-fuchsia-700  px-4 py-2 text-white font-bold rounded-full mt-5' onClick={()=>{fetchOrder(orderId)}}>Track Order</button>
+        <input className='w-full border-b border-main-800' type="text" id='orderInput' placeholder='Enter your order id' value={orderId} onChange={(e)=>{setOrderId(e.target.value)}}/>
+        <button className=' bg-main-800  px-4 py-2 text-white font-bold rounded-full mt-5' onClick={()=>{fetchOrder(orderId)}}>Track Order</button>
       </div>
     </div>
   )

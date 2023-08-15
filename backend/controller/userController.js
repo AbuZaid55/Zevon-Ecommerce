@@ -243,7 +243,6 @@ const uploadProfile = async(req,res)=>{
             try {
                 fs.unlinkSync(`./Images/${user.profile}`)
             } catch (error) {
-                console.log(error)
             }
         }
         user.profile=profile
@@ -521,6 +520,27 @@ const deleteUser = async(req,res)=>{
         sendError(res,"Something went wrong!")
     }
 }
+
+const changeName = async(req,res)=>{
+    const {userId,name}=req.body
+    if(userId===''){
+        return sendError(res,"Invalid User!")
+    }
+    if(name===''){
+        return sendError(res,"Please enter your name")
+    }
+    try {
+        const user = await userModel.findById(userId)
+        if(!user){
+            return sendError(res,"Invalid User")
+        }
+        user.name = name
+        await user.save()
+        sendSuccess(res,"Name update successfully")
+    } catch (error) {
+        sendError(res,"Something went wrong!")
+    }
+}
 module.exports = { 
     user,
     signUp,
@@ -539,5 +559,6 @@ module.exports = {
     contact,
     allUser,
     changeType,
-    deleteUser
+    deleteUser,
+    changeName
 }

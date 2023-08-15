@@ -1,7 +1,6 @@
 import React ,{useEffect,useRef,useState} from 'react'
 import { useNavigate,Link } from 'react-router-dom';
 import { FaArrowRight,FaArrowLeft ,FaPrint,FaTrash} from "react-icons/fa";
-import BACKEND_URL from '../../baseUrl';
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
@@ -9,6 +8,7 @@ import QRCode from "react-qr-code";
 import {useReactToPrint} from 'react-to-print';
 
 const Orders = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const ref = useRef()
   const [ordersOnPerPage,setOrdersOnPerPage]=useState(20)
@@ -100,6 +100,11 @@ const deleteOrder = async(orderId)=>{
     }
   },[props.user])
   useEffect(()=>{
+    if(props.setting && props.setting.noOfRow){
+      setOrdersOnPerPage(props.setting.noOfRow)
+    }
+  },[props.setting])
+  useEffect(()=>{
     getAllOrders()
   },[])
   useEffect(()=>{
@@ -154,12 +159,12 @@ const deleteOrder = async(orderId)=>{
           let totalPrice = 0
           let GST =0
           let deliverCharge = 0
-          return <div key={I}  className="mx-2 sm:mx-4 my-5 border-2 border-fuchsia-700 rounded-xl overflow-hidden relative">
-            <div className=' bg-fuchsia-700 text-white p-2 text-lg'>
+          return <div key={I}  className="mx-2 sm:mx-4 my-5 border-2 border-main-800 rounded-xl overflow-hidden relative">
+            <div className=' bg-main-800 text-white p-2 text-lg'>
             <div>Razorpay Payment Id: {order.razorpay_payment_id}</div>
             <div>Razorpay Order Id: {order.razorpay_order_id}</div>
             </div>
-            <span className='absolute top-1 right-1 cursor-pointer p-2 text-fuchsia-700 border-2 border-fuchsia-700 rounded bg-white' onClick={(e)=>{printPDF(`print${order._id}`)}}><FaPrint className=' pointer-events-none'/></span>
+            <span className='absolute top-1 right-1 cursor-pointer p-2 text-main-800 border-2 border-main-800 rounded bg-white' onClick={(e)=>{printPDF(`print${order._id}`)}}><FaPrint className=' pointer-events-none'/></span>
           {/* item  */}
            {
             order.item.map((item,i)=>{
@@ -179,7 +184,7 @@ const deleteOrder = async(orderId)=>{
            }
 
         {/* item end  */}
-          <div className='p-2 text-fuchsia-700 border-t-2 border-fuchsia-700 text-lg relative'>
+          <div className='p-2 text-main-800 border-t-2 border-main-800 text-lg relative'>
           <span className={`${(order.status==='Refund')?'':'hidden'} absolute top-1 right-1 cursor-pointer p-2 text-red-700 border-2 border-red-700 rounded bg-white`} onClick={()=>{deleteOrder(order._id)}}><FaTrash className=' pointer-events-none'/></span>
           <p>Order Id: {order._id}</p>
           <p className='w-full'>Order On : {order.createdAt.slice(0,10).split("-").reverse().join("-")}</p>
@@ -205,20 +210,20 @@ const deleteOrder = async(orderId)=>{
               <div className='shipping'>
                 <h1>Shipping Details:-</h1>
                 <div>
-                  <h1>House No : {`${(order.shippingDetails)?order.shippingDetails.houseNo:''}`}</h1>
-                  <h1>Address : {`${(order.shippingDetails)?order.shippingDetails.address:''}`}</h1>
-                  <h1>Pin code : {`${(order.shippingDetails)?order.shippingDetails.pinCode:''}`}</h1>
-                  <h1>City : {`${(order.shippingDetails)?order.shippingDetails.city:''}`}</h1>
-                  <h1>State : {`${(order.shippingDetails)?order.shippingDetails.state:''}`}</h1>
+                  <h1>House No : {order.shippingDetails.houseNo}</h1>
+                  <h1>Address : {order.shippingDetails.address}</h1>
+                  <h1>Pin code : {order.shippingDetails.pinCode}</h1>
+                  <h1>City : {order.shippingDetails.city}</h1>
+                  <h1>State : {order.shippingDetails.state}</h1>
                 </div>
               </div>    
             </div>
-            <div><QRCode style={{ height: "auto", maxWidth: "250px"}} value={`Date:- ${order.createdAt.slice(0,10).split("-").reverse().join("-")}\nOrder Id: ${order._id}\nUser Id: ${order.userId}\nName: ${order.username}\nEmail: ${order.email}\nPhone No: ${order.phoneNo}\nTotal Amount: ${deliverCharge+GST+totalPrice} rupees`} /></div>
+            <div><QRCode style={{ height: "auto", maxWidth: "250px"}} value={`Date:- ${order.createdAt.slice(0,10).split("-").reverse().join("-")}\nOrder Id: ${order._id}\nUser Id: ${order.userId}\nName: ${order.username}\nEmail: ${order.email}\nPhone No: ${order.phoneNo}\nTotal Amount: ${deliverCharge+GST+totalPrice} rupees\nHouse No: ${order.shippingDetails.houseNo}\nAddress: ${order.shippingDetails.address}\nPin code: ${order.shippingDetails.pinCode}\nCity: ${order.shippingDetails.city}\nState: ${order.shippingDetails.state}`} /></div>
             </div>
 
 
             <div className="w-full flex flex-col">
-            <h1 className=" bg-fuchsia-800 text-white font-semibold text-xl py-2 px-4 mb-5">
+            <h1 className=" bg-main-800 text-white font-semibold text-xl py-2 px-4 mb-5">
               Order Summery
             </h1>
             <div className="border w-full">
@@ -261,13 +266,13 @@ const deleteOrder = async(orderId)=>{
 
         {/* pagination  */}
         <div className='flex items-center justify-between w-full relative bottom-0'>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
             <div className='flex'>
             <p className='border p-2 w-10 h-10 text-center '>{currentPage}</p>
             <span className='text-3xl'>/</span>
             <p className='border p-2 w-10 h-10 text-center '>{totalPage}</p>
             </div>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
         </div>
       </div>
     </div>

@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useEffect ,useState} from 'react'
 import {Link} from 'react-router-dom'
 import { FaInstagram,FaDiscord,FaLinkedin,FaGithub,FaHome,FaRegAddressBook,FaPhoneAlt ,FaBoxOpen,FaShoppingCart,FaShoppingBag} from "react-icons/fa";
 
 const Footer = (props) => {
+  const [path,setPath]=useState('')
+  const [setting,setSetting]=useState({office:'xyz',email:'xyz@gmail.com',phoneNo:1234567890,instaLink:'',linkedInLink:'',discordLink:'',githubLink:''})
+  useEffect(()=>{
+    if(props.setting!==''){
+      setSetting(props.setting)
+    }
+  },[props.setting])
+  useEffect(()=>{
+    if(props.path){
+      setPath(props.path)
+    }
+  },[props.path])
   return (
-    <div className={` ${(props.path==='/products' || props.path && props.path.includes('/admin'))?'hidden':'flex'} bg-gray-300 items-center justify-around py-5 flex-wrap`}>
-      <div className='hidden lg:block'><Link to="/"><h1 className="mx-3 text-5xl font-serif text-fuchsia-950 ml-2 ">Zevon</h1></Link></div>
+    <div className={` ${(path==='/products' || path.includes('/admin'))?'hidden':'flex'} bg-gray-300 items-center justify-around py-5 flex-wrap`}>
+      <div className='hidden lg:block'><Link to="/"><h1 className="mx-3 text-5xl font-serif text-main-800 ml-2 ">Zevon</h1></Link></div>
       <div className='hidden lg:block mt-0 mx-3' style={{width:'260px'}}>
         <h1 className='text-3xl border-b-4 p-2 border-black font-bold mb-3'>Pages</h1>
         <ul className=' px-3 h-32'>
@@ -18,18 +30,18 @@ const Footer = (props) => {
       <div className='mx-3' style={{width:'260px'}}>
         <h1 className='text-xl sm:text-3xl border-b-2 sm:border-b-4 p-2 border-black font-bold mb-3'>Contact Us</h1>
        <ul className='px-1 h-32'>
-       <li className='flex items-center p-1'><FaHome className='m-2'/>Office: Chittan pura mau</li>
-        <li><Link className='flex items-center p-1'><FaRegAddressBook className='m-2 '/>Email:zaid70979@gmail.com</Link></li>
-        <li><Link className='flex items-center p-1'><FaPhoneAlt className='m-2'/>Phone : 8005263514</Link></li>
+        <li ><Link className='p-1'><span><FaRegAddressBook className='m-2 inline-flex items-center'/>Email:</span>{setting.email}</Link></li>
+        <li><Link className='p-1'><span><FaPhoneAlt className='m-2 inline-flex items-center'/>Phone :</span> {setting.phoneNo}</Link></li>
+       <li className='p-1'><span><FaHome className='m-2 inline-flex items-center'/>Office:</span> {setting.office}</li>
        </ul>
       </div>
       <div className='mx-3' style={{width:'260px'}}>
         <h1 className='text-xl sm:text-3xl border-b-2 sm:border-b-4 p-2 border-black font-bold mb-3'>Follow Us</h1>
         <ul className='px-3 flex items-center justify-between h-32'>
-          <li className='text-2xl sm:text-3xl'><Link><FaInstagram/></Link></li>
-          <li className='text-2xl sm:text-3xl'><Link><FaLinkedin/></Link></li>
-          <li className='text-2xl sm:text-3xl'><Link><FaDiscord/></Link></li>
-          <li className='text-2xl sm:text-3xl'><Link><FaGithub/></Link></li>
+          <li className='text-2xl sm:text-3xl'><Link target='_blank' to={setting.instaLink}><FaInstagram/></Link></li>
+          <li className='text-2xl sm:text-3xl'><Link target='_blank' to={setting.linkedInLink}><FaLinkedin/></Link></li>
+          <li className='text-2xl sm:text-3xl'><Link target='_blank' to={setting.discordLink}><FaDiscord/></Link></li>
+          <li className='text-2xl sm:text-3xl'><Link target='_blank' to={setting.githubLink}><FaGithub/></Link></li>
         </ul>
       </div>
     </div>

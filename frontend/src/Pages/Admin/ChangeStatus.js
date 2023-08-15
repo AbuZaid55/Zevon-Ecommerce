@@ -3,9 +3,9 @@ import {useNavigate} from 'react-router-dom'
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
-import BACKEND_URL from '../../baseUrl'
 
 const ChangeStatus = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const [orderId,setOrderId]=useState('')
   const [status,setStatus]=useState('Processing')

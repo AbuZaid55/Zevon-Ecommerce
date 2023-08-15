@@ -1,13 +1,13 @@
 import React ,{useEffect,useState} from 'react'
 import { useNavigate,Link } from 'react-router-dom';
 import { FaTrash,FaEdit,FaPlusSquare,FaStar,FaArrowRight,FaArrowLeft } from "react-icons/fa";
-import BACKEND_URL from '../../baseUrl';
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
 
 
 const Products = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const [itemOnPerPage,setItemOnPerPage]=useState(20)
   const [allProduct,setAllProduct]=useState([])
@@ -28,44 +28,7 @@ const Products = (props) => {
     setCurrentPage(1)
   }
 
-  const deleteItem = async()=>{
-    setShowConfirm(false)
-    props.setLoader2(true)
-    try {
-      const res = await axios.delete(`${BACKEND_URL}/delete/product?productId=${deleteItemId}`,{withCredentials:true})
-      props.fetchProduct()
-      toast.success(res.data.massage)
-    } catch (error) {
-      toast.error(error.response.data.massage)
-    }
-    props.setLoader2(false)
-  }
-
-  const handlePagination = (action)=>{
-    if(action==="Inc"){
-        if(totalPage>currentPage){
-            setCurrentPage(currentPage+1)
-        }else{
-            setCurrentPage(totalPage)
-        }
-    }
-    if(action==='Desc'){
-        if(currentPage>1){
-            setCurrentPage(currentPage-1)
-        }else{
-            setCurrentPage(1)
-        }
-    }
-}
-  useEffect(()=>{ 
-    if(props.user!==''){
-      if(props.user.type==='Admin'){
-      }else{
-        navigate('*')
-      }
-    }
-  },[props.user])
-  useEffect(()=>{
+  const getSearchProduct = ()=>{
     const key = search.toLowerCase().split(' ')
     const searchItem = props.allProduct.filter((item)=>{
       if(search!==''){
@@ -129,6 +92,52 @@ const Products = (props) => {
     setAllProduct(searchItem)
     setTotalPage(Math.ceil(searchItem.length/itemOnPerPage))
     setCurrentPage(1)
+  }
+
+  const deleteItem = async()=>{
+    setShowConfirm(false)
+    props.setLoader2(true)
+    try {
+      const res = await axios.delete(`${BACKEND_URL}/delete/product?productId=${deleteItemId}`,{withCredentials:true})
+      props.fetchProduct()
+      toast.success(res.data.massage)
+    } catch (error) {
+      toast.error(error.response.data.massage)
+    }
+    props.setLoader2(false)
+  }
+
+  const handlePagination = (action)=>{
+    if(action==="Inc"){
+        if(totalPage>currentPage){
+            setCurrentPage(currentPage+1)
+        }else{
+            setCurrentPage(totalPage)
+        }
+    }
+    if(action==='Desc'){
+        if(currentPage>1){
+            setCurrentPage(currentPage-1)
+        }else{
+            setCurrentPage(1)
+        }
+    }
+}
+  useEffect(()=>{ 
+    if(props.user!==''){
+      if(props.user.type==='Admin'){
+      }else{
+        navigate('*')
+      }
+    }
+  },[props.user])
+  useEffect(()=>{
+    if(props.setting && props.setting.noOfRow){
+      setItemOnPerPage(props.setting.noOfRow)
+    }
+  },[props.setting])
+  useEffect(()=>{
+    getSearchProduct()
   },[props.allProduct,search,itemOnPerPage,searchType])
   useEffect(()=>{
     const products = allProduct.slice((currentPage-1)*itemOnPerPage,currentPage*itemOnPerPage)
@@ -202,21 +211,21 @@ const Products = (props) => {
           </table>
         </div>
         <div className='flex items-center justify-between w-full relative bottom-0'>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Desc")}}><FaArrowLeft/></button>
             <div className='flex'>
             <p className='border p-2 w-10 h-10 text-center '>{currentPage}</p>
             <span className='text-3xl'>/</span>
             <p className='border p-2 w-10 h-10 text-center '>{totalPage}</p>
             </div>
-            <button className=' bg-fuchsia-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
+            <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={()=>{handlePagination("Inc")}}><FaArrowRight/></button>
         </div>
       </div>
         <div className={`${(showConfirm)?'flex':'hidden'} fixed top-0 left-0 w-full h-full items-center justify-center `} style={{backgroundColor:"rgba(128, 128, 128, 0.653)",zIndex:'200'}}>
         <div className=' w-56 h-56 border p-4  bg-white rounded  flex items-stretch justify-between flex-col'>
-          <h1 className=' text-fuchsia-700 text-center text-2xl'>Are your sure you want to delete?</h1>
+          <h1 className=' text-main-800 text-center text-2xl'>Are your sure you want to delete?</h1>
           <div className='flex items-center justify-between'>
             <button onClick={()=>{deleteItem()}} className=' bg-red-700 text-white px-3 py-2 rounded'>YES</button>
-            <button onClick={(()=>{setShowConfirm(false)})} className=' bg-fuchsia-700 text-white px-3 py-2 rounded'>NO</button>
+            <button onClick={(()=>{setShowConfirm(false)})} className=' bg-main-800 text-white px-3 py-2 rounded'>NO</button>
           </div>
         </div>
         </div>

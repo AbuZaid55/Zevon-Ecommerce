@@ -2,11 +2,11 @@ import React,{useState,useEffect} from "react";
 import { FaRupeeSign,FaTrash } from 'react-icons/fa';
 import {useNavigate,Link} from 'react-router-dom'
 import GoLogin from '../Component/GoLogin';
-import BACKEND_URL from '../baseUrl'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const Cart = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
   const [totalPrice,setTotalPrice]=useState(0)
   const [GST,setGST]=useState(0)
@@ -76,7 +76,7 @@ useEffect(()=>{
 },[props.user])
   return (<>
   <div className={`${(login)?"hidden":""}`}><GoLogin/></div>
-  <div className={`w-full ${(login && user.cart.length===0)?"flex":"hidden"} items-center justify-center flex-col`} style={{height:"49vh"}}><h1 className="text-5xl font-bold text-fuchsia-700">No Cart Item</h1><Link to="/products" className="px-4 py-3 bg-fuchsia-700 text-white font-semibold mt-5 rounded-full">Go to Shopping</Link></div>
+  <div className={`w-full ${(login && user.cart.length===0)?"flex":"hidden"} items-center justify-center flex-col`} style={{height:"49vh"}}><h1 className="text-5xl font-bold text-main-800">No Cart Item</h1><Link to="/products" className="px-4 py-3 bg-main-800 text-white font-semibold mt-5 rounded-full">Go to Shopping</Link></div>
     <div className={`w-full ${(login && user.cart.length!==0)?"flex":"hidden"} flex-col sm:flex-row mt-10 sm:mt-0 `} style={{minHeight:"49vh"}}>
       <div className="w-full sm:w-4/6 ">
         {/* item  */}
@@ -94,12 +94,12 @@ useEffect(()=>{
         </div>
         <div className="flex items-center mt-3">
           <div className="flex">
-            <span className='mr-1 sm:mr-3 bg-fuchsia-800 text-white text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded' onClick={(e)=>{setQty(e,"Dec",item.productId,i)}}>-</span>
-            <span className='mr-1 sm:mr-3 border border-fuchsia-800 text-fuchsia-800 text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded'>{item.qty}</span>
-            <span className='mr-1 sm:mr-3 bg-fuchsia-800 text-white text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded' onClick={(e)=>{setQty(e,"Inc",item.productId,i)}}>+</span>
+            <span className='mr-1 sm:mr-3 bg-main-800 text-white text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded' onClick={(e)=>{setQty(e,"Dec",item.productId,i)}}>-</span>
+            <span className='mr-1 sm:mr-3 border border-main-800 text-main-800 text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded'>{item.qty}</span>
+            <span className='mr-1 sm:mr-3 bg-main-800 text-white text-xl w-7 h-7 flex items-center justify-center cursor-pointer rounded' onClick={(e)=>{setQty(e,"Inc",item.productId,i)}}>+</span>
           </div>
           <p className="text-xl sm:mx-4 mx-1 cursor-pointer hover:text-red-700" onClick={(e)=>{removeItem(e,i)}}><FaTrash/></p>
-          <p className="flex items-center lg:text-xl ml-auto">Total Price: <FaRupeeSign className=" font-extralight text-green-600"/><span className="font-bold text-green-600">{item.price*item.qty}</span></p>
+          <p className="flex items-center lg:text-xl ml-auto">Total Price: <FaRupeeSign className=" font-extralight text-green-700"/><span className="font-bold text-green-700">{item.price*item.qty}</span></p>
         </div>
         </div>
       })
@@ -108,14 +108,14 @@ useEffect(()=>{
       </div>
       {/* price details  */}
       <div className={`${(login && user.cart.length!==0)?"":"hidden"} w-full sm:w-2/6 mt-4 `}>
-        <h1 className=" bg-fuchsia-800 text-white px-4 py-1">PRICE DETAILS</h1>
+        <h1 className=" bg-main-800 text-white px-4 py-1">PRICE DETAILS</h1>
         <div className="border-b w-full">
           <div className="flex items-center justify-between my-2 px-4 py-1"><span>Total Price ({user.cart.length} item)</span><span className="flex items-center font-semibold "><FaRupeeSign />{totalPrice}</span></div>
           <div className="flex items-center justify-between my-2 px-4 py-1"><span>GST</span><span className="flex items-center font-semibold">+<FaRupeeSign />{GST}</span></div>
-          <div className="flex items-center justify-between my-2 px-4 py-1"><span>Delievery Charge</span><span className={` ${(deliveryCharge!==0)?'flex':'hidden'} items-center font-semibold`}>+<FaRupeeSign />{deliveryCharge}</span><span className={` ${(deliveryCharge===0)?'':'hidden'} text-green-600 font-semibold`}>Free</span></div>
+          <div className="flex items-center justify-between my-2 px-4 py-1"><span>Delievery Charge</span><span className={` ${(deliveryCharge!==0)?'flex':'hidden'} items-center font-semibold`}>+<FaRupeeSign />{deliveryCharge}</span><span className={` ${(deliveryCharge===0)?'':'hidden'} text-green-700 font-semibold`}>Free</span></div>
         </div>
         <h1 className="flex items-center justify-between my-2 px-4 py-2 font-bold text-xl border-b"><span>Total Amount</span><span className="flex items-center"><FaRupeeSign/>{totalPrice+GST+deliveryCharge}</span></h1>
-        <div className="flex items-center justify-end" ><button className=" bg-fuchsia-800 text-white px-4 py-2 rounded-full cursor-pointer my-5 mx-3" onClick={(e)=>{goShipping(e)}}>CHECK OUT</button></div>
+        <div className="flex items-center justify-end" ><button className=" bg-main-800 text-white px-4 py-2 rounded-full cursor-pointer my-5 mx-3" onClick={(e)=>{goShipping(e)}}>CHECK OUT</button></div>
       </div>
     </div>
   </>);

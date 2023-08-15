@@ -29,7 +29,7 @@ table{
         font-size: 1.3rem;
         cursor: pointer;
         &.edit{
-            color: green;
+            color: #15803d;
             &:hover{
                 color: rgb(0, 81, 0);
             }
@@ -37,7 +37,7 @@ table{
         &.delete{
             color: red;
             &:hover{
-                color: rgb(203, 0, 0);
+                color: $button-color;
             }
         }
     }

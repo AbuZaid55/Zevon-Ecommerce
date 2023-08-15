@@ -10,7 +10,7 @@ const Aside = () => {
     <div id='aside'>
       <div className=' scrollbar-hide'>
       <label htmlFor="checkbox"><span onClick={()=>{setShowAside(!showAside)}}><FaAngleDoubleRight className={`${(showAside)?'hidden':''}`}/><FaAngleDoubleLeft className={`${(showAside)?'':'hidden'}`}/></span></label>
-        <h1 className='logo'>Dashboard</h1>
+        <Link to='/admin/dashboard'> <h1 className='logo'>Dashboard</h1></Link>
         <div>
           <p>MAIN</p>
           <Link to='/admin/dashboard'><h1><FaHome className='icon'/>Homepage</h1></Link>

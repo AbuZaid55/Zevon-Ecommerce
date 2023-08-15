@@ -1,0 +1,88 @@
+.setting{
+    min-height: 100vh;
+    width: 100%;
+    & h1{
+        font-size: 2.5rem;
+        color: $color;
+        font-weight:700;
+        width: 100%;
+        text-align: center;
+        margin-top: 2rem;
+    }
+    & input, & label{
+        display: block;
+        width: 100%;
+    }
+    & input[type='file']{
+        display: none;
+    }
+    & input{
+        border: 2px solid $color;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+    }
+    & label{
+        font-size: 1.3rem;
+        margin-top: 1rem;
+        padding-left: 2px;
+    }
+    & label.file{
+        background-color: $color;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    & div div > span{
+        color: $color;
+        display: inline-block;
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        border-radius: 10px;
+        position: relative;
+        font-weight: 600;
+        padding-bottom: 10px;
+        &::before{
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: $color;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-radius: 50px;
+        }
+        &::after{
+            content: "";
+            width: 100%;
+            height: 3px;
+            background-color: $color;
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            border-radius: 50px;
+        }
+    }
+    & div div{
+        width: 90%;
+        margin:2rem auto;
+        padding: 2rem;
+        border: 2px solid $color;
+        border-radius: 10px;
+        & label span{
+            color: $color;
+        }
+    }
+    & p{
+        width: 100%;
+        @include flex(row);
+        justify-content: flex-end;
+        & button{
+            background-color: #15803d;
+            color: white;
+            padding: 0.5rem 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+    }
+}

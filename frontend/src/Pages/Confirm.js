@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import GoLogin from "../Component/GoLogin";
-import BACKEND_URL from '../baseUrl'
 import axios from 'axios'
 import {
   FaRupeeSign,
@@ -9,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 
 const Confirm = (props) => {
+  const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const location = useLocation();
   const navigate = useNavigate()
   const [totalPrice,setTotalPrice]=useState(0)
@@ -90,7 +90,7 @@ const Confirm = (props) => {
         <div className="sm:flex  mt-9 sm:mt-0">
           <div className="w-full sm:w-4/6">
             {/* shipping details  */}
-            <h1 className=" bg-fuchsia-800 text-white font-semibold text-xl py-2 px-4 mb-5">
+            <h1 className=" bg-main-800 text-white font-semibold text-xl py-2 px-4 mb-5">
               Shipping Details
             </h1>
             <div className="border w-80 m-5 p-4">
@@ -102,7 +102,7 @@ const Confirm = (props) => {
             </div>
 
             {/* cart item  */}
-            <h1 className=" bg-fuchsia-800 text-white font-semibold text-xl py-2 px-4 my-5">
+            <h1 className=" bg-main-800 text-white font-semibold text-xl py-2 px-4 my-5">
               Your Cart Items
             </h1>
             {
@@ -144,7 +144,7 @@ const Confirm = (props) => {
             }
           </div>
           <div className="w-full md:w-2/6">
-            <h1 className=" bg-fuchsia-800 text-white font-semibold text-xl py-2 px-4 mb-5">
+            <h1 className=" bg-main-800 text-white font-semibold text-xl py-2 px-4 mb-5">
               Order Summery
             </h1>
             <div className="border w-full">
@@ -168,7 +168,7 @@ const Confirm = (props) => {
                   +<FaRupeeSign />
                   {deliveryCharge}
                 </span>
-                <span className={` ${(deliveryCharge!==0)?'hidden':''} text-green-600 font-semibold`}>Free</span>
+                <span className={` ${(deliveryCharge!==0)?'hidden':''} text-green-700 font-semibold`}>Free</span>
               </div>
             </div>
             <h1 className="flex items-center justify-between my-2 px-4 py-2 font-bold text-xl border">
@@ -179,7 +179,7 @@ const Confirm = (props) => {
               </span>
             </h1>
             <div className="flex items-center justify-end">
-              <button className=" bg-fuchsia-800 text-white px-4 py-2 rounded-full cursor-pointer my-5 mx-3" onClick={(e)=>{makePayment(e)}}>
+              <button className=" bg-main-800 text-white px-4 py-2 rounded-full cursor-pointer my-5 mx-3" onClick={(e)=>{makePayment(e)}}>
                 Proceed to Payment
               </button>
             </div>
