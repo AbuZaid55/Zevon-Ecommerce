@@ -111,7 +111,7 @@ const App = () => {
         <Routes>
           <Route path='/' element={<Home user={user} setting={setting} getUser={getUser} allProduct={allProduct} />} />
           <Route path='/contact' element={<Contact setLoader2={setLoader2} />} />
-          <Route path='/products' element={<Product user={user} setting={setting} allProduct={allProduct} />} />
+          <Route path='/products' element={<Product user={user} getUser={getUser} setting={setting} allProduct={allProduct} />} />
           <Route path='/details' element={<Detail setting={setting} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} getUser={getUser} />} />
           <Route path='/cart' element={<Cart user={user} setLoader2={setLoader2} getUser={getUser} />} />
           <Route path='/cart/shipping' element={<Shipping setLoader2={setLoader2} user={user} getUser={getUser} />} />
@@ -127,7 +127,7 @@ const App = () => {
           <Route path='/sendresetlink' element={<SendResetLink setLoader2={setLoader2} />} />
           <Route path='/changepass' element={<ChangePass setLoader2={setLoader2} />} />
 
-          <Route path='/admin/dashboard' element={<Dashboard user={user} />} />
+          <Route path='/admin/dashboard' element={<Dashboard setLoader2={setLoader2} allProduct={allProduct} user={user} />} />
           <Route path='/admin/dashboard/products' element={<Products setting={setting} allProduct={allProduct} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} />} />
           <Route path='/admin/dashboard/addproduct' element={<AddProduct setLoader2={setLoader2} user={user} />} />
           <Route path='/admin/dashboard/updateproduct' element={<UpdateProduct allProduct={allProduct} fetchProduct={fetchProduct} setLoader2={setLoader2} user={user} />} />

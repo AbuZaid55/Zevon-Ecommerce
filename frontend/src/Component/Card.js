@@ -28,6 +28,7 @@ const Card = (props) => {
     }else{
      try {
        const res = await axios.post(`${BACKEND_URL}/auth/addToCart`,{userId:userId,productId:_id,name:name,price:sellprice,thumbnail:thumbnail,size:'',qty:1,color:'',GST:GST,deliveryCharge:deliveryCharge},{withCredentials:true})
+       props.getUser()
        toast.success(res.data.massage)
      } catch (error) {
        const massage = error.response.data.massage

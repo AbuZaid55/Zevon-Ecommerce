@@ -64,7 +64,7 @@ useEffect(()=>{
           if(item.category===category){
               iteminSlider = iteminSlider+1
               if(iteminSlider<=sliderItemNo){
-                return <Card key={i} product={item} userId={userId}/>  
+                return <Card getUser={props.getUser} key={i} product={item} userId={userId}/>  
               }
           }
         })}

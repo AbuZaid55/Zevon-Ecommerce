@@ -12,7 +12,6 @@ const Users = (props) => {
   const [allUsers,setAllUsers]=useState([])
   const [searchUser,setSearchUser]=useState([])
   const [paginationUser,setPaginationUser]=useState([])
-  const [onlyAdmin,setOnlyAdmin]=useState(false)
   const [userType,setUserType]=useState('All')
   const [showConfirm,setShowConfirm]=useState(false)
   const [userId,setUserId]=useState('')
@@ -179,7 +178,7 @@ const Users = (props) => {
                   <td datalabel={"Name"}>{item.name}</td>
                   <td datalabel={"Email"}>{item.email}</td>
                   <td datalabel={"Admin"}>
-                    <select className={`select border-2 ${(item.type==='Worker')?'text-blue-800 border-blue-700':' text-main-800 border-main-800'} ${(item.type==='Admin')?'text-green-700 border-green-700':''}`} value={item.type} onChange={(e)=>{changeType(e.target.value,item._id)}}>
+                    <select className={`select border-2  ${(item.type==='Worker')?'text-blue-800 border-blue-700':''} ${(item.type==='Admin')?'text-green-700 border-green-700':''} ${(item.type==='User')?'text-main-800 border-main-800':''}`} value={item.type} onChange={(e)=>{changeType(e.target.value,item._id)}}>
                       <option className=' text-main-800' value="User">User</option>
                       <option className=' text-blue-700' value="Worker">Worker</option>
                       <option className=' text-green-700' value="Admin">Admin</option>

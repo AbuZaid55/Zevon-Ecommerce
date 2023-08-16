@@ -1,6 +1,11 @@
 import React ,{useState,useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Aside from './Aside'
+import ProductsChart from '../../Component/Chart/ProductsChart';
+import UserChart from '../../Component/Chart/UserChart';
+import OrdersChart from '../../Component/Chart/OrdersChart';
+import PaymentChart from '../../Component/Chart/PaymentChart';
+import FailedPaymentChart from '../../Component/Chart/FailedPaymentChart';
 
 const Dashboard = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
@@ -19,8 +24,15 @@ const Dashboard = (props) => {
   return (<>
     <div className='flex'>
       <Aside/>
-      <div className='dashboard' id='main'>
-        Dashboard
+      <div className='dashboard w-full' id='main'>
+        <h1>Zevon Dashboard</h1>
+        <div className='flex flex-col sm:flex-row'>
+        <div className='chartContainer  w-full sm:w-1/2'><ProductsChart allProduct={props.allProduct}/></div>
+        <div className='chartContainer  w-full sm:w-1/2'><UserChart allProduct={props.allProduct} setLoader2={props.setLoader2}/></div>
+        </div>
+        <div className='chartContainer w-full' ><OrdersChart setLoader2={props.setLoader2}/></div>
+        <div className='chartContainer w-full'><PaymentChart allProduct={props.allProduct} setLoader2={props.setLoader2}/></div>
+        <div className='chartContainer w-full'><FailedPaymentChart allProduct={props.allProduct} setLoader2={props.setLoader2}/></div>
       </div>
     </div>
   </>)

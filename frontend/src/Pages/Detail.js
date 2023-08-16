@@ -250,7 +250,7 @@ return (<>
             similarProduct.map((item,i)=>{
               iteminSlider = iteminSlider+1 
               if(iteminSlider<=sliderItemNo){
-                return <Card setLoader2={props.setLoader2} key={i} product={item} userId={user._id}/> 
+                return <Card getUser={props.getUser} setLoader2={props.setLoader2} key={i} product={item} userId={user._id}/> 
               }
             })
            }

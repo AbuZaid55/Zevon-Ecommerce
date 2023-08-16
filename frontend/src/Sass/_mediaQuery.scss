@@ -101,3 +101,25 @@
         }
     }
 }
+
+@media screen and (max-width:500px) {
+    .dashboard {
+        & .chartContainer{
+            &:nth-child(3){
+                height: 500px;
+                margin-bottom: 1rem;
+            }
+            &:nth-child(4){
+                height: 400px;
+                margin-bottom: 6rem;
+            }
+            &:nth-child(5){
+                height: 400px;
+                margin-bottom: 5rem;
+            }
+            }
+    & > h1{
+        font-size: 2rem;
+    }
+}
+}

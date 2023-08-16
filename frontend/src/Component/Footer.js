@@ -21,10 +21,10 @@ const Footer = (props) => {
       <div className='hidden lg:block mt-0 mx-3' style={{width:'260px'}}>
         <h1 className='text-3xl border-b-4 p-2 border-black font-bold mb-3'>Pages</h1>
         <ul className=' px-3 h-32'>
-          <li><Link className='flex items-center pt-1'><FaHome className='mr-2'/>Home</Link></li>
-          <li><Link className='flex items-center pt-1'><FaBoxOpen className='mr-2'/>Product</Link></li>
-          <li><Link className='flex items-center pt-1'><FaShoppingCart className='mr-2'/>Cart</Link></li>
-          <li><Link className='flex items-center pt-1'><FaShoppingBag className='mr-2'/>Order</Link></li>
+          <li><Link to='/' className='flex items-center pt-1'><FaHome className='mr-2'/>Home</Link></li>
+          <li><Link to='/products' className='flex items-center pt-1'><FaBoxOpen className='mr-2'/>Product</Link></li>
+          <li><Link to='/cart' className='flex items-center pt-1'><FaShoppingCart className='mr-2'/>Cart</Link></li>
+          <li><Link to='/orders' className='flex items-center pt-1'><FaShoppingBag className='mr-2'/>Order</Link></li>
         </ul>
       </div>
       <div className='mx-3' style={{width:'260px'}}>

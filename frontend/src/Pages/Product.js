@@ -256,7 +256,7 @@ const Product = (props) => {
         <div className={`w-full ${(filterProduct.length===0)?"flex":"hidden"} items-center justify-center flex-col`} style={{height:"60vh"}}><h1 className="text-5xl font-bold text-main-800">No Product</h1></div>
        <div className={`${(filterProduct.length===0)?'hidden':'flex'} flex-wrap items-center justify-evenly w-full`} style={{minHeight:'60vh'}} >
         {filterProduct!=='' && filterProduct.map((item,i)=>{
-            return <Card key={i} product={item} userId={userId}/>        
+            return <Card key={i} product={item} getUser={props.getUser} userId={userId}/>        
         })}
         </div>
         <div className='flex items-center justify-between w-full relative bottom-0'>
