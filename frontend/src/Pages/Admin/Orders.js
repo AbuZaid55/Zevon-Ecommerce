@@ -1,6 +1,6 @@
 import React ,{useEffect,useRef,useState} from 'react'
-import { useNavigate,Link } from 'react-router-dom';
-import { FaArrowRight,FaArrowLeft ,FaPrint,FaRupeeSign} from "react-icons/fa";
+import { useNavigate,Link,useLocation } from 'react-router-dom';
+import { FaArrowRight,FaArrowLeft ,FaPrint} from "react-icons/fa";
 import Aside from './Aside'
 import {toast} from 'react-toastify'
 import axios from 'axios'
@@ -10,6 +10,7 @@ import {useReactToPrint} from 'react-to-print';
 const Orders = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
+  const location = useLocation().search
   const ref = useRef()
   const [ordersOnPerPage,setOrdersOnPerPage]=useState(20)
   const [allOrders,setAllOrders]=useState([])
@@ -104,6 +105,9 @@ const printPDF = (elementId)=>{
   },[props.setting])
   useEffect(()=>{
     getAllOrders()
+    if(location!==''){
+      setStatus(location.slice(5).replaceAll('%20' , ' '))
+    }
   },[])
   useEffect(()=>{
     const payments = allOrders.filter(((order)=>{

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { LineChart, Line, YAxis, CartesianGrid,ResponsiveContainer, Tooltip } from "recharts";
 import axios from "axios";
 import CustomTooltip from "./Tooltip";
+import {useNavigate} from 'react-router-dom'
 
 const FailedPaymentChart = (props) => {
     const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [data,setData]=useState([])
+  const navigate = useNavigate()
   const [startDate,setStartDate]=useState(new Date(Date.now()-7 * 24 * 60 * 60 * 1000).toISOString().slice(0,10))
   const [endDate,setEndDate]=useState(new Date(Date.now()).toISOString().slice(0,10))
   
@@ -18,19 +20,25 @@ const FailedPaymentChart = (props) => {
       });
       allpayment.data.data.filter((payment)=>{
         if(new Date(startDate).getTime()<=new Date(payment.createdAt.slice(0,10)).getTime() && new Date(endDate).getTime()>=new Date(payment.createdAt.slice(0,10)).getTime() ){
-            let obj = {
-                Amount: 0,
-                userId:''
-              }
-            obj.Amount = payment.totalFailedAmount
-            obj.userId = payment.userId
-            data.push(obj)
+          let obj = {
+              Amount: 0,
+              paymentId:''
+            }
+          obj.Amount = payment.totalFailedAmount
+          obj.paymentId = payment.razorpay_payment_id
+          data.push(obj)
         }
       })
       setData(data)
     } catch (error) {}
     props.setLoader2(false);
   };
+
+  const handleChartClick = (data)=>{
+    if(data && data.activePayload[0].payload.paymentId){
+      navigate(`/admin/dashboard/failedpayment?key=${data.activePayload[0].payload.paymentId}`)
+    }
+  }
 
   useEffect(() => {
     fetchAllPayment();
@@ -56,6 +64,8 @@ const FailedPaymentChart = (props) => {
           left: 20,
           bottom: 5,
         }}
+        style={{cursor:"pointer"}}
+        onClick={(data)=>{handleChartClick(data)}}
       >
         <CartesianGrid strokeDasharray="3 3" />
         <YAxis />

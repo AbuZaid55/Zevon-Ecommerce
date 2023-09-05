@@ -10,7 +10,7 @@ const ChangePass = (props) => {
   const userId = new URLSearchParams(useLocation().search).get("id")
   const [data,setData]=useState({token:token,userId:userId,new_pass:"",confirm_pass:""})
   const handleInput = (e)=>{
-    setData({...data,[e.target.name]:e.target.value})
+    setData({...data,[e.target.name]:e.target.value}) 
   }
   const submitForm = async(e)=>{
     props.setLoader2(true)

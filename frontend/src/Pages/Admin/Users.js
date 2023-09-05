@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation } from 'react-router-dom';
 import { FaTrash,FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import Aside from './Aside'
 import {toast} from 'react-toastify'
@@ -8,6 +8,7 @@ import axios from 'axios'
 const Users = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
+  const location = useLocation().search
   const [userOnPerPage,setUserOnPerPage]=useState(20)
   const [allUsers,setAllUsers]=useState([])
   const [searchUser,setSearchUser]=useState([])
@@ -103,6 +104,9 @@ const Users = (props) => {
   },[props.setting])
   useEffect(()=>{
     getAllUsers()
+    if(location!==''){
+      setUserType(location.slice(5))
+    }
   },[])
   useEffect(()=>{
     const user = searchUser.slice((currentPage-1)*userOnPerPage,currentPage*userOnPerPage)

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { PieChart, Pie,Tooltip, Cell,ResponsiveContainer} from 'recharts';
+import {useNavigate} from 'react-router-dom'
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload) {
@@ -17,6 +18,18 @@ function CustomTooltip({ payload, label, active }) {
 const ProductsChart = (props) => {
     const [totalData,setTotalData]=useState(0)
     const [data,setData]=useState()
+    const navigate = useNavigate()
+
+    const handleChartClick = (data)=>{
+      if(data){
+        if(data.name==="In Stock"){
+          navigate(`/admin/dashboard/products?key=InStock`)
+        }
+        if(data.name==='Out Of Stock'){
+          navigate(`/admin/dashboard/products?key=OutOfStock`)
+        }
+      }
+    }
       
 useEffect(()=>{
   let data = [{name:"In Stock",value:0,color:'#38bdf8'},{name:"Out Of Stock", value:0,color:'#f472b6'}]
@@ -37,6 +50,7 @@ useEffect(()=>{
         <ResponsiveContainer width="99%" height="80%">
         <PieChart>
           <Pie
+            className=' cursor-pointer'
             dataKey="value"
             startAngle={90}
             endAngle={450}
@@ -45,6 +59,7 @@ useEffect(()=>{
             cy="50%"
             outerRadius={110}
             fill="#8884d8"
+            onClick={handleChartClick}
           >
 
           {data && data.map((entry, index) => (

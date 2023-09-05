@@ -52,7 +52,7 @@ useEffect(()=>{
     <div className='mt-9 sm:mt-0'>
       {/* section1 */}
       <div className=" h-40 sm:h-64 md:h-80 w-full sm:mt-0 mt-9 border-2 border-main-800 p-2">
-        <ImageSlider imgUrl={banner}/>
+        <ImageSlider imgUrl={banner}/> 
       </div>
       {/* section2 */}
     {category.map((category,I)=>{

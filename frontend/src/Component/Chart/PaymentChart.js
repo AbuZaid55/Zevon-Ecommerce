@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { LineChart, Line, YAxis, CartesianGrid,ResponsiveContainer, Tooltip } from "recharts";
 import axios from "axios";
 import CustomTooltip from "./Tooltip";
+import {useNavigate} from 'react-router-dom'
 
 const PaymentChart = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [data,setData]=useState([])
+  const navigate = useNavigate()
   const [startDate,setStartDate]=useState(new Date(Date.now()-7 * 24 * 60 * 60 * 1000).toISOString().slice(0,10))
   const [endDate,setEndDate]=useState(new Date(Date.now()).toISOString().slice(0,10))
   
@@ -20,10 +22,10 @@ const PaymentChart = (props) => {
         if(new Date(startDate).getTime()<=new Date(payment.createdAt.slice(0,10)).getTime() && new Date(endDate).getTime()>=new Date(payment.createdAt.slice(0,10)).getTime() ){
             let obj = {
                 Amount: 0,
-                userId:''
+                paymentId:''
               }
             obj.Amount = payment.totalPaidAmount
-            obj.userId = payment.userId
+            obj.paymentId = payment.razorpay_payment_id
             data.push(obj)
         }
       })
@@ -32,11 +34,16 @@ const PaymentChart = (props) => {
     props.setLoader2(false);
   };
 
+  const handleChartClick = (data)=>{
+    if(data && data.activePayload[0].payload.paymentId){
+      navigate(`/admin/dashboard/payment?key=${data.activePayload[0].payload.paymentId}`)
+    }
+  }
   useEffect(() => {
     fetchAllPayment();
   }, [startDate,endDate]);
   return (
-    <div className=" w-full h-full">
+    <div className=" w-full h-full paymentChart">
       <div className="mx-10 flex flex-col sm:flex-row justify-end items-end">
       <div>
       <label className="mx-4 text-xl" htmlFor="from">From: </label>
@@ -56,8 +63,10 @@ const PaymentChart = (props) => {
           left: 20,
           bottom: 5,
         }}
+        style={{cursor:"pointer"}}
+        onClick={(data)=>{handleChartClick(data)}}
       >
-        <CartesianGrid strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3"/>
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Line

@@ -1,5 +1,5 @@
 import React ,{useEffect,useRef,useState} from 'react'
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate,Link,useLocation } from 'react-router-dom';
 import { FaArrowRight,FaArrowLeft ,FaPrint,FaTrash} from "react-icons/fa";
 import Aside from './Aside'
 import {toast} from 'react-toastify'
@@ -10,6 +10,7 @@ import {useReactToPrint} from 'react-to-print';
 const Orders = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
+  const location = useLocation().search
   const ref = useRef()
   const [ordersOnPerPage,setOrdersOnPerPage]=useState(20)
   const [allOrders,setAllOrders]=useState([])
@@ -106,6 +107,10 @@ const deleteOrder = async(orderId)=>{
   },[props.setting])
   useEffect(()=>{
     getAllOrders()
+    if(location!==''){
+      setStatus(location.slice(5).replaceAll('%20' , ' '))
+      console.log(status)
+    }
   },[])
   useEffect(()=>{
     const payments = allOrders.filter(((order)=>{

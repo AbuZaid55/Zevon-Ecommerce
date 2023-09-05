@@ -110,7 +110,7 @@ const App = () => {
         <Header path={path} setLoader2={setLoader2} allProduct={allProduct} getUser={getUser} user={user} />
         <Routes>
           <Route path='/' element={<Home user={user} setting={setting} getUser={getUser} allProduct={allProduct} />} />
-          <Route path='/contact' element={<Contact setLoader2={setLoader2} />} />
+          <Route path='/contact' element={<Contact user={user} setLoader2={setLoader2} />} />
           <Route path='/products' element={<Product user={user} getUser={getUser} setting={setting} allProduct={allProduct} />} />
           <Route path='/details' element={<Detail setting={setting} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} getUser={getUser} />} />
           <Route path='/cart' element={<Cart user={user} setLoader2={setLoader2} getUser={getUser} />} />

@@ -91,13 +91,13 @@ const Shipping = (props) => {
       <label className='text-lg' htmlFor="address">Address</label>
       <input className='border-b border-main-800 py-1' name='address' placeholder='Enter Address' type="text" id='address' value={newAddress.address} onChange={(e)=>{handleNewAddress(e)}}/>
       <label className='text-lg' htmlFor="pinCode">Pin Code</label>
-      <input className='border-b border-main-800 py-1' name='pinCode' placeholder='Enter Pincode' type="text" id='pinCode' value={newAddress.pinCode} onChange={(e)=>{handleNewAddress(e)}}/>
+      <input className='border-b border-main-800 py-1' name='pinCode' placeholder='Enter Pincode' type="number" id='pinCode' value={newAddress.pinCode} onChange={(e)=>{handleNewAddress(e)}}/>
       <label className='text-lg' htmlFor="city">City</label>
       <input className='border-b border-main-800 py-1' name='city' placeholder='Enter City' type="text" id='city' value={newAddress.city} onChange={(e)=>{handleNewAddress(e)}}/>
       <label className='text-lg' htmlFor="state">State</label>
       <input className='border-b border-main-800 py-1' name='state' placeholder='Enter State' type="text" id='state' value={newAddress.state} onChange={(e)=>{handleNewAddress(e)}}/>
       <label className='text-lg' htmlFor="phoneNo">Phone No</label>
-      <input className='border-b border-main-800 py-1' name='phoneNo' placeholder='Enter Phone No' type="text" id='phoneNo' value={newAddress.phoneNo} onChange={(e)=>{handleNewAddress(e)}}/>
+      <input className='border-b border-main-800 py-1' name='phoneNo' placeholder='Enter Phone No' type="number" id='phoneNo' value={newAddress.phoneNo} onChange={(e)=>{handleNewAddress(e)}}/>
       
       <button className=' bg-main-800 text-white text-xl font-semibold py-2 mt-4' type='submit'>Submit</button>
     </form>

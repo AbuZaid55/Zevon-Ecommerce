@@ -1,23 +1,33 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import {useNavigate} from 'react-router-dom'
 
-const Contact = () => {
+const Contact = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const [details,setDetails]=useState({name:"",email:'',phone:"",subject:"",massage:""})
+  const navigate = useNavigate()
   const handleInput = (e)=>{
     setDetails({...details,[e.target.name]:e.target.value})
   }
   const submitForm = async(e)=>{
     e.preventDefault()
-    try {
-      const res = await axios.post(`${BACKEND_URL}/auth/contact`,details)
-      setDetails({name:"",email:'',phone:"",subject:"",massage:""})
-      toast.success(res.data.massage)
-    } catch (error) {
-      toast.error(error.response.data.massage)
+    if(props.user!=='' && props.user!=='Not Found!'){
+      if(props.user.name){
+        try {
+          const res = await axios.post(`${BACKEND_URL}/auth/contact`,details)
+          setDetails({name:"",email:'',phone:"",subject:"",massage:""})
+          toast.success(res.data.massage)
+        } catch (error) {
+          toast.error(error.response.data.massage)
+        }
+      }
+    }else{
+      navigate('/login',{state:{path:'/contact'}})
     }
   }
+
+  console.log(props.user)
   return (
     <div>
       <div className='flex w-full m-auto border sm:mt-0 mt-5 '>

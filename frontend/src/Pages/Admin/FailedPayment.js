@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useLocation} from 'react-router-dom';
 import { FaTrash,FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import Aside from './Aside'
 import {toast} from 'react-toastify'
@@ -8,6 +8,7 @@ import axios from 'axios'
 const FailedPayment = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
+  const location = useLocation().search
   const [paymentOnPerPage,setPaymentOnPerPage]=useState(20)
   const [allFailedPayment,setAllFailedPayment]=useState([])
   const [searchPayment,setSearchPayment]=useState([])
@@ -78,6 +79,9 @@ const getAllFailedPayment = async()=>{
   },[props.user])
   useEffect(()=>{
     getAllFailedPayment()
+    if(location!==''){
+      setSearch(location.slice(5))
+    }
   },[])
   useEffect(()=>{
     const payments = allFailedPayment.filter(((payment)=>{

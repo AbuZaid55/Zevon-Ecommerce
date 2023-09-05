@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Tooltip, Cell ,ResponsiveContainer } from "recharts";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom'
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload) {
@@ -18,6 +19,7 @@ const ProductsChart = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [data, setData] = useState();
   const [totalData,setTotalData]=useState(0)
+  const navigate = useNavigate()
 
   const getAllUsers = async () => {
     let data = [
@@ -43,6 +45,19 @@ const ProductsChart = (props) => {
     props.setLoader2(false);
   };
 
+  const handleChartClick = (data)=>{
+    if(data){
+      if(data.name==="Admin"){
+        navigate(`/admin/dashboard/users?key=Admin`)
+      }
+      if(data.name==='Worker'){
+        navigate(`/admin/dashboard/users?key=Worker`)
+      }
+      if(data.name==='User'){
+        navigate(`/admin/dashboard/users?key=User`)
+      }
+    }
+  }
   useEffect(() => {
     getAllUsers();
   }, []);
@@ -73,6 +88,7 @@ const ProductsChart = (props) => {
       <ResponsiveContainer width="99%" height="80%">
       <PieChart>
         <Pie
+          className=" cursor-pointer"
           dataKey="value"
           startAngle={90}
           endAngle={450}
@@ -83,6 +99,7 @@ const ProductsChart = (props) => {
           outerRadius={110}
           fill="#8884d8"
           paddingAngle={5}
+          onClick={handleChartClick}
           >
           {data && data.map((entry, index) => (
             <Cell key={index} fill={entry.color} />

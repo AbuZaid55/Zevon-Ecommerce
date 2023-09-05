@@ -10,4 +10,4 @@ function CustomTooltip({ payload, label, active }) {
     return null;
   }
 
-export default CustomTooltip;
+export default CustomTooltip;   

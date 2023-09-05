@@ -1,5 +1,5 @@
 import React ,{useEffect,useState} from 'react'
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate,Link,useLocation } from 'react-router-dom';
 import { FaTrash,FaEdit,FaPlusSquare,FaStar,FaArrowRight,FaArrowLeft } from "react-icons/fa";
 import Aside from './Aside'
 import {toast} from 'react-toastify'
@@ -9,6 +9,7 @@ import axios from 'axios'
 const Products = (props) => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL
   const navigate = useNavigate()
+  const location = useLocation().search
   const [itemOnPerPage,setItemOnPerPage]=useState(20)
   const [allProduct,setAllProduct]=useState([])
   const [productOnPage,setProductOnPage]=useState([])
@@ -18,6 +19,7 @@ const Products = (props) => {
   const [totalPage,setTotalPage]=useState(1)
   const [search,setSearch]=useState('')
   const [searchType,setSearchType]=useState('default')
+  const [onlyInStock,setOnlyInStock]=useState(false)
 
   const handleItemPerPage = (e)=>{
     if(e.target.value>100){
@@ -31,62 +33,66 @@ const Products = (props) => {
   const getSearchProduct = ()=>{
     const key = search.toLowerCase().split(' ')
     const searchItem = props.allProduct.filter((item)=>{
-      if(search!==''){
-        let rat = 0
-      item.reviews.map((review)=>{
-        rat = rat+review.rating
-      })
-      if(item.reviews.length===0){
-        rat = 0
-      }else{
-        rat= (rat/item.reviews.length).toFixed(1)
-      }
-      const name = item.name.toLowerCase()
-      const stock = item.stock
-      const price = item.sellprice
-      const description = item.description.toLowerCase()
-      const category = item.category.toLowerCase()
-      const subCategory = item.subCategory.toLowerCase()
-      let match = []
-      if(searchType==='default'){
-        key.map((keyPoint)=>{
-          if(name.includes(keyPoint) || item._id.includes(search)|| stock==search || price==search || item.createdAt.includes(search.split("-").reverse().join("-")) ||description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===search || subCategory===search){
-              match.push(true)
-          }else{
-              match.push(false)
-          }
+      if(onlyInStock===false){
+        if(search!==''){
+          let rat = 0
+        item.reviews.map((review)=>{
+          rat = rat+review.rating
         })
-      }
-      else if(searchType==='stock'){
-        if(stock==search){
-          match.push(true)
+        if(item.reviews.length===0){
+          rat = 0
         }else{
-          match.push(false)
+          rat= (rat/item.reviews.length).toFixed(1)
         }
-      }else if(searchType==='price'){
-        if(price==search){
-          match.push(true)
+        const name = item.name.toLowerCase()
+        const stock = item.stock
+        const price = item.sellprice
+        const description = item.description.toLowerCase()
+        const category = item.category.toLowerCase()
+        const subCategory = item.subCategory.toLowerCase()
+        let match = []
+        if(searchType==='default'){
+          key.map((keyPoint)=>{
+            if(name.includes(keyPoint) || item._id.includes(search)|| stock==search || price==search || item.createdAt.includes(search.split("-").reverse().join("-")) ||description.includes(keyPoint) || category===keyPoint || subCategory===keyPoint || category===search || subCategory===search){
+                match.push(true)
+            }else{
+                match.push(false)
+            }
+          })
+        }
+        else if(searchType==='stock'){
+          if(stock==search){
+            match.push(true)
+          }else{
+            match.push(false)
+          }
+        }else if(searchType==='price'){
+          if(price==search){
+            match.push(true)
+          }else{
+            match.push(false)
+          }
+        }else if(searchType==='rating'){
+          if(rat==search){
+            match.push(true)
+          }else{
+            match.push(false)
+          }
+        }else if(searchType==='id'){
+          if(item._id.includes(search)){
+            match.push(true)
+          }else{
+            match.push(false)
+          }
+        }
+        if(!match.includes(false)){
+          return item
+        }
         }else{
-          match.push(false)
+          return item
         }
-      }else if(searchType==='rating'){
-        if(rat==search){
-          match.push(true)
-        }else{
-          match.push(false)
-        }
-      }else if(searchType==='id'){
-        if(item._id.includes(search)){
-          match.push(true)
-        }else{
-          match.push(false)
-        }
-      }
-      if(!match.includes(false)){
-        return item
-      }
       }else{
-        return item
+        return item.stock!==0
       }
     })
     setAllProduct(searchItem)
@@ -138,12 +144,23 @@ const Products = (props) => {
   },[props.setting])
   useEffect(()=>{
     getSearchProduct()
-  },[props.allProduct,search,itemOnPerPage,searchType])
+  },[props.allProduct,search,onlyInStock,itemOnPerPage,searchType])
   useEffect(()=>{
     const products = allProduct.slice((currentPage-1)*itemOnPerPage,currentPage*itemOnPerPage)
     setProductOnPage(products)
   },[currentPage,allProduct])
 
+  useEffect(()=>{
+    if(location!==''){
+      if(location.slice(5)==='OutOfStock'){
+        setSearch('0')
+        setSearchType("stock")
+      }
+      if(location.slice(5)==='InStock'){
+        setOnlyInStock(true)
+      }
+    }
+  },[])
 
 
   return (
@@ -155,9 +172,9 @@ const Products = (props) => {
         <div>
          <div className='top flex items-center justify-between'>
          <div className='search relative'>
-         <input  type="search" className='w-full' value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder='Search Products' />
+         <input  type="search" className='w-full' value={search} onChange={(e)=>{setOnlyInStock(false);setSearch(e.target.value)}} placeholder='Search Products' />
          <label className='searchType'>Search Type :- 
-         <select  value={searchType} onChange={(e)=>{setSearchType(e.target.value)}}>
+         <select  value={searchType} onChange={(e)=>{setOnlyInStock(false);setSearchType(e.target.value)}}>
           <option value={"default"}>Default</option>
           <option value={"stock"}>Stock</option>
           <option value={"price"}>Price</option>
