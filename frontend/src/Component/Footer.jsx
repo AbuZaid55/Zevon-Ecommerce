@@ -1,20 +1,11 @@
-import React, { useEffect ,useState} from 'react'
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux';
 import { FaInstagram,FaDiscord,FaLinkedin,FaGithub,FaHome,FaRegAddressBook,FaPhoneAlt ,FaBoxOpen,FaShoppingCart,FaShoppingBag} from "react-icons/fa";
 
-const Footer = (props) => {
-  const [path,setPath]=useState('')
-  const [setting,setSetting]=useState({office:'xyz',email:'xyz@gmail.com',phoneNo:1234567890,instaLink:'',linkedInLink:'',discordLink:'',githubLink:''})
-  useEffect(()=>{
-    if(props.setting!==''){
-      setSetting(props.setting)
-    }
-  },[props.setting])
-  useEffect(()=>{
-    if(props.path){
-      setPath(props.path)
-    }
-  },[props.path])
+const Footer = () => {
+  const path = useSelector((state)=>(state.location))
+  const setting = useSelector((state)=>(state.setting))
+
   return (
     <div className={` ${(path==='/products' || path.includes('/admin'))?'hidden':'flex'} bg-gray-300 items-center justify-around py-5 flex-wrap`}>
       <div className='hidden lg:block'><Link to="/"><h1 className="mx-3 text-5xl font-serif text-main-800 ml-2 ">Zevon</h1></Link></div>

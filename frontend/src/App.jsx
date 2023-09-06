@@ -41,55 +41,57 @@ import Loading1 from './Pages/Loader1';
 import Loading2 from './Pages/Loader2';
 
 import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from './Redux/slice/user.js';
+import { setProduct } from './Redux/slice/product.js';
+import { setSetting } from './Redux/slice/setting.js';
+import { setLocation } from './Redux/slice/location';
 
 const App = () => {
   const dispatch = useDispatch()
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL  
   const location = useLocation().pathname
-  const [path, setPath] = useState('')
-  const [user, setUser] = useState('')
-  const [allProduct, setAllProduct] = useState([])
+  const user = useSelector((state)=>(state.user))
+  const allProduct = useSelector((state)=>(state.product.allProduct))
+  const setting = useSelector((state)=>(state.setting))
+  const path = useSelector((state)=>(state.location))
   const [loader1, setLoader1] = useState(true)
   const [loader2, setLoader2] = useState(false)
-  const [loading1, setLoading1] = useState(true)
-  const [loading2, setLoading2] = useState(true)
-  const [setting,setSetting]=useState('')
 
   const getUser = async () => {
-    setLoading1(true)
+    setLoader1(true)
     try {
       const res = await axios.get(`${BACKEND_URL}/auth/user`, { withCredentials: true })
       if (res.status === 200) {
         if (res.data.data.validated) {
-          setUser(res.data.data)
+          dispatch(setUser(res.data.data))
         }
       }
     } catch (error) {
-      setUser('Not Found!')
+      dispatch(setUser('Not Found!'))
       console.log(error)
     }
-    setLoading1(false)
+    setLoader1(false)
   }
   const fetchProduct = async () => {
-    setLoading2(true)
+    setLoader2(true)
     try {
       const res = await axios.get(`${BACKEND_URL}/products`)
-      setAllProduct(res.data.data)
+      dispatch(setProduct(res.data.data))
     } catch (error) {
       console.log(error)
     }
-    setLoading2(false)
+    setLoader2(false)
   }
 
   const getSiteSettings = async()=>{
-    setLoading2(true)
+    setLoader2(true)
     try {
       const res = await axios.get(`${BACKEND_URL}/site/siteSetting`,{withCredentials:true})
-      setSetting(res.data.data)
+      dispatch(setSetting(res.data.data))
     } catch (error) {
       console.log(error)
     }
-    setLoading2(false)
+    setLoader2(false)
   }
   useEffect(() => {
     getUser()
@@ -98,19 +100,14 @@ const App = () => {
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   useEffect(() => {
-    setPath(location)
+    dispatch(setLocation(location))
   }, [location])
-  useEffect(() => {
-    if (!loading1 && !loading2) {
-      setLoader1(false)
-    }
-  }, [loading1, loading2])
   return (
     <>
       <div className={`${(loader1) ? '' : 'hidden'}`}><Loading1 /></div>
       <div className={`${(loader2) ? '' : 'hidden'}`}><Loading2 /></div>
       <div className={`${(loader1) ? 'hidden' : ''}`}>
-        <Header path={path} setLoader2={setLoader2} allProduct={allProduct} getUser={getUser} user={user} />
+        <Header  setLoader2={setLoader2} getUser={getUser} />
         <Routes>
           <Route path='/' element={<Home user={user} setting={setting} getUser={getUser} allProduct={allProduct} />} />
           <Route path='/contact' element={<Contact user={user} setLoader2={setLoader2} />} />
@@ -144,7 +141,7 @@ const App = () => {
 
           <Route path='*' element={<Page404 />} />
         </Routes>
-        <Footer path={path} setting={setting}/>
+        <Footer/>
 
         <ToastContainer />
       </div>

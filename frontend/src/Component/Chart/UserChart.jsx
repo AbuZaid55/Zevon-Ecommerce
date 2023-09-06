@@ -61,28 +61,6 @@ const ProductsChart = (props) => {
   useEffect(() => {
     getAllUsers();
   }, []);
-
-  //   let data = [
-  //     { name: "Admin", value: 1, color: "#00C49F" },
-  //     { name: "Worker", value: 0, color: "#0088FE" },
-  //     { name: "User", value: 0, color: "#FF8042" },
-  //   ]
-  //   let admin = 0;
-  //   let worker = 0;
-  //   allUser.filter((user) => {
-  //     if (user.type === "Admin") {
-  //       admin = admin + 1;
-  //     } else if (user.type === "Worker") {
-  //       worker = worker + 1;
-  //     }
-  //     return user;
-  //   });
-  //   data[0].value = admin;
-  //   data[1].value = worker;
-  //   data[0].color = '#00C49F'
-  //   data[2].value = allUser.length - (admin + worker);
-  //   setData(data);
-  // }, [allUser]);
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="99%" height="80%">

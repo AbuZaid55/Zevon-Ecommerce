@@ -28,12 +28,10 @@ const ImageSlider = (props) => {
           rightSlide()
       }, time);
       return () => clearInterval(interval);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideIndex]);
 
   useEffect(()=>{
     setSlideIndex(-props.index)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[props.index])
 
   return (

@@ -5,35 +5,25 @@ import axios from "axios";
 import { toast } from 'react-toastify'
 import { FaArrowRightFromBracket} from 'react-icons/fa6';
 import { FaSearch,FaTh , FaMapMarkedAlt, FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
+import {useSelector } from "react-redux";
 
 const Header = (props) => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const ref = useRef(null);
   const ref2 = useRef(null);
   const navigate = useNavigate()
-  const allProduct = props.allProduct
-  const [category,setCategory]=useState([])
+  const allProduct = useSelector((state)=>(state.product.allProduct))
+  const user = useSelector((state)=>(state.user))
+  const path = useSelector((state)=>(state.location))
+  const category = useSelector((state)=>(state.product.category))
   const [dropdown1 , setDropdown1]=useState(false)
   const [dropdown2 , setDropdown2]=useState(false)
-  const [admin,setAdmin]=useState(true)
   const [dropdown,setDropdown]=useState(false)
-  const [login,setLogin]=useState(false)
   const [showLogoutform,setShowLogoutform]=useState(false)
   const [search,setSearch]=useState('')
   const [searchItem,setSearchItem]=useState([])
   const [showitem,setShowItem]=useState(false)
   const [userProfile,setUserProfile]=useState('/Images/profile.jpg')
-
-  const getCategory = ()=>{
-    let cat = []
-    allProduct!==undefined && allProduct.map((item)=>{
-      const isExist = cat.includes(item.category)
-      if(!isExist){
-        cat.push(item.category)
-      }
-    })
-    setCategory(cat)
-  }
 
   const handleSearch = ()=>{
         const key = search.toLowerCase().split(' ')
@@ -93,36 +83,15 @@ const Header = (props) => {
     }
     props.setLoader2(false)
 }
-
-  useEffect(()=>{
-    if(props.user._id){
-      setLogin(true)
-      if(props.user.type==='Admin'){
-        setAdmin(true)
-      }
-      if(props.user.profile!=='' && props.user.profile.includes('https://')){
-        setUserProfile(props.user.profile)
-      }else if(props.user.profile!==''){
-        setUserProfile(`${BACKEND_URL}/Images/${props.user.profile}`)
-      }else{
-        setUserProfile('/Images/profile.jpg')
-      }
-    }else{
-      setAdmin(false)
-      setLogin(false)
-    }
-  },[props.user])
   useEffect(()=>{
     handleSearch()
   },[search])
-  useEffect(()=>{ 
-      getCategory()
-  },[allProduct])
   useEffect(()=>{
     document.addEventListener('click',handleClickOutside,true)
+    return ()=> removeEventListener('click')
   },[])
   return (
-    <div id="header" className={` ${(props.path==='/products')?'fixed top-0 left-0 ':''} ${(props.path.includes('/admin'))?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
+    <div id="header" className={` ${(path==='/products')?'fixed top-0 left-0 ':''} ${(path.includes('/admin'))?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}
       <div className="flex items-center justify-between h-20 sm:px-8 px-2 border-b border-main-800">
         <Link to="/"><h1 className=" sm:block text-5xl font-serif text-main-800 ml-2 ">Zevon</h1></Link>
@@ -139,13 +108,13 @@ const Header = (props) => {
           </div>
           <button className="absolute right-4 top-1/3 text-main-800"><FaSearch/></button>
         </form>
-        <Link to="/login"><button className={`bg-main-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(login)?'hidden':'block'}`}>Login</button></Link>
+        <Link to="/login"><button className={`bg-main-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(user._id)?'hidden':'block'}`}>Login</button></Link>
         {/* dropdown1  */}
-        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-main-800 h-20 sm:w-full ${(login)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-main-800 mr-2" src={userProfile} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg text-main-800 hidden sm:block">{props.user.name}</span></span>
+        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-main-800 h-20 sm:w-full ${(user._id)?'block':'hidden'} `} style={{maxWidth:"12rem",minWidth:'6rem'}} onMouseMove={(e)=>{setDropdown1(true)}} onMouseOut={(e)=>{setDropdown1(false)}}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-main-800 mr-2" src={userProfile} style={{width:"40px",height:'40px'}} alt="Profile" /><span className="text-lg text-main-800 hidden sm:block">{user.name}</span></span>
         <ul className={`absolute -left-2 sm:-left-0 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1)?'block':'hidden'} `} style={{minWidth:"110px"}}>
           <li className="px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/profile" className="flex items-center justify-left text-main-800"><FaUser className="m-3 hidden sm:block text-main-800"/>Profile</Link></li>
-          <li className={`${(admin)?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-main-800"><FaTh className="m-3 hidden sm:block text-main-800"/>Dashboard</Link></li>
-          <li className={`${(props.user.type==='Worker')?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard/changestatus" className="flex items-center justify-left text-main-800"><FaMapMarkedAlt className="m-3 hidden sm:block text-main-800"/>Change Status</Link></li>
+          <li className={`${(user.type==="Admin")?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-main-800"><FaTh className="m-3 hidden sm:block text-main-800"/>Dashboard</Link></li>
+          <li className={`${(user.type==='Worker')?"block":"hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard/changestatus" className="flex items-center justify-left text-main-800"><FaMapMarkedAlt className="m-3 hidden sm:block text-main-800"/>Change Status</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/cart" className="flex items-center justify-left text-main-800"><FaShoppingCart className="m-3 hidden sm:block text-main-800"/>Cart</Link></li>
           <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/orders" className="flex items-center justify-left text-main-800"><FaShoppingBag className="m-3 hidden sm:block text-main-800"/>Order</Link></li>
           <li className="px-4 py-2 border-b-2 hover:bg-hover-50"><span onClick={()=>{setShowLogoutform(true)}} className="flex items-center justify-left text-main-800"><FaArrowRightFromBracket className="m-3 hidden sm:block text-main-800"/>Log Out</span></li>
