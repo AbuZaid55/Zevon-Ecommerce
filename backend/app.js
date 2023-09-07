@@ -4,6 +4,7 @@ const express = require("express")
 const cookie = require("cookie-parser")
 const cookieSession = require("cookie-session")
 const passport = require("passport")
+const cloudinary = require('cloudinary')
 const app = express()
 const port = process.env.PORT
 const dbConnection = require('./db/db_conn')
@@ -25,6 +26,13 @@ app.use(cookieSession({
 app.use(passport.initialize())
 app.use(passport.session())
 app.use('/Images',express.static('Images'))
+
+cloudinary.v2.config({ 
+    cloud_name: process.env.CLOUDINARY_NAME, 
+    api_key: process.env.CLOUDINARY_KEY, 
+    api_secret: process.env.CLOUDINARY_SECRET 
+});
+
 
 app.use('/auth',require('./routes/userRouter'))
 app.use('/order',require('./routes/orderRouter'))

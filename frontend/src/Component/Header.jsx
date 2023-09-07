@@ -88,8 +88,15 @@ const Header = (props) => {
   },[search])
   useEffect(()=>{
     document.addEventListener('click',handleClickOutside,true)
-    return ()=> removeEventListener('click')
+    return ()=> removeEventListener('click',handleClickOutside)
   },[])
+  useEffect(()=>{
+    if(user.profile && user.profile.secure_url){
+      setUserProfile(user.profile.secure_url)
+    }else{
+      setUserProfile('/Images/profile.jpg')
+    }
+  },[user])
   return (
     <div id="header" className={` ${(path==='/products')?'fixed top-0 left-0 ':''} ${(path.includes('/admin'))?'hidden':''} z-50 w-full bg-white top-0 h-36`}>
       {/* section 1 */}

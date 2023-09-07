@@ -6,8 +6,9 @@ const validator = require("email-validator")
 const generateOtp = require('../utils/generateOtp')
 const {otpMail,greetingMail,linkSendMail,contactMail} = require('../utils/mail')
 const JWT = require("jsonwebtoken")
-const fs = require("fs")
+const fs = require("fs/promises")
 const productModel = require("../models/productModel")
+const cloudinary = require('cloudinary')
 
 const user = (req,res)=>{
     sendSuccess(res,"Hello User",req.rootUser)
@@ -226,6 +227,9 @@ const sendResetLink = async(req,res)=>{
 }
 
 const uploadProfile = async(req,res)=>{
+    if(req.fileError){
+        return sendError(res,req.fileError)
+    }
     try {
         const _id = (req.body && req.body._id)?req.body._id:''
         const profile = (req.file && req.file.filename)?req.file.filename:''
@@ -239,14 +243,19 @@ const uploadProfile = async(req,res)=>{
         if(!user){
             return sendError(res,"Invalid User!")
         }
-        if(user.profile!==''){
-            try {
-                fs.unlinkSync(`./Images/${user.profile}`)
-            } catch (error) {
-            }
+         
+        if(user.profile.public_id!==''){
+            await cloudinary.uploader.destroy(user.profile.public_id)
         }
-        user.profile=profile
+
+        const result = await cloudinary.v2.uploader.upload(req.file.path,{folder:'ZevonProfile', gravity:'faces'})
+
+        if(result){
+            user.profile.public_id = result.public_id
+            user.profile.secure_url = result.secure_url
+        }
         await user.save()
+        fs.rm(req.file.path)
         sendSuccess(res,"Profile uploaded successfully")
     } catch (error) {
         sendError(res,"Profile uploading Failed!")

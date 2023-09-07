@@ -19,8 +19,14 @@ const userSchema = mongoose.Schema({
         trim:true
     },
     profile:{
-        type:String,
-        default:'',
+        public_id:{
+            type:String,
+            default:'',
+        },
+        secure_url:{
+            type:String,
+            default:'',
+        }
     },
     validated:{
         type:Boolean,

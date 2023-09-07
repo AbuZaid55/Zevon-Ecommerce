@@ -24,7 +24,7 @@ async function(accessToken, refreshToken, user,done) {
     const password = user.displayName+user.photos[0].value
     const existUser = await userModel.findOne({email:email})
     if(!existUser){
-        await userModel({name:name,email:email,validated:validated,profile:profile,password:password}).save()
+        await userModel({name:name,email:email,validated:validated,'profile.secure_url':profile,password:password}).save()
     } 
     done(null,email)
 }

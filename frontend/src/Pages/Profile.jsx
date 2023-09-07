@@ -81,12 +81,8 @@ const Profile = (props) => {
       setLogin(true)
       setUser(props.user)
       setChangeName(props.user.name)
-      if (props.user.profile !== '' && props.user.profile.includes('https://')) {
-        setUserProfile(props.user.profile)
-      } else if (props.user.profile !== '') {
-        setUserProfile(`${BACKEND_URL}/Images/${props.user.profile}`)
-      } else {
-        setUserProfile('/Images/profile.jpg')
+      if(props.user.profile.secure_url){
+        setUserProfile(props.user.profile.secure_url)
       }
     } else {
       setLogin(false)
