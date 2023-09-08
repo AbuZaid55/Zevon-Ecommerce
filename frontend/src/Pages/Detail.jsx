@@ -147,7 +147,6 @@ const Details = (props) => {
   useEffect(()=>{
     scrollTop()
     fetchProductDetails()
-  //  eslint-disable-next-line react-hooks/exhaustive-deps
   },[productId])
   useEffect(()=>{
     if(props.setting && props.setting.sliderItemNo){
@@ -155,20 +154,18 @@ const Details = (props) => {
     }
   },[props.setting])
 
-
-
 return (<>
 <div className='flex flex-col md:flex-row'>
   {/* section1  */}
   <div className='w-full md:w-1/2 h-80 sm:h-96 flex justify-center mt-8 sm:mt-0 md:mt-8'>
     <div className=' h-full overflow-y-scroll scrollbar-hide'>
       {
-        product.images && product.images.map((url,i)=>{
-          return <img key={i} className='w-20 h-20 m-2 cursor-pointer border-2 border-main-800' src={`${BACKEND_URL}/Images/${url}`} onClick={()=>{setSlideIndex(i)}} alt="" />
+        product.images.secure_url && product.images.secure_url.map((url,i)=>{
+          return <img key={i} className='w-20 h-20 m-2 cursor-pointer p-2 border-2 border-main-800' src={url} onClick={()=>{setSlideIndex(i)}} alt="" />
         })
       }
     </div>
-    <div className='w-80 sm:w-96 mx-5 my-2 border-2 border-main-800'><ImageSlider imgUrl={product.images} index={slideIndex}/></div>
+    <div className='w-80 sm:w-96 mx-5 my-2 border-2 p-4 border-main-800'><ImageSlider imgUrl={product.images.secure_url} index={slideIndex}/></div>
   </div>
 
   {/* section2 */}
@@ -177,7 +174,7 @@ return (<>
     <div className='flex items-center border-b pb-2 mb-3'><span className='flex items-center bg-green-600 text-white rounded px-1 my-1 text-lg lg:text-base '>{productRating}<FaStar className='ml-1'/></span><span className='ml-4'>({product.reviews.length})</span></div>
     <div className='flex items-center border-b pb-3 mb-2'>
       <h1 className='flex items-center text-2xl font-bold'><FaRupeeSign/>{product.sellprice} </h1>
-      <div><span className=' line-through mx-2 lg:text-xl'>{product.maxprice}</span><span className='font-bold text-green-700 lg:text-xl'>off {(product.sellprice/product.maxprice)*100}%</span></div>
+      <div><span className=' line-through mx-2 lg:text-xl'>{product.maxprice}</span><span className='font-bold text-green-700 lg:text-xl'>off {Math.round((product.sellprice/product.maxprice)*100)}%</span></div>
     </div>
     <div className=' flex text-xl border-b mb-2 pb-2 '><span>Delivery Charge : </span><span className={` ${(product.deliveryCharge===0)?'':"hidden"} text-green-700 ml-1 `}> Free </span><span className={`${(product.deliveryCharge===0)?'hidden':'flex'} items-center font-semibold`}><FaRupeeSign/> {product.deliveryCharge}</span></div>
     <div className='text-xl border-b mb-2 pb-2 '><span>Stock : </span><span className={` ${(product.stock===0)?'hidden':""} text-green-700 `}>In Stock</span><span className={` ${(product.stock===0)?'':'hidden'} text-red-700`}>Out of stock</span></div>
@@ -185,7 +182,7 @@ return (<>
         <h1 className='text-xl border-b mb-2 pb-2'>Color</h1>
         {
           product.color.map((col,i)=>{
-            return <span key={i} className={` mr-3 inline-block rounded cursor-pointer border-black w-9 h-9 ${(color===col)?'border-4':''}`} style={{backgroundColor:`${col}`}} onClick={(e)=>{setColor(col)}}></span>
+            return <span key={i} className={` mr-3 inline-block rounded cursor-pointer border-black w-9 h-9 ${(color===col)?'border-4':'border-2'}`} style={{backgroundColor:`${col}`}} onClick={(e)=>{setColor(col)}}></span>
           })
         }
       </div>

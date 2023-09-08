@@ -170,12 +170,12 @@ const printPDF = (elementId)=>{
            {
             order.item.map((item,i)=>{
               return <div key={i} className="flex item  items-center">
-              <img className="m-2" style={{width:"80px" , height:"80px"}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" />
+              <img className="m-2" style={{width:"80px" , height:"80px"}} src={item.thumbnail} alt="Pic" />
               <div className='w-full'>
               <Link to={`/details?_id=${item.productId}`}><h1 className=' lg:text-2xl'>{item.name}</h1></Link>
               <div className='flex items-center justify-start flex-wrap'>
               <p className={`${(item.size && item.size!=='')?'':'hidden'} lg:text-xl mx-2`}>Size: {item.size}</p>
-              <p className={`${(item.color && item.color!=='')?'':'hidden'} flex items-center lg:text-xl mx-2`}>Color: <span className="w-5 h-5 inline-block ml-1 rounded-full" style={{backgroundColor:item.color}}></span></p>
+              <p className={`${(item.color && item.color!=='')?'':'hidden'} flex items-center lg:text-xl mx-2`}>Color: <span className="w-5 h-5 inline-block ml-1 rounded-full border-2 border-black " style={{backgroundColor:item.color}}></span></p>
               <p className="flex items-center lg:text-xl mx-2">Quentity: {item.qty}</p>
               <span className='hidden'>{totalPrice=totalPrice+item.price*item.qty}{GST = GST+item.GST*item.qty}{deliverCharge=deliverCharge+item.deliveryCharge*item.qty}</span>
               </div>

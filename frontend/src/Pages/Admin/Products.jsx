@@ -214,7 +214,7 @@ const Products = (props) => {
                      rat= (rat/item.reviews.length).toFixed(1)
                    }
                   return <tr key={i}>
-                  <td datalabel={"Thumbnail"}><img style={{height:"60px",width:"60px",margin:" 8px auto",borderRadius:'10px'}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" /></td>
+                  <td datalabel={"Thumbnail"}><img style={{height:"60px",width:"60px",margin:" 8px auto",borderRadius:'5px'}} src={item.thumbnail.secure_url} alt="Pic" /></td>
                   <td datalabel={"Name"} className='name'><Link to={`/details?_id=${item._id}`}>{item.name}</Link></td>
                   <td datalabel={"Stock"}>{item.stock}</td>
                   <td datalabel={"Price"}>&#8377; {item.sellprice}</td>

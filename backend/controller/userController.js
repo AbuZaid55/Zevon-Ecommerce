@@ -313,7 +313,7 @@ const addToCart = async(req,res)=>{
         if(userId=='' ){
             return sendError(res,"Invalid User")
         }
-        if(name=='' || thumbnail=='' || productId==''  || price=='' ){
+        if(name=='' || (!thumbnail && !thumbnail.secure_url) || productId==''  || price=='' ){
             return sendError(res,"Invalid Product")
         }
         if(qty==0){
@@ -353,14 +353,14 @@ const addToCart = async(req,res)=>{
                     }
                 }
                 if(product.size.length===0 && product.color.length===0){
-                    return item
+                    return item 
                 }
             }
         })
         if(alreadyAdded.length!==0){
             return sendError(res,"Product is already added")
         }
-        user.cart.push({name:name,thumbnail:thumbnail,productId:productId,size:size,qty:qty,color:color,price:price,GST:GST,deliveryCharge:deliveryCharge})
+        user.cart.push({name:name,thumbnail:thumbnail.secure_url,productId:productId,size:size,qty:qty,color:color,price:price,GST:GST,deliveryCharge:deliveryCharge})
         await user.save()
         sendSuccess(res,"Product Added successfully")
     } catch (error) {

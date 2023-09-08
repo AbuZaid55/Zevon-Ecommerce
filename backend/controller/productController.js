@@ -168,7 +168,7 @@ const submitReview = async(req,res)=>{
             return item.userId == userId
         })
         if(isExist.length==0){
-            dbData.reviews = dbData.reviews.concat({userId:userId,username:username,profile:profile,rating:rating,comment:comment})
+            dbData.reviews = dbData.reviews.concat({userId:userId,username:username,profile:profile.secure_url,rating:rating,comment:comment})
             await dbData.save()
             return sendSuccess(res,"Review submit successfully")
         }
@@ -177,14 +177,13 @@ const submitReview = async(req,res)=>{
                 item.username = username
                 item.rating = rating
                 item.comment=comment
-                item.profile=profile 
+                item.profile=profile.secure_url 
             }
             return item
         })
         await productModel.updateOne({_id:productId},{$set:{reviews:updatedReview}})
         sendSuccess(res,"Review update successfully")
     } catch (error) {
-        console.log(error)
         sendError(res,"Something went wrong!")
     }
 }

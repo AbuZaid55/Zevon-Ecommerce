@@ -61,7 +61,6 @@ const Order = (props) => {
     }else{
       setLogin(false)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[props.user])
   return (<>
     <div className={`${(login)?"hidden":""}`}><GoLogin/></div>
@@ -76,12 +75,12 @@ const Order = (props) => {
           {
             order.item.map((item,i)=>{
               return <div key={i} className="flex border my-1 items-center">
-              <img className="m-2" style={{width:"80px" , height:"80px"}} src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" />
+              <img className="m-2" style={{width:"80px" , height:"80px"}} src={item.thumbnail} alt="Pic" />
               <div className='w-full'>
               <Link to={`/details?_id=${item.productId}`}><h1 className=' lg:text-2xl font-semibold'>{item.name}</h1></Link>
               <div className='flex items-center justify-between flex-wrap'>
               <p className="lg:text-xl mx-2">Size: {item.size}</p>
-              <p className="flex items-center lg:text-xl mx-2">Color: <span className="w-5 h-5 inline-block ml-1 rounded-full" style={{backgroundColor:item.color}}></span></p>
+              <p className="flex items-center lg:text-xl mx-2">Color: <span className="w-5 h-5 inline-block ml-1 rounded-full border-2 border-black " style={{backgroundColor:item.color}}></span></p>
               <p className="flex items-center lg:text-xl mx-2">Price: <FaRupeeSign className=" font-extralight"/><span className="font-bold">{item.price}</span></p>
               <p className="flex items-center lg:text-xl mx-2">Quentity: {item.qty}</p>
               <p className="flex items-center lg:text-xl mx-2">Total: <FaRupeeSign className=" font-extralight"/><span className="font-bold">{item.price*item.qty}</span></p>

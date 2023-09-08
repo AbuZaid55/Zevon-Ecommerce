@@ -13,7 +13,6 @@ const Cart = (props) => {
   const [deliveryCharge,setDeliveryCharge]=useState(0)
   const [login,setLogin]=useState(false)
   const [user,setUser]=useState({_id:"",email:"",name:"",cart:[],shippingDetails:[],profile:""})
-
 const goShipping = (e)=>{
   e.preventDefault()
   navigate('/cart/shipping',{state:{orderItme:"thisisorderitem",paymentDetails:""}})
@@ -84,11 +83,11 @@ useEffect(()=>{
       user.cart.map((item,i)=>{
         return <div key={i} className="mx-4 p-1 sm:p-4 my-3 border">
         <div className="flex items-center">
-        <div className="w-20 h-20 bg-black mx-2"><img className="w-full h-full" src={`${BACKEND_URL}/Images/${item.thumbnail}`} alt="Pic" /></div>
+        <div className="w-20 h-20 bg-black mx-2"><img className="w-full h-full" src={item.thumbnail} alt="Pic" /></div>
         <div>
         <Link to={`/details?_id=${item.productId}`}><h1 className=' lg:text-2xl font-semibold'>{item.name} </h1></Link>
         <p className={`${(item.size && item.size!=='')?'':'hidden'} lg:text-xl`}>Size: {`${(item.size!=='')?item.size:''}`}</p>
-        <p className={`${(item.color && item.color!=='')?'flex':'hidden'} items-center lg:text-xl`}>Color: <span className="w-5 h-5 inline-block ml-1 rounded-full" style={{backgroundColor:`${(item.color!=='')?item.color:''}`}}></span></p>
+        <p className={`${(item.color && item.color!=='')?'flex':'hidden'} items-center lg:text-xl`}>Color: <span className="w-5 h-5 inline-block ml-1 rounded-full border-2 border-black " style={{backgroundColor:`${(item.color!=='')?item.color:''}`}}></span></p>
         <p className="flex items-center lg:text-xl">Price: <FaRupeeSign className=" font-extralight"/><span className="font-bold">{item.price}</span></p>
         </div>
         </div>

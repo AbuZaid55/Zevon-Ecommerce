@@ -112,7 +112,7 @@ const Confirm = (props) => {
                 className="m-2"
                 width={"80px"}
                 height={"80px"}
-                src={`${BACKEND_URL}/Images/${item.thumbnail}`}
+                src={item.thumbnail}
                 alt="Pic"
               />
               <div className="w-full flex flex-col justify-center">
@@ -124,7 +124,7 @@ const Confirm = (props) => {
                   <p className="flex items-center lg:text-xl">
                     Color:
                     <span
-                      className="w-5 h-5 inline-block ml-1 rounded-full"
+                      className="w-5 h-5 inline-block ml-1 rounded-full border-2 border-black "
                       style={{ backgroundColor: `${item.color}` }}
                     ></span>
                   </p>

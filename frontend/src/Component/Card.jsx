@@ -41,13 +41,13 @@ const Card = (props) => {
     }
    }
   return (
-    <div className=' w-44 sm:w-52 md:w-60 lg:w-72 border-2 mt-2 lg:m-4 p-1 sm:p-4' >
-        <div className='w-full h-40 sm:h-44 md:h-56 lg:h-64'><img className='min-h-full w-full' src={(thumbnail!=='')?`${BACKEND_URL}/Images/${thumbnail}`:""} alt="Pic" /></div>
+    <div className=' w-44 sm:w-52 md:w-60 lg:w-72 border-2 mt-2 lg:m-4 p-1 sm:p-4 shadow-lg rounded-md' >
+        <div className='w-full h-40 sm:h-44 md:h-56 lg:h-64'><img className='min-h-full max-h-full w-full' src={thumbnail.secure_url} alt="Pic" /></div>
         <h1 className='text-lg lg:text-xl overflow-hidden whitespace-nowrap font-bold'>{name}</h1>
         <p className=' sm:text-lg whitespace-nowrap overflow-hidden'>{description}</p>
         <div className='flex items-center  '>
         <h1 className='flex items-center sm:text-lg lg:text-xl font-bold'><FaRupeeSign/> {sellprice} </h1>
-        <div><span className=' line-through mx-1 hidden sm:inline-block'>{maxprice}</span><span className='font-bold mx-2 sm:mx-0 text-green-600'>off {(sellprice/maxprice)*100}%</span></div>
+        <div><span className=' line-through mx-1 hidden sm:inline-block'>{maxprice}</span><span className='font-bold mx-2 sm:mx-0 text-green-600'>off {Math.round((sellprice/maxprice)*100)}%</span></div>
         </div>
         <div className='flex items-center'><span className='flex items-center bg-green-600 text-white rounded px-1 my-1 lg:text-base '>{rating}<FaStar className='ml-1'/></span></div>
         <div className='flex items-center justify-between mt-2'>
