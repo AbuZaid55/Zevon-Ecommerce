@@ -40,7 +40,7 @@ const Setting = (props) => {
       inputData.banner.map((banner)=>(
         formdata.append('banner',banner)
       ))
-      const res = await axios.post(`${BACKEND_URL}/site/siteSetting`,formdata,{withCredentials:true})
+      const res = await axios.post(`${BACKEND_URL}/site/siteSetting`,formdata,{withCredentials:true}) 
       props.getSiteSettings()
       toast.success(res.data.massage)
     } catch (error) {
@@ -58,9 +58,8 @@ const Setting = (props) => {
     }
   },[props.user])
   useEffect(()=>{
-    if(props.setting!==''){
-      props.setting.banner=[]
-      setInputData(props.setting)
+    if(props.setting.banner){
+      setInputData({...props.setting,banner:[]})
     }
   },[props.setting])
   return (

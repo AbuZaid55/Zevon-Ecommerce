@@ -169,12 +169,9 @@ const Users = (props) => {
             <tbody>
                 {paginationUser.map((item,i)=>{
                   let profile = '/Images/profile.jpg'
-                  if(item.profile!==''){
-                    if(item.profile.includes('https://')){
-                      profile=item.profile
-                    }else{
-                      profile = `${BACKEND_URL}/Images/${item.profile}`
-                    }
+                  if(item.profile && item.profile.secure_url!==''){
+                    profile=item.profile.secure_url
+                    console.log(profile)
                   }
                   return <tr key={i}>
                   <td datalabel={"Profile"}><img style={{height:"60px",width:"60px",margin:" 8px auto",borderRadius:'10px'}} src={profile} alt="Pic" /></td>

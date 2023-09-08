@@ -42,7 +42,7 @@ useEffect(()=>{
 },[path])
 useEffect(()=>{
   if(props.setting && props.setting.banner){
-    setBanner(props.setting.banner)
+    setBanner(props.setting.banner.secure_url)
   }
   if(props.setting && props.setting.sliderItemNo){
     setSliderItemNo(props.setting.sliderItemNo)

@@ -4,12 +4,10 @@ const settingSchema = mongoose.Schema(({
         type:Number,
         required:true,
     },
-    banner:[
-        {
-            type:String,
-            required:true
-        }
-    ],
+    banner:{
+        public_id:[],
+        secure_url:[]
+    },
     productPageItemNo:{
         type:Number,
         required:true

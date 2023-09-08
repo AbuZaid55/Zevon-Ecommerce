@@ -2,7 +2,8 @@ const {sendError, sendSuccess }= require('../sendResponse')
 const productModel = require("../models/productModel")
 const userModel = require("../models/userModel")
 const orderModel = require('../models/orderModel')
-const fs = require("fs")
+const cloudinary = require('cloudinary')
+const fs = require("fs/promises")
 
 const products = async(req,res)=>{
     try {
@@ -16,28 +17,48 @@ const products = async(req,res)=>{
 const addProduct = async(req,res)=>{
     try {
         const {name,description,stock,maxprice,sellprice,deliveryCharge,category,subCategory,color,size,GST}=req.body
-        const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0].filename:''
-        const img = (req.files && req.files["images"])?req.files["images"]:[]
+        const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0]:''
+        const image = (req.files && req.files["images"])?req.files["images"]:[]
         const highlight = (req.body.highlight!=='')?JSON.parse(req.body.highlight):[]
-        const images = []
-        img.map((item)=>{ images.push(item.filename)})
-        if(name=='' || description=='' || stock=='' || maxprice=='' || sellprice=='' || category=='' || subCategory=='' ||  thumbnail=='' || images.length==0 ){
+         if(name=='' || description=='' || stock=='' || maxprice=='' || sellprice=='' || category=='' || subCategory=='' ||  thumbnail=='' || image.length==0 ){
             return sendError(res,"All field are required!")
         }
-        await productModel({name,description,stock,maxprice,sellprice,deliveryCharge,GST,category,subCategory,color,size,thumbnail,images,highlight}).save()
+        let thumb_public_id = ''
+        let thumb_secure_url=''
+        let image_public_id=[]
+        let image_secure_url=[]
+        const thumbresult = await cloudinary.v2.uploader.upload(thumbnail.path,{folder:'ZevonThumbnail'})
+        if(thumbresult){
+            thumb_public_id = thumbresult.public_id
+            thumb_secure_url = thumbresult.secure_url
+        }
+        fs.rm(thumbnail.path)
+
+        for(const file of image){
+            const imgresult = await cloudinary.v2.uploader.upload(file.path,{folder:'ZevonImages'})
+            if(imgresult){
+                image_public_id.push(imgresult.public_id)
+                image_secure_url.push(imgresult.secure_url)
+            }
+            fs.rm(file.path)
+        }
+        await productModel({name,description,stock,maxprice,sellprice,deliveryCharge,GST,category,subCategory,color,size,'thumbnail.public_id':thumb_public_id,'thumbnail.secure_url':thumb_secure_url,'images.public_id':image_public_id,'images.secure_url':image_secure_url,highlight}).save()
         sendSuccess(res,"Product Added successfully")
     } catch (error) {
+        console.log(error)
         sendError(res,"something went wrong!")
     }
 }
 
 const updataProduct = async(req,res)=>{
     try {
-        const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0].filename:''
-        const img = (req.files && req.files["images"])?req.files["images"]:[]
+        const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0]:''
+        const image = (req.files && req.files["images"])?req.files["images"]:[]
         const highlight = (req.body.highlight!=='')?JSON.parse(req.body.highlight):[]
-        const images = []
-        img.map((item)=>{ images.push(item.filename)})
+        let thumb_public_id = ''
+        let thumb_secure_url=''
+        let image_public_id=[]
+        let image_secure_url=[]
         const {productId,name,description,stock,maxprice,sellprice,deliveryCharge,category,subCategory,color,size,GST}=req.body
         if(productId==''){
             return sendError(res,"Invalid Porduct Id!")
@@ -45,46 +66,64 @@ const updataProduct = async(req,res)=>{
         if(name=='' || description=='' || stock=='' || maxprice=='' || sellprice=='' || category=='' || subCategory==''){
             return sendError(res,"All field are required!")
         }
-        if(thumbnail==='' && images.length==0){
+        if(thumbnail==='' && image.length===0){
             await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,deliveryCharge,GST,subCategory,color,size,highlight}}) 
             await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST}})
         }
         const dbProduct = await productModel.findById(productId)
-        if(thumbnail!='' && images.length==0){
-            try {
-                fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
-            } catch (error) {
+        if(thumbnail!='' && image.length==0){
+            await cloudinary.uploader.destroy(dbProduct.thumbnail.public_id)
+            const thumbresult = await cloudinary.v2.uploader.upload(thumbnail.path,{folder:'ZevonThumbnail'})
+            if(thumbresult){
+                thumb_public_id = thumbresult.public_id
+                thumb_secure_url = thumbresult.secure_url
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,thumbnail}})
-            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
-            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumbnail}})
+            fs.rm(thumbnail.path)
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,'thumbnail.public_id':thumb_public_id,'thumbnail.secure_url':thumb_secure_url}})
+            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumb_secure_url}})
+            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumb_secure_url}})
         }
-        if(thumbnail=='' && images.length!=0){
-            try {
-                dbProduct.images.map((item)=>{
-                    fs.unlinkSync(`./Images/${item}`)
-                })
-            } catch (error) {
+        if(thumbnail=='' && image.length!=0){
+            dbProduct.images.public_id.map(async(public_id)=>{
+                await cloudinary.uploader.destroy(public_id)
+            })
+            for(const file of image){
+                const imgresult = await cloudinary.v2.uploader.upload(file.path,{folder:'ZevonImages'})
+                if(imgresult){
+                    image_public_id.push(imgresult.public_id)
+                    image_secure_url.push(imgresult.secure_url)
+                }
+                fs.rm(file.path)
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,images}})
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,highlight,'images.public_id':image_public_id,'images.secure_url':image_secure_url}})
         }
-        if(thumbnail!='' && images.length!=0){
-            try {
-                fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
-            } catch (error) {
+        if(thumbnail!='' && image.length!=0){
+            await cloudinary.uploader.destroy(dbProduct.thumbnail.public_id)
+            dbProduct.images.public_id.map(async(public_id)=>{
+                await cloudinary.uploader.destroy(public_id)
+            })
+            const thumbresult = await cloudinary.v2.uploader.upload(thumbnail.path,{folder:'ZevonThumbnail'})
+            if(thumbresult){
+                thumb_public_id = thumbresult.public_id
+                thumb_secure_url = thumbresult.secure_url
             }
-            try {
-                dbProduct.images.map((item)=>{
-                    fs.unlinkSync(`./Images/${item}`)
-                })
-            } catch (error) {
+            fs.rm(thumbnail.path)
+    
+            for(const file of image){
+                const imgresult = await cloudinary.v2.uploader.upload(file.path,{folder:'ZevonImages'})
+                if(imgresult){
+                    image_public_id.push(imgresult.public_id)
+                    image_secure_url.push(imgresult.secure_url)
+                }
+                fs.rm(file.path)
             }
-            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,thumbnail,images}}) 
-            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumbnail}})
-            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumbnail}})
+            await productModel.updateOne({_id:productId},{$set:{name,description,stock,maxprice,sellprice,category,subCategory,deliveryCharge,GST,color,size,'thumbnail.public_id':thumb_public_id,'thumbnail.secure_url':thumb_secure_url,'images.public_id':image_public_id,'images.secure_url':image_secure_url}}) 
+            await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.name':name,'cart.$.price':sellprice,'cart.$.deliveryCharge':deliveryCharge,'cart.$.GST':GST,'cart.$.thumbnail':thumb_secure_url}})
+            await orderModel.updateMany({'item.productId':productId},{$set:{'item.$.thumbnail':thumb_secure_url}})
         }
         sendSuccess(res,"Product update successfully")
     } catch (error) {
+        console.log(error)
         sendError(res,"something went wrong!")
     }
 }
@@ -96,16 +135,10 @@ const deleteProduct = async(req,res)=>{
             return sendError(res,"Invalid Product Id!")
         }
         const dbProduct = await productModel.findById(productId)
-        try {
-            fs.unlinkSync(`./Images/${dbProduct.thumbnail}`)
-        } catch (error) {
-        }
-        try {
-            dbProduct.images.map((item)=>{
-                fs.unlinkSync(`./Images/${item}`)
-            })
-        } catch (error) {
-        }
+        await cloudinary.uploader.destroy(dbProduct.thumbnail.public_id)
+        dbProduct.images.public_id.map(async(public_id)=>{
+            await cloudinary.uploader.destroy(public_id)
+        })
         await productModel.deleteOne({_id:productId})
         await userModel.updateMany({'cart.productId':productId},{$set:{'cart.$.productId':'aa','cart.$.price':'','cart.$.deliveryCharge':'','cart.$.GST':'','cart.$.name':'','cart.$.thumbnail':'','cart.$.qty':0}})
         sendSuccess(res,"Product delete successfully")

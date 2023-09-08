@@ -74,6 +74,7 @@ function UpdateProduct(props) {
   }
 
 const submitForm = async(e)=>{
+    props.setLoader2(true)
     e.preventDefault()
     let formdata = new FormData()
     formdata.append('productId',product._id)
@@ -109,6 +110,7 @@ const submitForm = async(e)=>{
     } catch (error) {
       toast.error(error.response.data.massage)
     }
+    props.setLoader2(false)
   }
 
   useEffect(()=>{
@@ -121,16 +123,13 @@ const submitForm = async(e)=>{
       const data=allData.filter((item)=>{
         return item._id===_id
       })
-    if(data.length!==0){
-      data[0].thumbnail=''
-      data[0].images=[]
-      setProduct(data[0])
+      if(data.length!==0){
+        setProduct({...data[0],thumbnail:'',images:[]})
+      }
+      else{
+        toast.error("Product Not Found!")
+      }
     }
-    else{
-      toast.error("Product Not Found!")
-    }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[props.allProduct,location])
   useEffect(()=>{ 
     if(props.user!==''){

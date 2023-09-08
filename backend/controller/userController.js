@@ -523,9 +523,13 @@ const deleteUser = async(req,res)=>{
                 return sendError(res,"Please make admin to another")
             }
         }
+        if(user.profile.public_id!==''){
+            await cloudinary.uploader.destroy(user.profile.public_id)
+        }
         await userModel.findByIdAndDelete(userId)
         sendSuccess(res,"User delete successfully")
     } catch (error) {
+        
         sendError(res,"Something went wrong!")
     }
 }

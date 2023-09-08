@@ -54,15 +54,19 @@ const productSchema = mongoose.Schema({
         }
     ],
     thumbnail:{
-        type:String,
-        required:true
-    },
-    images:[
-        {
+        public_id:{
             type:String,
-            required:true
+            default:''
+        },
+        secure_url:{
+            type:String,
+            default:''
         }
-    ],
+    },
+    images:{
+        public_id:[],
+        secure_url:[]
+    },
     reviews:[
         {
             _id:false,

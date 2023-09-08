@@ -39,7 +39,7 @@ const ImageSlider = (props) => {
       <span className='absolute text-main-800 left-0 top-1/2 text-2xl -translate-y-2/4 z-10 sm:px-3 py-3 sm:py-7 rounded-r cursor-pointer bg-white hover:bg-hover-50' onClick={(e)=>{leftSlide(e)}}><FaAngleLeft/></span>
         <div className='flex  relative  h-full transition-all' style={{left:slideIndex*100+'%' }}>
           {imgUrl.map((image,i)=>{
-            return <img key={i} className='min-w-full h-full' src={`${BACKEND_URL}/Images/${image}`} alt="" />
+            return <img key={i} className='min-w-full h-full' src={image} alt="" />
           })}
         </div>
         <span className='absolute text-main-800 right-0 top-1/2 text-2xl -translate-y-2/4 z-10 sm:px-3 py-3 sm:py-7 rounded-l cursor-pointer bg-white hover:bg-hover-50' onClick={(e)=>{rightSlide()}}><FaAngleRight/></span>
