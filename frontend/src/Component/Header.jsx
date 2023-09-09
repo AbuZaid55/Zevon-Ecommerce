@@ -6,15 +6,19 @@ import { toast } from 'react-toastify'
 import { FaArrowRightFromBracket} from 'react-icons/fa6';
 import { FaSearch,FaTh , FaMapMarkedAlt, FaShoppingBag ,FaShoppingCart,FaBoxOpen,FaBars ,FaListUl ,FaAddressBook,FaUser,FaHome ,FaAngleDown,FaAngleUp ,FaAngleRight} from 'react-icons/fa';
 import {useSelector } from "react-redux";
+import { useContext } from "react";
+import { context } from "../Context/context.js";
+import { useLocation } from "react-router-dom";
 
-const Header = (props) => {
+const Header = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const ref = useRef(null);
   const ref2 = useRef(null);
   const navigate = useNavigate()
+  const {setLoader2,getUser} = useContext(context)
   const allProduct = useSelector((state)=>(state.product.allProduct))
   const user = useSelector((state)=>(state.user))
-  const path = useSelector((state)=>(state.location))
+  const path = useLocation().pathname
   const category = useSelector((state)=>(state.product.category))
   const [dropdown1 , setDropdown1]=useState(false)
   const [dropdown2 , setDropdown2]=useState(false)
@@ -53,8 +57,8 @@ const Header = (props) => {
   }
   const submitSearch = (e)=>{
     e.preventDefault()
-    setShowItem(false)
-    navigate(`/products?search=${search}`)
+      setShowItem(false)
+      navigate(`/products?search=${search}`)
   }
 
   const handleClickOutside = (e)=>{
@@ -70,18 +74,18 @@ const Header = (props) => {
   }
 
   const logout = async()=>{
-    props.setLoader2(true)
+    setLoader2(true)
     try {
         const res = await axios.get(`${BACKEND_URL}/auth/logout`,{withCredentials:true})
         if(res.status===202){
-            props.getUser()
+            getUser()
             setShowLogoutform(false)
             navigate('/login')
         }
     } catch (error) {
         toast.error(error.response.data.massage)
     }
-    props.setLoader2(false)
+    setLoader2(false)
 }
   useEffect(()=>{
     handleSearch()
@@ -105,10 +109,10 @@ const Header = (props) => {
         <form className="sm:flex hidden w-full max-w-3xl relative sm:mx-5" onSubmit={(e)=>{submitSearch(e)}}>
           <div className="w-full relative " ref={ref}>
           <input className=" w-full border px-4 py-2 rounded-md text-main-800 border-main-800" value={search} onChange={(e)=>{setSearch(e.target.value)}} type="text" placeholder="Search product" />
-          <div  className={`${(search==='' || showitem===false)?'hidden':''} absolute top-full z-50 w-full overflow-auto scrollbar-hide shadow-2xl border-x-2 mt-1 rounded-xl`}>
+          <div  className={`${(search==='' || showitem===false)?'hidden':''} absolute top-full z-50 w-full overflow-auto scrollbar-hide shadow-2xl border-x-2 mt-1 rounded-md`}>
           {searchItem.map((item,i)=>{
             if(i<6){
-              return <span key={i} onClick={()=>{handleClickOnItem(item._id)}} className="flex bg-white border-y py-2 px-3 cursor-pointer w-full overflow-hidden whitespace-nowrap hover:bg-hover-50"><img className="mr-3 rounded-md" src={`${(item.thumbnail!=='')?`${BACKEND_URL}/Images/${item.thumbnail}`:"/Images/profile.jpg"}`} style={{width:'30px',height:'30px'}} alt=""/>{item.name}</span>
+              return <span key={i} onClick={()=>{handleClickOnItem(item._id)}} className="flex bg-white border-y py-2 px-3 cursor-pointer w-full overflow-hidden whitespace-nowrap hover:bg-hover-50"><img className="mr-3 rounded-sm" src={item.thumbnail.secure_url} style={{width:'30px',height:'30px'}} alt=""/>{item.name}</span>
             }
           })}
           </div>
@@ -144,7 +148,7 @@ const Header = (props) => {
           <button className="absolute right-4 top-1/3 text-main-800 pr-3"><FaSearch/></button>
         </form>
         {/* section2 */}
-      <div className="relative sm:static flex flex-col sm:flex-row items-center justify-between sm:px-5 border-b border-main-800" ref={ref2}>
+      <div className="relative sm:static flex flex-col sm:flex-row items-center justify-between lg:px-5 border-b border-main-800" ref={ref2}>
         <div className=" w-full sm:hidden flex item-center justify-end px-4 text-2xl bg-main-800 py-2 text-white" onClick={()=>{setDropdown(!dropdown)}}><FaBars className=" cursor-pointer"/></div>
         <ul className={` absolute sm:static top-full sm:flex sm:flex-row w-full bg-main-800 sm:bg-white z-40 ${(dropdown)?'':'hidden'}`} >
           <Link to='/'><li className="flex items-center sm:mx-5 sm:border border-y sm:border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaHome className="mr-2"/>Home</li></Link>
@@ -152,7 +156,7 @@ const Header = (props) => {
           {/* dropdown2 */}
           <li className={`relative sm:mx-5 sm:border border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800 ${(dropdown2)?'':'overflow-hidden'}`} onMouseMove={(e)=>{setDropdown2(true)}} onMouseOut={(e)=>{setDropdown2(false)}}><span className="flex items-center cursor-pointer"><FaListUl className="mr-2"/>Category{(dropdown2)?<FaAngleDown className="ml-2"/>:<FaAngleUp className="ml-2"/>}</span>
           
-          <ul className={`absolute border-t-2 border-x-2 left-5  sm:-left-3  bg-white z-50 ${(dropdown2)?'top-full':'bottom-full'}`} style={{maxWidth:'200px'}}>
+          <ul className={`absolute border-t-2 border-x-2 left-5  sm:-left-1  bg-white z-50 w-[150px] ${(dropdown2)?'top-full':'bottom-full'}`}>
             {/* dropdown3 */}
             {
               category!=='' && category.map((cat,I)=>{

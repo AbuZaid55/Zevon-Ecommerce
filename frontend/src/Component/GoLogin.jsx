@@ -4,6 +4,7 @@ import {useLocation,useNavigate} from 'react-router-dom'
 const GoLogin = () => {
   const location = useLocation().pathname
   const navigate = useNavigate()
+  
   const goLogin = (e)=>{
     e.preventDefault()
     navigate('/login',{state:{path:location}})

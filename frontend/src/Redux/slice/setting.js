@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit'
 
 const settingSlice = createSlice({
     name:"Setting",
-    initialState:{},
+    initialState:{banner:{}},
     reducers:{
         setSetting(state,action){
             state = action.payload

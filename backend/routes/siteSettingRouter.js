@@ -4,6 +4,6 @@ const auth = require('../auth/auth')
 const upload = require('../utils/uploadFile')
 
 router.post('/siteSetting',auth,upload.fields([{name:"banner"}]),siteInformation)
-router.get('/siteSetting',auth,getSiteSettings)
+router.get('/siteSetting',getSiteSettings)
 
 module.exports = router

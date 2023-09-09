@@ -2,29 +2,35 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import {useNavigate} from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useContext } from 'react'
+import { context } from '../Context/context'
 
-const Contact = (props) => {
+const Contact = () => {
+  const user = useSelector((state)=>(state.user))
+  const {setLoader2} = useContext(context)
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-  const [details,setDetails]=useState({name:"",email:'',phone:"",subject:"",massage:""})
+  const [details,setDetails]=useState({name:user.name,email:user.email,phone:"",subject:"",massage:""})
   const navigate = useNavigate()
+  
   const handleInput = (e)=>{
     setDetails({...details,[e.target.name]:e.target.value})
   }
   const submitForm = async(e)=>{
+    setLoader2(true)
     e.preventDefault()
-    if(props.user!=='' && props.user!=='Not Found!'){
-      if(props.user.name){
-        try {
-          const res = await axios.post(`${BACKEND_URL}/auth/contact`,details)
-          setDetails({name:"",email:'',phone:"",subject:"",massage:""})
-          toast.success(res.data.massage)
-        } catch (error) {
-          toast.error(error.response.data.massage)
-        }
+    if(user.name){
+      try {
+        const res = await axios.post(`${BACKEND_URL}/auth/contact`,details)
+        setDetails({name:"",email:'',phone:"",subject:"",massage:""})
+        toast.success(res.data.massage)
+      } catch (error) {
+        toast.error(error.response.data.massage)
       }
     }else{
-      navigate('/login',{state:{path:'/contact'}})
+    navigate('/login',{state:{path:'/contact'}})
     }
+    setLoader2(false)
   }
 
   return (

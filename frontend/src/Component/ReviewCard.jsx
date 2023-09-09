@@ -2,7 +2,6 @@ import React,{useEffect, useState} from 'react'
 import { FaStar,FaTrash} from 'react-icons/fa';
 
 const ReviewCard = (props) => {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const type = props.type
 const proprating = (props.rating)?props.rating:0
 const propname = (props.name)?props.name:"Name"

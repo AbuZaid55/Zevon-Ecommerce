@@ -1,9 +1,9 @@
-import {Link} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { FaInstagram,FaDiscord,FaLinkedin,FaGithub,FaHome,FaRegAddressBook,FaPhoneAlt ,FaBoxOpen,FaShoppingCart,FaShoppingBag} from "react-icons/fa";
 
 const Footer = () => {
-  const path = useSelector((state)=>(state.location))
+  const path = useLocation().pathname
   const setting = useSelector((state)=>(state.setting))
 
   return (
