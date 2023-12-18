@@ -19,4 +19,15 @@
             }
         }
     }
+    & #emptyForm{
+        all: unset;
+        @include flex(row);
+        cursor: pointer;
+        & input{
+            height: 1.3rem;
+            width: 1.3rem;
+            margin-right: 0.5rem;
+            accent-color: $color;
+        }
+    }
 }

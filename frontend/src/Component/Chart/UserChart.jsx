@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Tooltip, Cell ,ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Tooltip, Cell, ResponsiveContainer } from "recharts";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useContext } from 'react';
+import { context } from '../../Context/context.js';
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload) {
     return (
-      <div className="custom-tooltip bg-white px-2 py-1 rounded-xl" style={{color:payload[0].payload.color,border:`1.5px solid ${payload[0].payload.color}`}}>
+      <div className="custom-tooltip bg-white px-2 py-1 rounded-xl" style={{ color: payload[0].payload.color, border: `1.5px solid ${payload[0].payload.color}` }}>
         <p className="label">{`${payload[0].name} : ${payload[0].value}`}</p>
       </div>
     );
@@ -15,11 +17,12 @@ function CustomTooltip({ payload, label, active }) {
   return null;
 }
 
-const ProductsChart = (props) => {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const [data, setData] = useState();
-  const [totalData,setTotalData]=useState(0)
+const ProductsChart = () => {
   const navigate = useNavigate()
+  const [data, setData] = useState();
+  const { setLoader2 } = useContext(context)
+  const [totalData, setTotalData] = useState(0)
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const getAllUsers = async () => {
     let data = [
@@ -27,33 +30,33 @@ const ProductsChart = (props) => {
       { name: "Worker", value: 0, color: "#0088FE" },
       { name: "User", value: 0, color: "#FF8042" },
     ]
-    props.setLoader2(true);
+    setLoader2(true);
     try {
-      const allUsers = await axios.get(`${BACKEND_URL}/auth/allUser`, { withCredentials: true});
+      const allUsers = await axios.get(`${BACKEND_URL}/auth/allUser`, { withCredentials: true });
       setTotalData(allUsers.data.data.length)
-      allUsers.data.data.filter((user)=>{
-        if(user.type==='Admin'){
-          data[0].value +=1
-        }else if(user.type==='Worker'){
-          data[1].value +=1
-        }else{
-          data[2].value +=1
+      allUsers.data.data.filter((user) => {
+        if (user.type === 'Admin') {
+          data[0].value += 1
+        } else if (user.type === 'Worker') {
+          data[1].value += 1
+        } else {
+          data[2].value += 1
         }
       })
       setData(data)
-    } catch (error) {}
-    props.setLoader2(false);
+    } catch (error) { }
+    setLoader2(false);
   };
 
-  const handleChartClick = (data)=>{
-    if(data){
-      if(data.name==="Admin"){
+  const handleChartClick = (data) => {
+    if (data) {
+      if (data.name === "Admin") {
         navigate(`/admin/dashboard/users?key=Admin`)
       }
-      if(data.name==='Worker'){
+      if (data.name === 'Worker') {
         navigate(`/admin/dashboard/users?key=Worker`)
       }
-      if(data.name==='User'){
+      if (data.name === 'User') {
         navigate(`/admin/dashboard/users?key=User`)
       }
     }
@@ -64,29 +67,29 @@ const ProductsChart = (props) => {
   return (
     <div className="w-full h-full">
       <ResponsiveContainer width="99%" height="80%">
-      <PieChart>
-        <Pie
-          className=" cursor-pointer"
-          dataKey="value"
-          startAngle={90}
-          endAngle={450}
-          data={data}
-          cx="50%"
-          cy="50%"
-          innerRadius={70}
-          outerRadius={110}
-          fill="#8884d8"
-          paddingAngle={5}
-          onClick={handleChartClick}
+        <PieChart>
+          <Pie
+            className=" cursor-pointer"
+            dataKey="value"
+            startAngle={90}
+            endAngle={450}
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius={70}
+            outerRadius={110}
+            fill="#8884d8"
+            paddingAngle={5}
+            onClick={handleChartClick}
           >
-          {data && data.map((entry, index) => (
-            <Cell key={index} fill={entry.color} />
+            {data && data.map((entry, index) => (
+              <Cell key={index} fill={entry.color} />
             ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip/>}/>
-      </PieChart>
+          </Pie>
+          <Tooltip content={<CustomTooltip />} />
+        </PieChart>
       </ResponsiveContainer>
-      <h1 className='w-full text-center text-2xl underline -mt-4' style={{color:"#FF8042"}}>Total User: {totalData}</h1>
+      <h1 className='w-full text-center text-2xl underline -mt-4' style={{ color: "#FF8042" }}>Total User: {totalData}</h1>
     </div>
   );
 };

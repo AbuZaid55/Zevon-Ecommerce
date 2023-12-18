@@ -2,16 +2,19 @@ import React,{useEffect,useState} from 'react'
 import GoLogin from '../Component/GoLogin';
 import { FaCheck } from "react-icons/fa";
 import {Link} from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
-const WelcomOrder = (props) => {
+const WelcomOrder = () => {
+  const user = useSelector((state) => (state.user))
   const [login,setLogin]=useState(false)
+
   useEffect(()=>{
-    if(props.user._id){
+    if(user._id){
       setLogin(true)
     }else{
       setLogin(false)
     }
-  },[props.user])
+  },[user])
   return (
     <>
     <div className={`${(login)?"hidden":""}`}><GoLogin/></div>

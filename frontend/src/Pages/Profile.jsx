@@ -4,51 +4,55 @@ import { FaCamera, FaPlus, FaTrash } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify'
+import { useContext } from 'react';
+import { context } from '../Context/context';
+import { useSelector } from 'react-redux';
 
-const Profile = (props) => {
+const Profile = () => {
   const [newAddress, setNewAddress] = useState({ name: "", houseNo: "", address: "", pinCode: "", city: "", state: "", phoneNo: "" })
-  const [user, setUser] = useState({ _id: "", email: "", name: "", cart: [], shippingDetails: [], profile: "" })
   const [userProfile, setUserProfile] = useState('/Images/profile.jpg')
   const [showAddressForm, setshowAddressForm] = useState(false)
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const [showInput, setShowInput] = useState(false)
   const [changeName, setChangeName] = useState('')
   const [login, setLogin] = useState(false)
+  const user = useSelector((state) => (state.user));
+  const { setLoader2, getUser } = useContext(context)
 
   const handleNewAddress = (e) => {
     setNewAddress({ ...newAddress, [e.target.name]: e.target.value })
   }
 
   const addShippingDetails = async (e) => {
-    props.setLoader2(true)
+    setLoader2(true)
     e.preventDefault()
     try {
       newAddress["_id"] = user._id
       const res = await axios.post(`${BACKEND_URL}/auth/addShippingDetails`, newAddress)
       setNewAddress({ name: "", houseNo: "", address: "", pinCode: "", city: "", state: "", phoneNo: "" })
       setshowAddressForm(false)
-      props.getUser()
+      getUser()
       toast.success(res.data.massage)
     } catch (error) {
       toast.error(error.response.data.massage)
     }
-    props.setLoader2(false)
+    setLoader2(false)
   }
 
   const deleteShippingDetails = async (i) => {
-    props.setLoader2(true)
+    setLoader2(true)
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/deleteShippingDetails`, { _id: user._id, index: i })
-      props.getUser()
+      getUser()
       toast.success(res.data.massage)
     } catch (error) {
       toast.error(error.response.data.massage)
     }
-    props.setLoader2(false)
+    setLoader2(false)
   }
 
   const uploadProfile = async (e) => {
-    props.setLoader2(true)
+    setLoader2(true)
     e.preventDefault()
     const formdata = new FormData()
     formdata.append("_id", user._id)
@@ -56,38 +60,37 @@ const Profile = (props) => {
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/uploadProfile`, formdata)
       toast.success(res.data.massage)
-      props.getUser()
+      getUser()
     } catch (error) {
       toast.error(error.response.data.massage)
     }
-    props.setLoader2(false)
+    setLoader2(false)
   }
 
   const submitName = async () => {
-    props.setLoader2(true)
+    setLoader2(true)
     try {
       const res = await axios.post(`${BACKEND_URL}/auth/changeName`, { name: changeName, userId: user._id }, { withCredentials: true })
-      props.getUser()
+      getUser()
       setShowInput(false)
       toast.success(res.data.massage)
     } catch (error) {
       toast.error(error.response.data.massage)
     }
-    props.setLoader2(false)
+    setLoader2(false)
   }
 
   useEffect(() => {
-    if (props.user._id) {
+    if (user._id) {
       setLogin(true)
-      setUser(props.user)
-      setChangeName(props.user.name)
-      if(props.user.profile.secure_url){
-        setUserProfile(props.user.profile.secure_url)
+      setChangeName(user.name)
+      if (user.profile.secure_url) {
+        setUserProfile(user.profile.secure_url)
       }
     } else {
       setLogin(false)
     }
-  }, [props.user])
+  }, [user])
 
   return (<>
     <div className={`${(login) ? "hidden" : ""}`}><GoLogin /></div>
@@ -127,7 +130,7 @@ const Profile = (props) => {
             <h1 className='text-xl sm:text-3xl my-5 px-5'>Shipping Address :-</h1>
           </div>
           <div className='flex flex-wrap items-center justify-evenly'>
-            {user.shippingDetails.map((data, i) => {
+            {login && user.shippingDetails.map((data, i) => {
               return <div key={i} className='border w-72 sm:w-80 m-5 p-4 relative'>
                 <button className='absolute top-0 right-0 p-2 text-main-800' onClick={() => { deleteShippingDetails(i) }}><FaTrash /></button>
                 <h1>{data.name}</h1>

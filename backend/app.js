@@ -7,6 +7,7 @@ const passport = require("passport")
 const cloudinary = require('cloudinary')
 const app = express()
 const port = process.env.PORT
+const hostName = process.env.HOSTNAME
 const dbConnection = require('./db/db_conn')
 require('./utils/passport')
 
@@ -39,6 +40,6 @@ app.use('/order',require('./routes/orderRouter'))
 app.use(require('./routes/productRouter'))
 app.use('/site',require('./routes/siteSettingRouter'))
 
-app.listen(port,()=>{
-    console.log(`App listining on port no ${port}`)
+app.listen(port,hostName,()=>{
+    console.log(`App listining at http://${hostName}:${port}`)
 })

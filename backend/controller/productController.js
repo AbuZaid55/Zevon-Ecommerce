@@ -15,6 +15,9 @@ const products = async(req,res)=>{
 }
 
 const addProduct = async(req,res)=>{
+    if(req.fileError){
+        return sendError(res,req.fileError)
+    }
     try {
         const {name,description,stock,maxprice,sellprice,deliveryCharge,category,subCategory,color,size,GST}=req.body
         const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0]:''
@@ -51,6 +54,9 @@ const addProduct = async(req,res)=>{
 }
 
 const updataProduct = async(req,res)=>{
+    if(req.fileError){
+        return sendError(res,req.fileError)
+    }
     try {
         const thumbnail = (req.files && req.files["thumbnail"])?req.files["thumbnail"][0]:''
         const image = (req.files && req.files["images"])?req.files["images"]:[]

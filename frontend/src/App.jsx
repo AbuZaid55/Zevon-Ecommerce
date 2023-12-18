@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import Header from './Component/Header.jsx';
 import Footer from './Component/Footer.jsx';
 import Home from './Pages/Home.jsx';
@@ -45,14 +45,11 @@ import { setUser } from './Redux/slice/user.js';
 import { setProduct } from './Redux/slice/product.js';
 import { setSetting } from './Redux/slice/setting.js';
 
-import {context} from './Context/context.js'
+import { context } from './Context/context';
 
 const App = () => {
   const dispatch = useDispatch()
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL  
-  const user = useSelector((state)=>(state.user))
-  const allProduct = useSelector((state)=>(state.product.allProduct))
-  const setting = useSelector((state)=>(state.setting))
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
   const [loader1, setLoader1] = useState(true)
   const [loader2, setLoader2] = useState(false)
 
@@ -79,8 +76,7 @@ const App = () => {
     }
     setLoader2(false)
   }
-
-  const getSiteSettings = async()=>{
+  const getSiteSettings = async () => {
     setLoader2(true)
     try {
       const res = await axios.get(`${BACKEND_URL}/site/siteSetting`)
@@ -90,53 +86,54 @@ const App = () => {
     }
     setLoader2(false)
   }
+
   useEffect(() => {
     getUser()
     fetchProduct()
     getSiteSettings()
   }, [])
   return (
-    <context.Provider value={{setLoader2,getUser,fetchProduct}}>
+    <context.Provider value={{ setLoader2, getUser, fetchProduct,getSiteSettings }}>
       <div className={`${(loader1) ? '' : 'hidden'}`}><Loading1 /></div>
       <div className={`${(loader2) ? '' : 'hidden'}`}><Loading2 /></div>
       <div className={`${(loader1) ? 'hidden' : ''}`}>
-        <Header/>
+        <Header />
         <Routes>
-          <Route path='/' element={<Home/>} />
-          <Route path='/contact' element={<Contact/>} />
-          <Route path='/products' element={<Product/>} />
-          <Route path='/details' element={<Detail setting={setting} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} getUser={getUser} />} />
-          <Route path='/cart' element={<Cart user={user} setLoader2={setLoader2} getUser={getUser} />} />
-          <Route path='/cart/shipping' element={<Shipping setLoader2={setLoader2} user={user} getUser={getUser} />} />
-          <Route path='/cart/confirm' element={<Confirm setLoader2={setLoader2} getUser={getUser} user={user} />} />
-          <Route path='/orders' element={<Order setLoader2={setLoader2} user={user} />} />
-          <Route path='/track' element={<TrackOrder setLoader2={setLoader2} />} />
-          <Route path='/welcome' element={<WelcomOrder user={user} />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/products' element={<Product />} />
+          <Route path='/details' element={<Detail />} />
+          <Route path='/cart' element={<Cart/>} />
+          <Route path='/cart/shipping' element={<Shipping/>} />
+          <Route path='/cart/confirm' element={<Confirm/>} />
+          <Route path='/orders' element={<Order/>} />
+          <Route path='/track' element={<TrackOrder/>} />
+          <Route path='/welcome' element={<WelcomOrder/>} />
 
-          <Route path='/profile' element={<Profile setLoader2={setLoader2} getUser={getUser} user={user} />} />
-          <Route path='/login' element={<Login setLoader2={setLoader2} getUser={getUser} />} />
-          <Route path='/signup' element={<SignUp setLoader2={setLoader2} />} />
-          <Route path='/verifyemail' element={<VerifyEmail setLoader2={setLoader2} getUser={getUser} user={user} />} />
-          <Route path='/sendresetlink' element={<SendResetLink setLoader2={setLoader2} />} />
-          <Route path='/changepass' element={<ChangePass setLoader2={setLoader2} />} />
+          <Route path='/profile' element={<Profile/>} />
+          <Route path='/login' element={<Login/>} />
+          <Route path='/signup' element={<SignUp/>} />
+          <Route path='/verifyemail' element={<VerifyEmail/>} />
+          <Route path='/sendresetlink' element={<SendResetLink/>} />
+          <Route path='/changepass' element={<ChangePass/>} />
 
-          <Route path='/admin/dashboard' element={<Dashboard setLoader2={setLoader2} allProduct={allProduct} user={user} />} />
-          <Route path='/admin/dashboard/products' element={<Products setting={setting} allProduct={allProduct} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} />} />
-          <Route path='/admin/dashboard/addproduct' element={<AddProduct setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/updateproduct' element={<UpdateProduct allProduct={allProduct} fetchProduct={fetchProduct} setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/users' element={<Users setting={setting} setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/orders' element={<Orders setting={setting} setLoader2={setLoader2} fetchProduct={fetchProduct} user={user} />} />
-          <Route path='/admin/dashboard/cancleorder' element={<CancleOrder setting={setting} setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/changestatus' element={<ChangeStatus setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/payment' element={<Payment setting={setting} setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/failedpayment' element={<FailedPayment setting={setting} setLoader2={setLoader2} user={user} />} />
-          <Route path='/admin/dashboard/setting' element={<Setting setting={setting} getSiteSettings={getSiteSettings} setLoader2={setLoader2} user={user} />} />
+          <Route path='/admin/dashboard' element={<Dashboard/>} />
+          <Route path='/admin/dashboard/products' element={<Products/>} />
+          <Route path='/admin/dashboard/addproduct' element={<AddProduct/>} />
+          <Route path='/admin/dashboard/updateproduct' element={<UpdateProduct/>} />
+          <Route path='/admin/dashboard/users' element={<Users/>} />
+          <Route path='/admin/dashboard/orders' element={<Orders/>} />
+          <Route path='/admin/dashboard/cancleorder' element={<CancleOrder/>} />
+          <Route path='/admin/dashboard/changestatus' element={<ChangeStatus/>} />
+          <Route path='/admin/dashboard/payment' element={<Payment/>} />
+          <Route path='/admin/dashboard/failedpayment' element={<FailedPayment/>} />
+          <Route path='/admin/dashboard/setting' element={<Setting/>} />
 
           <Route path='*' element={<Page404 />} />
         </Routes>
-        <Footer/>
+        <Footer />
 
-        <ToastContainer />
+        <ToastContainer position="bottom-right"/>
       </div>
     </context.Provider>
   )

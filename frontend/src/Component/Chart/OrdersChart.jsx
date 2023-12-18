@@ -1,15 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {useNavigate} from 'react-router-dom'
-import {
-  BarChart,
-  Bar,
-  CartesianGrid,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { useNavigate } from 'react-router-dom'
+import { BarChart, Bar, CartesianGrid, Tooltip, XAxis, YAxis, ResponsiveContainer } from "recharts";
 import axios from "axios";
+import { useContext } from "react";
+import { context } from "../../Context/context";
 
 function CustomTooltip({ payload, label, active }) {
   if (active && payload) {
@@ -29,11 +23,12 @@ function CustomTooltip({ payload, label, active }) {
   return null;
 }
 
-const OrdersChart = (props) => {
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-  const [data, setData] = useState();
-  const [totalData, setTotalData] = useState(0);
+const OrdersChart = () => {
   const navigate = useNavigate()
+  const [data, setData] = useState();
+  const { setLoader2 } = useContext(context)
+  const [totalData, setTotalData] = useState(0);
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const fetchOrders = async () => {
     let data2 = [
@@ -61,7 +56,7 @@ const OrdersChart = (props) => {
 
     let totalData = 0;
 
-    props.setLoader2(true);
+    setLoader2(true);
     try {
       const allOrders = await axios.get(`${BACKEND_URL}/order/allOrders`, {
         withCredentials: true,
@@ -82,22 +77,22 @@ const OrdersChart = (props) => {
       });
       setData(data2);
       setTotalData(totalData);
-    } catch (error) {}
-    props.setLoader2(false);
+    } catch (error) { }
+    setLoader2(false);
   };
-
-  const handleChartClick = (data)=>{
-    let keyType=["Processing","Confirmed","Shipped","Out For Delivery","Cancelled"]
-    if(data){
-      if(keyType.includes(data.name)){
-        if(data.name==="Cancelled"){
+  const handleChartClick = (data) => {
+    let keyType = ["Processing", "Confirmed", "Shipped", "Out For Delivery", "Cancelled"]
+    if (data) {
+      if (keyType.includes(data.name)) {
+        if (data.name === "Cancelled") {
           navigate(`/admin/dashboard/cancleorder?key=${data.name}`)
-        }else{
+        } else {
           navigate(`/admin/dashboard/orders?key=${data.name}`)
         }
       }
     }
   }
+
   useEffect(() => {
     fetchOrders();
   }, []);

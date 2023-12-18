@@ -127,7 +127,7 @@ const Product = () => {
             setAllFilterProduct(filterallproduct)
         }
     }
-    
+
     useEffect(() => {
         document.addEventListener('click', handleClickOutside, true)
         return () => removeEventListener('click', handleClickOutside)
