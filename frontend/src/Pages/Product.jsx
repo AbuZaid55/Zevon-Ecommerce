@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Footer from '../Component/Footer'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { FaAngleDown, FaAngleUp, FaFilter, FaRupeeSign, FaStar, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import Card from '../Component/Card'
 import { useSelector } from 'react-redux';
@@ -9,6 +9,7 @@ const Product = () => {
     const ref = useRef(null)
     const params = (useLocation().search);
     const paramsData = params.slice(params.indexOf('=') + 1).replaceAll('%20', ' ')
+    const navigate = useNavigate()
 
     const userId = useSelector((state) => (state.user))._id
     const allProduct = useSelector((state) => (state.product.allProduct))
@@ -24,6 +25,7 @@ const Product = () => {
     const [totalPage, setTotalPage] = useState(1)
     const [currentPage, setCurrentPage] = useState(1)
     const [filterSubCategory, setfilterSubCategory] = useState([])
+    const [search,setSearch]=useState(false)
 
     const showSubCat = (e) => {
         const xData = e.target.parentElement.getAttribute("data-show")
@@ -40,11 +42,14 @@ const Product = () => {
     }
     const clearAll = (e) => {
         e.preventDefault()
-        setFilterPrice(maxPrice)
-        setRating(0)
         setfilterSubCategory([])
+        setRating(0)
+        setFilterPrice(maxPrice)
+        setSearch(false)
+        navigate('/products')
     }
     const filterSubCategoryHandle = (e) => {
+        setCurrentPage(1)
         const { value, checked } = e.target
         if (checked) {
             setfilterSubCategory([...filterSubCategory, value])
@@ -78,7 +83,8 @@ const Product = () => {
     }
     const getItem = () => {
         let result = []
-        if (params.includes('?search=') && paramsData) {
+        if ((params.includes('?search=') || params.includes('?category=')) && paramsData) {
+            setSearch(true)
             const key = paramsData.toLowerCase().split(' ')
             result = allProduct.filter((item) => {
                 const name = item.name.toLowerCase()
@@ -141,7 +147,7 @@ const Product = () => {
         setCurrentPage(1)
         setfilterSubCategory([])
         setRating(0)
-        if (params.includes('?search=') && paramsData) {
+        if ((params.includes('?search=') || params.includes('?category=')) && paramsData) {
             getItem()
         }
         if (params.includes('?subCategory=') && paramsData) {
@@ -172,7 +178,14 @@ const Product = () => {
                                     <span className={`${(rating === 0) ? 'hidden' : 'flex'} items-center bg-white rounded-full px-3 py-1 mt-1`}>{rating} <FaStar className='mx-1' /> & above</span>
                                 </div>
                             </div>
-                            <h1 className='text-2xl font-semibold px-3 text-main-800 py-3'>Category</h1>
+                            <div className={`${(search) ? '' : 'hidden'}`}>
+                                <h1 className='text-2xl font-semibold px-3 text-main-800 py-3'>Applied Filters</h1>
+                                <div className='p-2'>
+                                    <span className={` items-center bg-white rounded-full px-3 py-1 mt-1`}>{paramsData}</span>
+                                </div>
+                            </div>
+                           <div className={search?'hidden':''}>
+                           <h1 className='text-2xl font-semibold px-3 text-main-800 py-3'>Category</h1>
                             {
                                 category && category.map((cat, I) => {
                                     let subCategory = []
@@ -193,23 +206,24 @@ const Product = () => {
                                     </div>
                                 })
                             }
+                           </div>
                         </div>
                         <div>
                             <h1 className='text-2xl font-semibold px-3 text-main-800 py-2'>Price</h1>
                             <div className='bg-white px-3 py-2'>
                                 <p className='flex items-center text-xl font-semibold'><FaRupeeSign />{filterPrice}</p>
-                                <input className=' w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer' type="range" min={0} max={maxPrice} value={filterPrice} onChange={(e) => { setFilterPrice(e.target.value) }} />
+                                <input className=' w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer' type="range" min={0} max={maxPrice} value={filterPrice} onChange={(e) => { setCurrentPage(1), setFilterPrice(e.target.value) }} />
                             </div>
                         </div>
                         <div>
                             <h1 className='text-2xl font-semibold px-3 text-main-800 py-2'>Rating</h1>
                             <div className='flex flex-col bg-white'>
-                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 4} onChange={(e) => { (e.target.checked) ? setRating(4) : setRating(0) }} />4 <FaStar className='mx-1 text-base' /> & above</label>
-                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 3} onChange={(e) => { (e.target.checked) ? setRating(3) : setRating(0) }} />3 <FaStar className='mx-1 text-base' /> & above</label>
-                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 2} onChange={(e) => { (e.target.checked) ? setRating(2) : setRating(0) }} />2 <FaStar className='mx-1 text-base' /> & above</label>
+                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 4} onChange={(e) => { (e.target.checked) ? setRating(4) : setRating(0), setCurrentPage(1) }} />4 <FaStar className='mx-1 text-base' /> & above</label>
+                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 3} onChange={(e) => { (e.target.checked) ? setRating(3) : setRating(0), setCurrentPage(1) }} />3 <FaStar className='mx-1 text-base' /> & above</label>
+                                <label className='w-full px-4 py-1 border-t text-lg flex items-center cursor-pointer'><input className='mr-4 w-4 h-4' type="checkbox" checked={rating === 2} onChange={(e) => { (e.target.checked) ? setRating(2) : setRating(0) , setCurrentPage(1)}} />2 <FaStar className='mx-1 text-base' /> & above</label>
                             </div>
                         </div>
-                        <button className=' w-full bg-white text-xl font-bold my-3 py-2 hover:bg-hover-50 ' onClick={(e) => { clearAll(e) }}>Clear All</button>
+                        <button className=' w-full bg-white text-xl font-bold my-3 py-2 hover:bg-hover-50 mb-20' onClick={(e) => { clearAll(e) }}>Clear All</button>
                     </div>
                 </aside>
 
@@ -222,7 +236,7 @@ const Product = () => {
                                 return <Card key={i} product={item} userId={userId} />
                             })}
                         </div>
-                        <div className='flex items-center justify-between w-full relative bottom-0'>
+                        <div className='flex items-center justify-between w-full relative bottom-0 mb-20'>
                             <button className=' bg-main-800 text-white px-4 py-3 m-8 text-2xl' onClick={() => { handlePagination("Desc") }}><FaArrowLeft /></button>
                             <div className='flex'>
                                 <p className='border p-2 w-10 h-10 text-center '>{currentPage}</p>

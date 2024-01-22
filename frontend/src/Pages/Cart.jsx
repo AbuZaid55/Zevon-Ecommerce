@@ -86,7 +86,7 @@ const Cart = () => {
           login && user.cart.map((item, i) => {
             return <div key={i} className="mx-4 p-1 sm:p-4 my-3 border">
               <div className="flex items-center">
-                <div className="w-20 h-20 bg-black mx-2"><img className="w-full h-full" src={item.thumbnail} alt="Pic" /></div>
+                <div className="w-20 h-20 bg-black mx-2"><img className="w-full h-full" style={{minWidth:"65px"}} src={item.thumbnail} alt="Pic" /></div>
                 <div>
                   <Link to={`/details?_id=${item.productId}`}><h1 className='h-7 overflow-hidden lg:text-2xl font-semibold'>{item.name} </h1></Link>
                   <p className={`${(item.size && item.size !== '') ? '' : 'hidden'} lg:text-xl`}>Size: {`${(item.size !== '') ? item.size : ''}`}</p>

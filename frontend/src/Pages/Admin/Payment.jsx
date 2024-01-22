@@ -138,12 +138,12 @@ const Payment = () => {
               </tr>
             </thead>
 
-            <tbody>
+            <tbody >
               {paginationPayment.map((item, i) => {
                 return <tr key={i}>
-                  <td datalabel={"Payment Id"}>{item.razorpay_payment_id}</td>
+                  <td datalabel={"Payment Id"} >{item.razorpay_payment_id}</td>
                   <td datalabel={'Order Id'}>{item.razorpay_order_id}</td>
-                  <td datalabel={'User Id'}>{item.userId}</td>
+                  <td datalabel={'User Id'} >{item.userId}</td>
                   <td datalabel={'Amount'}>&#8377; {item.totalPaidAmount}</td>
                   <td datalabel={'Date'}>{item.createdAt.slice(0, 10).split("-").reverse().join("-")}</td>
                   <td datalabel={'Delete'}><FaTrash className='icon delete' onClick={() => { setId(item._id); setShowConfirm(true) }} /></td>

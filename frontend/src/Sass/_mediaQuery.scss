@@ -103,6 +103,9 @@
 }
 
 @media screen and (max-width:500px) {
+    table tbody tr td{
+        font-size: 1.1rem;
+    }
     .dashboard {
         & .chartContainer{
             &:nth-child(3){

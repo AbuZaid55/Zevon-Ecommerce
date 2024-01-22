@@ -13,7 +13,7 @@ const Aside = () => {
         <Link to='/admin/dashboard'> <h1 className='logo'>Dashboard</h1></Link>
         <div>
           <p>MAIN</p>
-          <Link to='/admin/dashboard'><h1><FaHome className='icon'/>Homepage</h1></Link>
+          <Link to='/'><h1><FaHome className='icon'/>Homepage</h1></Link>
           <p>PRODUCTS</p>
           <Link to='/admin/dashboard/products'><h1><FaShoppingCart className='icon'/>Products</h1></Link>
           <Link to='/admin/dashboard/addproduct'><h1><FaPlusSquare className='icon'/>Add Products</h1></Link>

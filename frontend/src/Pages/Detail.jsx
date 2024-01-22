@@ -147,23 +147,23 @@ const Details = () => {
     <div className='flex flex-col md:flex-row'>
 
       <div className='w-full md:w-1/2 h-80 sm:h-96 flex justify-center mt-8 sm:mt-0 md:mt-8'>
-        <div className=' h-full overflow-y-scroll scrollbar-hide'>
+        <div className=' h-full overflow-y-scroll scrollbar-hide w-20'>
           {
             product.images.secure_url && product.images.secure_url.map((url, i) => {
-              return <img key={i} className='w-20 h-20 m-2 cursor-pointer p-2 border-2 border-main-800' src={url} onClick={() => { setSlideIndex(i) }} alt="" />
+              return <img key={i} className='w-[90%] h-20 my-2 mx-1 sm:mx-2 cursor-pointer p-2 border-2 border-main-800' src={url} onClick={() => { setSlideIndex(i) }} alt="" />
             })
           }
         </div>
-        <div className='w-80 sm:w-96 mx-5 my-2 border-2 p-4 border-main-800'><ImageSlider imgUrl={product.images.secure_url} index={slideIndex} /></div>
+        <div className='w-80 sm:w-96 mx-2 sm:mx-5 my-2 border-2 p-4 border-main-800'><ImageSlider imgUrl={product.images.secure_url} index={slideIndex} /></div>
       </div>
 
 
-      <div className='md:w-1/2 mt-5 px-10 mb-10'>
+      <div className='md:w-1/2 mt-5 px-4 mb-10'>
         <h1 className='text-2xl sm:text-3xl border-b pb-2 mb-2 font-bold text-main-800'>{product.name}</h1>
         <div className='flex items-center border-b pb-2 mb-3'><span className='flex items-center bg-green-600 text-white rounded px-1 my-1 text-lg lg:text-base '>{productRating}<FaStar className='ml-1' /></span><span className='ml-4'>({product.reviews.length})</span></div>
         <div className='flex items-center border-b pb-3 mb-2'>
           <h1 className='flex items-center text-2xl font-bold'><FaRupeeSign />{product.sellprice} </h1>
-          <div><span className=' line-through mx-2 lg:text-xl'>{product.maxprice}</span><span className='font-bold text-green-700 lg:text-xl'>off {Math.round((product.sellprice / product.maxprice) * 100)}%</span></div>
+          <div><span className=' line-through mx-2 lg:text-xl'>{product.maxprice}</span><span className='font-bold text-green-700 lg:text-xl'>off {100-Math.round((product.sellprice / product.maxprice) * 100)}%</span></div>
         </div>
         <div className=' flex text-xl border-b mb-2 pb-2 '><span>Delivery Charge : </span><span className={` ${(product.deliveryCharge === 0) ? '' : "hidden"} text-green-700 ml-1 `}> Free </span><span className={`${(product.deliveryCharge === 0) ? 'hidden' : 'flex'} items-center font-semibold`}><FaRupeeSign /> {product.deliveryCharge}</span></div>
         <div className='text-xl border-b mb-2 pb-2 '><span>Stock : </span><span className={` ${(product.stock === 0) ? 'hidden' : ""} text-green-700 `}>In Stock</span><span className={` ${(product.stock === 0) ? '' : 'hidden'} text-red-700`}>Out of stock</span></div>
@@ -230,7 +230,7 @@ const Details = () => {
 
 
     <div className={`w-full ${(similarProduct.length === 0) ? 'hidden' : ''}`}>
-      <ItemSlider products={similarProduct} category={['Similar Products']} />
+      <ItemSlider products={similarProduct} category={[product.category]} similarProduct={true} />
     </div>
 
     <div className={` ${(showReviewForm) ? "" : "hidden"} w-full h-full fixed top-0 left-0 z-50`} style={{ backgroundColor: "rgba(128, 128, 128, 0.653)" }}>

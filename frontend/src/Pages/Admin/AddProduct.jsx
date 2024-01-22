@@ -111,6 +111,8 @@ function AddProduct() {
         toast.success(res.data.massage)
         ref1.current.value = null
         ref2.current.value = null
+        setProduct({...product,"thumbnail":''})
+        setProduct({...product,"images":[]})
         if (emptyFormAfterSubmit) {
           setProduct({ name: '', description: '', stock: '', maxprice: '', sellprice: '', deliveryCharge: "", GST: "", category: '', subCategory: '', color: [], size: [], highlight: [], thumbnail: '', images: [] })
           setColor('#000000')

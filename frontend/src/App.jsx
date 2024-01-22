@@ -40,7 +40,7 @@ import './Sass/Admin.scss'
 import Loading1 from './Pages/Loader1.jsx';
 import Loading2 from './Pages/Loader2.jsx';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setUser } from './Redux/slice/user.js';
 import { setProduct } from './Redux/slice/product.js';
 import { setSetting } from './Redux/slice/setting.js';

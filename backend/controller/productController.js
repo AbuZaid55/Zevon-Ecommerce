@@ -35,7 +35,11 @@ const addProduct = async(req,res)=>{
             thumb_public_id = thumbresult.public_id
             thumb_secure_url = thumbresult.secure_url
         }
-        fs.rm(thumbnail.path)
+        try {
+            fs.rm(thumbnail.path)
+        } catch (error) {
+            console.log("Product Thumbnail directory not found!")
+        }
 
         for(const file of image){
             const imgresult = await cloudinary.v2.uploader.upload(file.path,{folder:'ZevonImages'})
@@ -43,7 +47,11 @@ const addProduct = async(req,res)=>{
                 image_public_id.push(imgresult.public_id)
                 image_secure_url.push(imgresult.secure_url)
             }
-            fs.rm(file.path)
+            try {
+                fs.rm(file.path)
+            } catch (error) {
+                console.log("Product Images directory not found!")
+            }
         }
         await productModel({name,description,stock,maxprice,sellprice,deliveryCharge,GST,category,subCategory,color,size,'thumbnail.public_id':thumb_public_id,'thumbnail.secure_url':thumb_secure_url,'images.public_id':image_public_id,'images.secure_url':image_secure_url,highlight}).save()
         sendSuccess(res,"Product Added successfully")

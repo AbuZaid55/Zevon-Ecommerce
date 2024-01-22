@@ -121,13 +121,13 @@ const Header = () => {
         </form>
         <Link to="/login"><button className={`bg-main-800 text-white px-6 py-2 mx-3 rounded-full font-semibold ${(user._id) ? 'hidden' : 'block'}`}>Login</button></Link>
         {/* dropdown1  */}
-        <div className={`relative px-3 py-5 cursor-pointer hover:border-b-4 border-main-800 h-20 sm:w-full ${(user._id) ? 'block' : 'hidden'} `} style={{ maxWidth: "12rem", minWidth: '6rem' }} onMouseMove={(e) => { setDropdown1(true) }} onMouseOut={(e) => { setDropdown1(false) }}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-main-800 mr-2" src={userProfile} style={{ width: "40px", height: '40px' }} alt="Profile" /><span className="text-lg text-main-800 hidden sm:block">{user.name}</span></span>
-          <ul className={`absolute -left-2 sm:-left-0 w-full border-x-2 mt-5 z-50 bg-white ${(dropdown1) ? 'block' : 'hidden'} `} style={{ minWidth: "110px" }}>
-            <li className="px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/profile" className="flex items-center justify-left text-main-800"><FaUser className="m-3 hidden sm:block text-main-800" />Profile</Link></li>
-            <li className={`${(user.type === "Admin") ? "block" : "hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard" className="flex items-center justify-left text-main-800"><FaTh className="m-3 hidden sm:block text-main-800" />Dashboard</Link></li>
-            <li className={`${(user.type === 'Worker') ? "block" : "hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link to="/admin/dashboard/changestatus" className="flex items-center justify-left text-main-800"><FaMapMarkedAlt className="m-3 hidden sm:block text-main-800" />Change Status</Link></li>
-            <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/cart" className="flex items-center justify-left text-main-800"><FaShoppingCart className="m-3 hidden sm:block text-main-800" />Cart</Link></li>
-            <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link to="/orders" className="flex items-center justify-left text-main-800"><FaShoppingBag className="m-3 hidden sm:block text-main-800" />Order</Link></li>
+        <div className={`relative px-3 py-3  cursor-pointer hover:border-b-4 border-main-800 h-20 sm:w-full ${(user._id) ? 'block' : 'hidden'} `} style={{ maxWidth: "12rem", minWidth: '6rem' }} onMouseMove={(e) => { setDropdown1(true) }} onMouseOut={(e) => { setDropdown1(false) }}><span className="flex items-center justify-center sm:mr-4"><img className="rounded-full border-2 border-main-800 mr-2 w-14 h-14" src={userProfile} alt="Profile" /><span className="text-lg text-main-800 hidden sm:block">{user.name}</span></span>
+          <ul className={`absolute -left-2 sm:-left-0 w-full border-x-2 mt-3 z-50 bg-white ${(dropdown1) ? 'block' : 'hidden'} `} style={{ minWidth: "110px" }}>
+            <li className="px-4 py-2 border-b-2 hover:bg-hover-50"><Link onClick={()=>{setDropdown1(false)}} to="/profile" className="flex items-center justify-left text-main-800"><FaUser className="m-3 hidden sm:block text-main-800" />Profile</Link></li>
+            <li className={`${(user.type === "Admin") ? "block" : "hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link onClick={()=>{setDropdown1(false)}} to="/admin/dashboard" className="flex items-center justify-left text-main-800"><FaTh className="m-3 hidden sm:block text-main-800" />Dashboard</Link></li>
+            <li className={`${(user.type === 'Worker') ? "block" : "hidden"} px-4 py-2 border-b-2 hover:bg-hover-50`}><Link onClick={()=>{setDropdown1(false)}} to="/admin/dashboard/changestatus" className="flex items-center justify-left text-main-800"><FaMapMarkedAlt className="m-3 hidden sm:block text-main-800" />Change Status</Link></li>
+            <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link onClick={()=>{setDropdown1(false)}} to="/cart" className="flex items-center justify-left text-main-800"><FaShoppingCart className="m-3 hidden sm:block text-main-800" />Cart</Link></li>
+            <li className="md:hidden px-4 py-2 border-b-2 hover:bg-hover-50"><Link onClick={()=>{setDropdown1(false)}} to="/orders" className="flex items-center justify-left text-main-800"><FaShoppingBag className="m-3 hidden sm:block text-main-800" />Order</Link></li>
             <li className="px-4 py-2 border-b-2 hover:bg-hover-50"><span onClick={() => { setShowLogoutform(true) }} className="flex items-center justify-left text-main-800"><FaArrowRightFromBracket className="m-3 hidden sm:block text-main-800" />Log Out</span></li>
           </ul>
         </div>
@@ -151,8 +151,8 @@ const Header = () => {
       <div className="relative sm:static flex flex-col sm:flex-row items-center justify-between lg:px-5 border-b border-main-800" ref={ref2}>
         <div className=" w-full sm:hidden flex item-center justify-end px-4 text-2xl bg-main-800 py-2 text-white" onClick={() => { setDropdown(!dropdown) }}><FaBars className=" cursor-pointer" /></div>
         <ul className={` absolute sm:static top-full sm:flex sm:flex-row w-full bg-main-800 sm:bg-white z-40 ${(dropdown) ? '' : 'hidden'}`} >
-          <Link to='/'><li className="flex items-center sm:mx-5 sm:border border-y sm:border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaHome className="mr-2" />Home</li></Link>
-          <Link to='/products'><li className="flex items-center sm:mx-5 sm:border border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaBoxOpen className="mr-2" />Products</li></Link>
+          <Link onClick={()=>{setDropdown(false)}} to='/'><li className="flex items-center sm:mx-5 sm:border border-y sm:border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaHome className="mr-2" />Home</li></Link>
+          <Link onClick={()=>{setDropdown(false)}} to='/products'><li className="flex items-center sm:mx-5 sm:border border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaBoxOpen className="mr-2" />Products</li></Link>
           {/* dropdown2 */}
           <li className={`relative sm:mx-5 sm:border border-b border-white sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800 ${(dropdown2) ? '' : 'overflow-hidden'}`} onMouseMove={(e) => { setDropdown2(true) }} onMouseOut={(e) => { setDropdown2(false) }}><span className="flex items-center cursor-pointer"><FaListUl className="mr-2" />Category{(dropdown2) ? <FaAngleDown className="ml-2" /> : <FaAngleUp className="ml-2" />}</span>
 
@@ -167,7 +167,7 @@ const Header = () => {
                         allProduct.map((item, i) => {
                           if (item.category === cat) {
                             if (!subCategory.includes(item.subCategory)) {
-                              return <Link key={i} to={`/products?subCategory=${item.subCategory}`}><li className="px-3 py-2 border-b text-main-800 hover:bg-hover-50">{item.subCategory}</li><span className='hidden'>{subCategory.push(item.subCategory)}</span></Link>
+                              return <Link key={i} onClick={()=>{setDropdown(false)}} to={`/products?subCategory=${item.subCategory}`}><li className="px-3 py-2 border-b text-main-800 hover:bg-hover-50">{item.subCategory}</li><span className='hidden'>{subCategory.push(item.subCategory)}</span></Link>
                             }
                           }
                         })
@@ -181,7 +181,7 @@ const Header = () => {
             </ul>
             {/* dropdown2 end */}
           </li>
-          <Link to='/contact'><li className="flex items-center sm:mx-5 sm:border  sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaAddressBook className="mr-2" />Contact</li></Link>
+          <Link onClick={()=>{setDropdown(false)}} to='/contact'><li className="flex items-center sm:mx-5 sm:border  sm:border-main-800 sm:rounded px-4 py-2 sm:my-2 sm:hover:bg-main-800 hover:text-white text-white sm:text-main-800"><FaAddressBook className="mr-2" />Contact</li></Link>
         </ul>
         <div className="hidden md:flex">
           <Link to='/orders' className="border border-main-800 rounded p-2 mx-3 text-main-800 hover:bg-main-800 hover:text-white"><FaShoppingBag /></Link>

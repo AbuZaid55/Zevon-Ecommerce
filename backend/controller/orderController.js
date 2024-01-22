@@ -6,7 +6,7 @@ const orderModel = require('../models/orderModel')
 const productModel = require('../models/productModel')
 const failedPaymentModel = require('../models/PaymentFailed')
 const paymentModel = require('../models/Payment')
-
+ 
 let userEmail = ''
 let shippingDetails = ''
 let phoneNo=''
