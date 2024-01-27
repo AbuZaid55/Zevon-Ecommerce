@@ -1,38 +1,80 @@
 
 # Advanced E-commerce Application - Full Stack
 
-## Login and Sign Up
+_I have created this Ecommerce application without any assistance and without watching any tutorials._
 
-New User hava to create a account for access cart, order and profile page. During sign up time user have to enter otp that will send on given email id for Verify user.
+## User Features
 
-## Forgot Password
+- ###  Account Creation:
+  - New users need to create an account to access the cart, order, and profile pages.
+  - During signup, users must enter an OTP sent to their provided email for verification.
 
-User have frogot his Password then it can change this Password.
-For the change Password user hava to send a link on registered email id.
+- ### Password Recovery:
+  - Users can reset their password by requesting a password reset link sent to their registered email.
 
-## Add to cart and manage order
+- ### Shopping Cart:
+  - Users can add products to their cart.
+  - Ability to manage and view items in the cart.
 
-User can add any products on his cart and manage it. Also can manage orders and track it status. User able to see all payments related details on the cart and order page.
+- ### Order Management:
+  - Users can place orders and track their status.
+  - Access to order history and details.
 
-## Seach and Filters
+- ### Payment Information:
+  - Users can view all payment-related details on the cart and order pages.
+  - Secure payment processing.
 
-In this website user able to search and filters products esily. 
+- ### Product Search and Filters:
+  - Users can easily search for products.
+  - Filters available for efficient product browsing.
 
-## Profile page
+- ### Profile Editing:
+  - Users can edit their profile details.
+  - Option to add multiple shipping addresses.
 
-User can edit his details on the profile page and can add mulitple shipping details for shipping products.
+## Admin Features
 
-## Admin 
+- ### Dashboard Access:
+  - Only admin has access to the dashboard.
 
-Only admin can access Dashboard and can manage orders and payments. Admin can edit any products and aslo can delete it.
+- ### Order and Payment Management:
+  - Admin can manage orders.
+  - Access to payment details.
 
-Admin can give Dashboard access to any user.
+- ### Product Management:
+  - Admin can edit and delete products.
+  - Full control over product catalog.
 
-Admin can see full details about any products, payments and orders on the admin Dashboard using chart.
+- ### User Management:
+  - Admin can grant dashboard access to users.
 
-## Payments 
+- ### Data Visualization:
+  - Charts and graphs displaying product, payment, and order details.
 
-User able to make payments securily.
+## Security
+
+- ### Secure Payments:
+  - Implement secure payment gateways for user transactions.
+
+- ### OTP Verification:
+  - Ensure the security of user accounts through OTP verification.
+
+## Additional Considerations
+
+- ### Responsive Design:
+  - Ensure the website is accessible and user-friendly on various devices.
+
+- ### Notifications:
+  - Implement email notifications for order confirmations, password resets, etc.
+
+- ### User Support:
+  - Provide a support system for users to address any issues.
+
+- ### Data Privacy:
+  - Comply with data protection regulations to safeguard user information.
+
+- ### Scalability:
+  - Design the system to handle potential growth in the number of users and products.
    
 
 
