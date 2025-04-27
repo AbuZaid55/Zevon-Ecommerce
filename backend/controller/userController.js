@@ -138,7 +138,10 @@ const logIn = async(req,res)=>{
         const token = user.generateToken()
         res.cookie('ZevonToken',token,{
             expires:new Date(Date.now() + Number(process.env.EXPIRE_COOKIE_TIME)),
-            httpOnly:true
+            httpOnly:true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Strict", 
+            path: "/",
         })
         if(!user.validated){
             const sendOtp = await verifyEmailModel.findOne({owner:user._id}) 
