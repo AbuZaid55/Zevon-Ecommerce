@@ -39,15 +39,15 @@ const Contact = () => {
         <img className='hidden md:block w-1/2 p-4' src="/Images/contact.jpg" alt="Pic" />
         <form className='w-full md:w-1/2 p-4 flex flex-col' onSubmit={(e) => { submitForm(e) }}>
           <h1 className='text-3xl text-center font-bold text-main-800 mb-3 mt-2'>Contact Us</h1>
-          <label className='mt-3 text-main-800' htmlFor="name">Name</label>
-          <input className='w-full border-b border-main-800 mb-3 text-main-800' name='name' type="text" placeholder='Enter your Name' id='name' value={details.name} onChange={(e) => { handleInput(e) }} />
-          <label className='mt-3 text-main-800' htmlFor="phone">Phone</label>
-          <input className='w-full border-b border-main-800 mb-3 text-main-800' name='phone' type="text" placeholder='Enter phone no' id='phone' value={details.phone} onChange={(e) => { handleInput(e) }} />
-          <label className='mt-3 text-main-800' htmlFor="email">Email</label>
-          <input className='w-full border-b border-main-800 mb-3 text-main-800' name='email' type="text" placeholder='Enter your email' id='email' value={details.email} onChange={(e) => { handleInput(e) }} />
-          <label className='mt-3 text-main-800' htmlFor="subject">Subject</label>
-          <input className='w-full border-b border-main-800 mb-3 text-main-800' name='subject' type="text" placeholder='Enter subject' id='subject' value={details.subject} onChange={(e) => { handleInput(e) }} />
-          <label className='mt-3 text-main-800' htmlFor="massage">Massage</label>
+          <label className='mt-3 text-main-800 font-semibold' htmlFor="name">Name</label>
+          <input className='w-full border-b border-main-800 mb-3' name='name' type="text" placeholder='Enter your Name' id='name' value={details.name} onChange={(e) => { handleInput(e) }} />
+          <label className='mt-3 text-main-800 font-semibold' htmlFor="phone">Phone</label>
+          <input className='w-full border-b border-main-800 mb-3' name='phone' type="text" placeholder='Enter phone no' id='phone' value={details.phone} onChange={(e) => { handleInput(e) }} />
+          <label className='mt-3 text-main-800 font-semibold' htmlFor="email">Email</label>
+          <input className='w-full border-b border-main-800 mb-3' name='email' type="text" placeholder='Enter your email' id='email' value={details.email} onChange={(e) => { handleInput(e) }} />
+          <label className='mt-3 text-main-800 font-semibold' htmlFor="subject">Subject</label>
+          <input className='w-full border-b border-main-800 mb-3' name='subject' type="text" placeholder='Enter subject' id='subject' value={details.subject} onChange={(e) => { handleInput(e) }} />
+          <label className='mt-3 text-main-800 font-semibold' htmlFor="massage">Massage</label>
           <textarea className='w-full border-b border-main-800 mb-3 text-main-800 resize-none' name='massage' type="textarea" placeholder='Massage' id='massage' value={details.massage} onChange={(e) => { handleInput(e) }} />
           <button className=' bg-main-800 text-white text-xl font-semibold py-2 mt-4' type='submit'>Submit</button>
         </form>
