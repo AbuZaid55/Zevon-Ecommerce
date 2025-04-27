@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8003:8003"
+    container_name: zevon-backend
+    env_file:
+      - ./backend/.env
+    networks:
+      - zevon_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    container_name: zevon-frontend
+    env_file: 
+      - ./frontend/.env
+    depends_on:
+      - backend
+    networks:
+      - zevon_network
+
+networks:
+  zevon_network:
+ 
