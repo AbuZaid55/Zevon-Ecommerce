@@ -41,5 +41,5 @@ app.use(require('./routes/productRouter'))
 app.use('/site',require('./routes/siteSettingRouter'))
 
 app.listen(port,hostName,()=>{
-    console.log(`App listining at http://${hostName}:${port}`)
+    console.log(`App listining at http://localhost:${port}`)
 })
