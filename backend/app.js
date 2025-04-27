@@ -34,6 +34,10 @@ cloudinary.v2.config({
     api_secret: process.env.CLOUDINARY_SECRET 
 });
 
+app.get("/test",(req,res)=>{
+    res.status(200).json({message:"Sever is running sucssessfully"})
+})
+
 
 app.use('/auth',require('./routes/userRouter'))
 app.use('/order',require('./routes/orderRouter'))
