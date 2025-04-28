@@ -458,7 +458,12 @@ const removeCartItem = async(req,res)=>{
 
 const Logout = async(req,res)=>{
     try{
-        res.clearCookie("ZevonToken")
+        // res.clearCookie("ZevonToken")
+        res.clearCookie('ZevonToken', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None',
+          });
         res.clearCookie("googleZevonToken")
         res.status(202).send({success:"Log Out Successfully"})
     }catch(err){
